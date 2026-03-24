@@ -1,0 +1,45 @@
+{
+  "section_id": "uuid",
+  "template": "sections/categories-section.jinja",
+  "icon": "fal fa-home",
+  "name": {
+    "ar": "الأقسام",
+    "en": "Categories Section"
+  },
+  "settings": [
+   {
+    "type": "list",
+    "id": "categories",
+    "label": {
+      "ar": "الأقسام",
+      "en": "Categories"
+    },
+    "settings": [
+      {
+        "type": "image",
+        "id": "image",
+        "label": {
+          "ar": "الصورة",
+          "en": "Image"
+        }
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": {
+          "ar": "العنوان",
+          "en": "Title"
+        }
+      },
+      {
+        "type": "text",
+        "id": "url",
+        "label": {
+          "ar": "الرابط",
+          "en": "URL"
+        }
+      }
+    ]
+   } 
+  ]
+}

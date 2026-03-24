@@ -1,0 +1,37 @@
+{
+  "section_id": "uuid",
+  "template": "sections/banners-grid.jinja",
+  "icon": "fal fa-home",
+  "name": {
+    "ar": "شبكة البانرات",
+    "en": "Banners Grid"
+  },
+  "settings": [
+    {
+      "type": "list",
+      "id": "banners",
+      "label": {
+        "ar": "البانرات",
+        "en": "Banners"
+      },
+      "settings": [
+        {
+          "type": "image",
+          "id": "image",
+          "label": {
+            "ar": "الصورة",
+            "en": "Image"
+          }
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": {
+            "ar": "الرابط",
+            "en": "URL"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "section_id": "uuid",
+  "template": "sections/shop-by-category.jinja",
+  "icon": "fal fa-home",
+  "name": {
+    "ar": "تسوق حسب الفئة",
+    "en": "Shop by Category"
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": {
+        "ar": "العنوان",
+        "en": "Title"
+      }
+    },
+    {
+      "type": "list",
+      "id": "categories",
+      "label": {
+        "ar": "الأقسام",
+        "en": "Categories"
+      },
+      "settings": [
+        {
+          "type": "image",
+          "id": "image",
+          "label": {
+            "ar": "الصورة",
+            "en": "Image"
+          }
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": {
+            "ar": "العنوان",
+            "en": "Title"
+          }
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": {
+            "ar": "الرابط",
+            "en": "URL"
+          }
+        }
+      ]
+    }
+  ]
+}

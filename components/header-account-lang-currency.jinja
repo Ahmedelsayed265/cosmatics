@@ -1,0 +1,190 @@
+<div class="header-mobile-top d-block d-lg-none header-theme-bg-primary">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center justify-content-center header-mobile-top-inner">
+            {% if show_country %}
+            <div class="header-delivery-area header-delivery-mobile d-flex align-items-center"
+                onclick="zidOpenRegionSettingDialog()" style="cursor: pointer">
+
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M7 18C5.17107 18.4117 4 19.0443 4 19.7537C4 20.9943 7.58172 22 12 22C16.4183 22 20 20.9943 20 19.7537C20 19.0443 18.8289 18.4117 17 18"
+                        stroke="#050505" stroke-width="1.5" stroke-linecap="round" />
+                    <path
+                        d="M14.5 9C14.5 10.3807 13.3807 11.5 12 11.5C10.6193 11.5 9.5 10.3807 9.5 9C9.5 7.61929 10.6193 6.5 12 6.5C13.3807 6.5 14.5 7.61929 14.5 9Z"
+                        stroke="#050505" stroke-width="1.5" />
+                    <path
+                        d="M13.2574 17.4936C12.9201 17.8184 12.4693 18 12.0002 18C11.531 18 11.0802 17.8184 10.7429 17.4936C7.6543 14.5008 3.51519 11.1575 5.53371 6.30373C6.6251 3.67932 9.24494 2 12.0002 2C14.7554 2 17.3752 3.67933 18.4666 6.30373C20.4826 11.1514 16.3536 14.5111 13.2574 17.4936Z"
+                        stroke="#050505" stroke-width="1.5" />
+                </svg>
+                {% if session.shipping_destination %}
+                <div class="d-flex align-items-center">
+                    <span class="header-delivery-text">{{ _("Delivery to:") }}</span>
+                    <span class="header-delivery-text header-theme-icon-primary">{{ session.shipping_destination.name }}</span>
+                </div>
+                {% else %}
+                <span class="header-delivery-text header-theme-icon-primary">{{ session.country.names[session.lang] }}</span>
+                {% endif %}
+
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 9.00005C18 9.00005 13.5811 15 12 15C10.4188 15 6 9 6 9" stroke="#050505"
+                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="header-mobile-bottom d-block d-lg-none header-theme-bg-primary">
+    <div class="container-fluid">
+        <div class="d-flex align-items-center justify-content-between header-mobile-bottom-inner">
+
+            <div class="header-mobile-start-icons d-flex align-items-center">
+                {% if not ('hide_search_bar' in header_options) %}
+                <div class="header-mobile-icon sm-search-icon" style="cursor: pointer">
+
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.5 17.5L22 22" stroke="#050505" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path
+                            d="M20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11Z"
+                            stroke="#050505" stroke-width="1.5" stroke-linejoin="round" />
+                    </svg>
+                </div>
+                {% endif %}
+
+                <button onclick="openSlidingMenu()" class="header-mobile-icon" type="button"
+                    style="all: unset; cursor: pointer;">
+
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 12L10 12" stroke="#050505" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path d="M20 5L4 5" stroke="#050505" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path d="M20 19L4 19" stroke="#050505" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="header-mobile-logo">
+                <a href="/" style="display: block">
+                    {% if settings.header_logo_mobile %}
+                    {% set logoUrlMobile = settings.header_logo_mobile %}
+                    {% elif store.settings.branding.mobile_app_logo %}
+                    {% set logoUrlMobile = store.settings.branding.mobile_app_logo %}
+                    {% elif settings.header_logo %}
+                    {% set logoUrlMobile = settings.header_logo %}
+                    {% else %}
+                    {% set logoUrlMobile = store.logo %}
+                    {% endif %}
+                    <img class="image-logo" src="{{ image_url(logoUrlMobile, h=175, q=100) }}" alt="{{ store.name }}"
+                        style="width: auto; max-height: 100%" decoding="async" fetchpriority="high">
+                </a>
+            </div>
+
+            <div class="header-mobile-end-icons d-flex align-items-center">
+                <a href="{{ url_for('cart_page') }}" class="header-mobile-icon a-shopping-cart"
+                    style="position: relative; color: inherit">
+
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M3.87289 17.0194L2.66933 9.83981C2.48735 8.75428 2.39637 8.21152 2.68773 7.85576C2.9791 7.5 3.51461 7.5 4.58564 7.5H19.4144C20.4854 7.5 21.0209 7.5 21.3123 7.85576C21.6036 8.21152 21.5126 8.75428 21.3307 9.83981L20.1271 17.0194C19.7282 19.3991 19.5287 20.5889 18.7143 21.2945C17.9 22 16.726 22 14.3782 22H9.62182C7.27396 22 6.10003 22 5.28565 21.2945C4.47127 20.5889 4.27181 19.3991 3.87289 17.0194Z"
+                            stroke="#050505" stroke-width="1.5" />
+                        <path d="M17.5 7.5C17.5 4.46243 15.0376 2 12 2C8.96243 2 6.5 4.46243 6.5 7.5" stroke="#050505"
+                            stroke-width="1.5" />
+                    </svg>
+
+                    <span class="cart-badge d-none"></span>
+                </a>
+                <button type="button" class="header-mobile-icon"
+                    style="color: inherit; background: none; border: none; padding: 0; cursor: pointer;"
+                    data-open-offers-offcanvas aria-label="{{ _('Offers') }}">
+
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12 22C16.4183 22 20 18.4183 20 14C20 8 12 2 12 2C11.6117 4.48692 11.2315 5.82158 10 8C8.79908 7.4449 8.5 7 8 5.75C6 8 4 11 4 14C4 18.4183 7.58172 22 12 22Z"
+                            stroke="#050505" stroke-width="1.5" stroke-linejoin="round" />
+                        <path d="M10 17L14 13" stroke="#050505" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path d="M10 13H10.009M13.991 17H14" stroke="#050505" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </button>
+                <a href="/wishlist" class="header-mobile-icon" style="color: inherit">
+
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M19.4626 3.99415C16.7809 2.34923 14.4404 3.01211 13.0344 4.06801C12.4578 4.50096 12.1696 4.71743 12 4.71743C11.8304 4.71743 11.5422 4.50096 10.9656 4.06801C9.55962 3.01211 7.21909 2.34923 4.53744 3.99415C1.01807 6.15294 0.221721 13.2749 8.33953 19.2834C9.88572 20.4278 10.6588 21 12 21C13.3412 21 14.1143 20.4278 15.6605 19.2834C23.7783 13.2749 22.9819 6.15294 19.4626 3.99415Z"
+                            stroke="#050505" stroke-width="1.5" stroke-linecap="round" />
+                    </svg>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function openSlidingMenu() {
+        if (window.slidingMenu && window.slidingMenu.open) {
+            window.slidingMenu.open();
+        } else if (typeof SlideMenu !== 'undefined') {
+            var element = document.getElementById('sliding-menu');
+            if (element) {
+                window.slidingMenu = new SlideMenu(element, {
+                    position: (window.appDirection === 'ltr') ? 'left' : 'right',
+                    showBackLink: true,
+                    backLinkBefore: (window.appDirection === 'ltr') ? '<span class="icon-arrow_left slide-menu-arrow slide-menu-arrow-back"></span>' : '<span class="icon-arrow_right slide-menu-arrow slide-menu-arrow-back"></span>',
+                    submenuLinkAfter: (window.appDirection === 'ltr') ? '<span class="icon-arrow_right slide-menu-arrow"></span>' : '<span class="icon-arrow_left slide-menu-arrow"></span>'
+                });
+
+                if (typeof $ !== 'undefined') {
+                    element.addEventListener('sm.open', () => $('body').addClass('sidenav-open'));
+                    element.addEventListener('sm.close', () => $('body').removeClass('sidenav-open'));
+                }
+
+                window.slidingMenu.open();
+            }
+        }
+    }
+
+    document.addEventListener('zid-customer-fetched', function (event) {
+        const customer = event.detail.customer;
+        if (customer && customer.name) {
+            var desktopLoginBtn = document.getElementById('desktop-login-btn');
+            var desktopHelloBtn = document.getElementById('desktop-hello-btn');
+            if (desktopLoginBtn) desktopLoginBtn.style.display = 'none';
+            if (desktopHelloBtn) desktopHelloBtn.style.display = 'inline-flex';
+        }
+    });
+
+    {% if store.settings.products.filter_by_nearest_inventory %}
+    document.addEventListener('DOMContentLoaded', function () {
+        var storedData = localStorage.getItem('zid_kit_select_branch');
+        if (!storedData) return;
+
+        var lang = '{{ session.lang }}';
+        var deliveryToText = '{{ _("Delivery to:") }}';
+        var pickupFromText = '{{ _("Pickup from:") }}';
+        var data = JSON.parse(storedData);
+        var branchData = data.branchData;
+        var deliveryTexts = document.querySelectorAll('.header-delivery-text');
+        var currencyBtns = document.querySelectorAll('.currency-btn');
+
+        var displayText = '';
+        if (branchData.type === 'pickup' && branchData.pickup) {
+            displayText = pickupFromText + ' ' + branchData.pickup.name;
+        } else if (branchData.type === 'delivery' && branchData.address) {
+            var addr = branchData.address;
+            var cityName = lang === 'ar' ? addr.city_name_ar : addr.city_name_en;
+            displayText = deliveryToText + ' ' + cityName;
+        }
+
+        if (displayText) {
+            deliveryTexts.forEach(function (el) { el.textContent = displayText; });
+            currencyBtns.forEach(function (btn) { btn.textContent = displayText; });
+        }
+    });
+    {% endif %}
+</script>

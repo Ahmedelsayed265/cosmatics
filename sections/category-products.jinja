@@ -1,0 +1,45 @@
+<section class="category-products s_block" id="{{ sectionId }}" section-id="{{ sectionId }}">
+    <div class="container-fluid">
+        <div class="category-products-header">
+            <h2>{{ settings.title }}</h2>
+
+            {% if settings.view_all_url %}
+            <a href="{{ settings.view_all_url }}">{{ settings.view_all_text }}</a>
+            {% endif %}
+        </div>
+
+        <div class="swiper category-products-slider">
+            <div class="swiper-wrapper">
+                {% for product in safeget(settings, "category.products.results", []) %}
+                <div class="swiper-slide">
+                    {% set index=loop.index0 %}{% include 'components/product-card.jinja' %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        new Swiper('[section-id="{{ sectionId }}"] .swiper', {
+            slidesPerView: 1,
+            spaceBetween: 0,
+            loop: true,
+            breakpoints: {
+                640: {
+                    slidesPerView: 2.5,
+                    spaceBetween: 8,
+                },
+                768: {
+                    slidesPerView: 4,
+                    spaceBetween: 16,
+                },
+                1024: {
+                    slidesPerView: 5.5,
+                    spaceBetween: 20,
+                },
+            },
+        });
+    });
+</script>

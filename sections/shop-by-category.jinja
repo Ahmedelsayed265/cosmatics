@@ -1,0 +1,17 @@
+<section class="shop-by-category-section" id="{{ sectionId }}" section-id="{{ sectionId }}">
+    <div class="container-fluid">
+        <h3 class="section-title">{{ settings.title }}</h3>
+
+        <div class="shop-by-category-wrapper">
+            {% for category in safeget(settings, 'categories', []) %}
+            <a href="{{ category.url }}" class="shop-by-category-item">
+                <div class="shop-by-category-image">
+                    <img src="{{ image_url(category.image, w=1920, q=100, f='auto') }}" alt="{{ category.title }}">
+                </div>
+                
+                <h6>{{ category.title }}</h6>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>

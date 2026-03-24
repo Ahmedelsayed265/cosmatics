@@ -1,0 +1,52 @@
+<section class="hero-section" id="{{ sectionId }}" section-id="{{ sectionId }}"
+    style="background-color: {{ settings.background_color }}">
+    <div class="swiper hero-slider">
+        <div class="swiper-wrapper">
+            {% for slide in safeget(settings, 'hero_slider', []) %}
+            <div class="swiper-slide">
+                <div class="container-fluid">
+                    <div class="swiper-slide-content">
+                        <h1 class="swiper-slide-title">{{ slide.title }}</h1>
+                        <p class="swiper-slide-description">{{ slide.description }}</p>
+                        {% if slide.button_url %}
+                        <a href="{{ slide.button_url }}" class="swiper-slide-button"
+                            style="{% if slide.button_text_color %}color: {{ slide.button_text_color }};{% endif %} {% if slide.button_bg_color %}background-color: {{ slide.button_bg_color }};{% endif %}">{{
+                            slide.button_text }}</a>
+                        {% endif %}
+                    </div>
+
+                    <div class="swiper-slide-image">
+                        {% if slide.image %}
+                        <img src="{{ image_url(slide.image, w=1920, q=100, f='auto') }}" alt="{{ slide.title }}">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="swiper-pagination"></div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        new Swiper('[section-id="{{ sectionId }}"] .swiper', {
+            slidesPerView: 1,
+            spaceBetween: 0,
+            loop: true,
+            effect: "fade",
+            fadeEffect: {
+                crossFade: true,
+            },
+            pagination: {
+                el: '[section-id="{{ sectionId }}"] .swiper .swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '[section-id="{{ sectionId }}"] .swiper .swiper-button-next',
+                prevEl: '[section-id="{{ sectionId }}"] .swiper .swiper-button-prev',
+            },
+        });
+    });
+</script>

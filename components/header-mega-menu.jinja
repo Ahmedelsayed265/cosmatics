@@ -1,0 +1,451 @@
+{# ====== DESKTOP BOTTOM ROW: Slide menu icon + جميع الأقسام dropdown + Nav categories + City/Lang + Icons ====== #}
+{% set ns = namespace(all_cat_menu=none, dropdown_items=[]) %}
+{% for m in store.settings.menus.main_menu.items %}
+{% if m.url and (safeget(m, "url") == '/c/' or safeget(m, "url") == '/categories/') %}
+{% set ns.all_cat_menu = m %}
+{% endif %}
+{% endfor %}
+{% set all_cat_menu = ns.all_cat_menu %}
+{# عناصر الدروب دون: إن كان لعنصر "جميع التصنيفات" items نستخدمها، وإلا نأخذ باقي عناصر القائمة الرئيسية (التصنيفات) #}
+{% if all_cat_menu and all_cat_menu.items and all_cat_menu.items | length > 0 %}
+{% set ns.dropdown_items = all_cat_menu.items %}
+{% elif all_cat_menu %}
+{% for m in store.settings.menus.main_menu.items %}
+{% if m.url and safeget(m, "url") != '/c/' and safeget(m, "url") != '/categories/' and safeget(m, "url") != '/' and
+safeget(m, "url") != '/products/' %}
+{% set ns.dropdown_items = ns.dropdown_items + [m] %}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% set all_cat_dropdown_items = ns.dropdown_items %}
+
+{# ماكرو متكرر: كل تصنيف (حتى الفرعي) جمبه صورة؛ لو عنده أطفال يبقى كولابس #}
+{% macro render_sublist_nested(items) %}
+<ul class="header-all-cat-sublist">
+    {% for sub in items %}
+    <li class="header-all-cat-sublist-li">
+        {% if sub.items and sub.items | length > 0 %}
+        <details class="header-all-cat-collapse">
+            <summary class="header-all-cat-subitem-summary">
+                <span class="header-all-cat-subitem-icon">
+                    {% if safeget(sub, 'image') %}
+                    <img src="{{ image_url(safeget(sub, 'image'), w=80, q=100, f='auto') }}" alt="" width="28"
+                        height="28">
+                    {% else %}
+                    <img src="{{ image_url(('product-img.svg' | asset_url), w=80, q=100, f='auto') }}" alt="" width="28"
+                        height="28" class="header-all-cat-default-img">
+                    {% endif %}
+                </span>
+                <a href="{{ sub.url | localized_url if sub.resource_type != 'url' else sub.url }}"
+                    class="header-all-cat-subitem-label" onclick="event.stopPropagation()">{{ sub.label }}</a>
+                <span class="header-all-cat-collapse-chevron" aria-hidden="true">
+                    <span class="header-all-cat-chevron-plus"><svg width="16" height="16" viewBox="0 0 16 16"
+                            fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 3V13M3 8H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                        </svg></span>
+                    <span class="header-all-cat-chevron-minus"><svg width="16" height="16" viewBox="0 0 16 16"
+                            fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 8H13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                        </svg></span>
+                </span>
+            </summary>
+            <div class="header-all-cat-collapse-body">
+                {{ render_sublist_nested(sub.items) }}
+            </div>
+        </details>
+        {% else %}
+        <a href="{{ sub.url | localized_url if sub.resource_type != 'url' else sub.url }}"
+            class="header-all-cat-subitem-link">
+            <span class="header-all-cat-subitem-icon">
+                {% if safeget(sub, 'image') %}
+                <img src="{{ image_url(safeget(sub, 'image'), w=80, q=100, f='auto') }}" alt="" width="28" height="28">
+                {% else %}
+                <img src="{{ image_url(('product-img.svg' | asset_url), w=80, q=100, f='auto') }}" alt="" width="28"
+                    height="28" class="header-all-cat-default-img">
+                {% endif %}
+            </span>
+            <span class="header-all-cat-subitem-label">{{ sub.label }}</span>
+        </a>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endmacro %}
+
+<div class="dark d-none d-lg-block header-theme-bg-primary" style="position: relative">
+    <div class="div-bg-absolute header-theme-bg-primary"></div>
+    <div class="container-fluid">
+        <div class="d-flex align-items-center header-bottom-row-inner">
+
+            {# 1. أيقونة القائمة الجانبية (slide menu) - تظهر في الموبايل فقط؛ في الديسكتوب نخفيها #}
+            <div class="d-lg-none">
+                <button type="button" class="header-slide-menu-btn header-theme-text-for-primary-bg"
+                    onclick="openSlidingMenu()" title="{{ _('Menu') }}" aria-label="{{ _('Menu') }}">
+                    <span class="icon-bars"></span>
+                </button>
+            </div>
+
+            {# 2. دروب دون "جميع الأقسام" - يفتح بالضغط (click) ويعرض التصنيفات الرئيسية عمودياً والفرعية عند المرور #}
+            <div class="header-all-cat-dropdown" id="header-all-cat-dropdown">
+                <button type="button" class="header-all-cat-toggle header-theme-text-for-primary-bg"
+                    id="header-all-cat-toggle" aria-expanded="false" aria-haspopup="true">
+
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 12L10 12" stroke="#050505" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path d="M20 5L4 5" stroke="#050505" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path d="M20 19L4 19" stroke="#050505" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+
+                    <span class="header-all-cat-label">{{ _('All sections') }}</span>
+                    <span class=" header-cat-arrow header-all-cat-chevron" aria-hidden="true">
+
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M18 9.00005C18 9.00005 13.5811 15 12 15C10.4188 15 6 9 6 9" stroke="#050505"
+                                stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+
+                    </span>
+                </button>
+                {% if all_cat_menu and all_cat_dropdown_items %}
+                <div class="header-all-cat-panel" id="header-all-cat-panel" role="menu">
+                    <div class="header-all-cat-panel-inner">
+                        {# منطقة التصنيفات الفرعية (يسار في RTL) - تظهر حسب التصنيف المرور عليه #}
+                        <div class="header-all-cat-subcols">
+                            {% set submenu_headers_list = safeget(settings, 'submenu_headers', []) or [] %}
+                            {% for cat in all_cat_dropdown_items %}
+                            {% set cat_id = cat.id | default(safeget(cat, 'id')) %}
+                            {% set cat_url = cat.url | localized_url if cat.resource_type != 'url' else cat.url %}
+                            <div class="header-all-cat-subcontent" data-cat-index="{{ loop.index0 }}"
+                                data-menu-url="{{ cat_url }}" data-selected-category="{{ cat_id or '' }}" role="region"
+                                aria-label="{{ cat.label }}">
+                                <div class="header-all-cat-subcontent-inner">
+                                    <div class="header-all-cat-subcol">
+                                        <a href="{{ cat_url }}" class="header-all-cat-col-header">
+                                            <span>{{ _('All Products') }}</span>
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M15 6C15 6 9.00001 10.4189 9 12C8.99999 13.5812 15 18 15 18"
+                                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                                    stroke-linejoin="round" />
+                                            </svg>
+                                        </a>
+                                        {% if cat.items %}
+                                        {{ render_sublist_nested(cat.items) }}
+                                        {% endif %}
+                                    </div>
+                                    {# عناصر مخصصة من الإعدادات (submenu.headers) لهذا التصنيف: صور وروابط #}
+                                    {% set ns_cat = namespace(items=[]) %}
+                                    {% for key in submenu_headers_list %}
+                                    {% set key_cat_id = (key.category.id if key.category else none) %}
+                                    {% if key_cat_id is not none and key_cat_id == cat_id %}
+                                    {% set ns_cat.items = ns_cat.items + [key] %}
+                                    {% endif %}
+                                    {% endfor %}
+                                    {% if ns_cat.items | length > 0 %}
+                                    <div class="header-all-cat-custom-items">
+                                        {% for key in ns_cat.items %}
+                                        {% if key.image %}
+                                        <a href="{{ key.urled | default('#') }}" class="header-all-cat-custom-item"
+                                            target="_blank" rel="noopener">
+                                            <span class="header-all-cat-custom-item-img">
+                                                <img src="{{ image_url(key.image, w=200, q=85, f='auto') }}"
+                                                    alt="{{ key.category.name if key.category else '' }}"
+                                                    loading="lazy">
+                                            </span>
+                                        </a>
+                                        {% endif %}
+                                        {% if key.image2 %}
+                                        <a href="{{ key.urled2 | default('#') }}" class="header-all-cat-custom-item"
+                                            target="_blank" rel="noopener">
+                                            <span class="header-all-cat-custom-item-img">
+                                                <img src="{{ image_url(key.image2, w=200, q=85, f='auto') }}"
+                                                    alt="{{ key.category.name if key.category else '' }}"
+                                                    loading="lazy">
+                                            </span>
+                                        </a>
+                                        {% endif %}
+                                        {% if key.image3 %}
+                                        <a href="{{ key.urled3 | default('#') }}" class="header-all-cat-custom-item"
+                                            target="_blank" rel="noopener">
+                                            <span class="header-all-cat-custom-item-img">
+                                                <img src="{{ image_url(key.image3, w=200, q=85, f='auto') }}"
+                                                    alt="{{ key.category.name if key.category else '' }}"
+                                                    loading="lazy">
+                                            </span>
+                                        </a>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {# قائمة التصنيفات الرئيسية (يمين في RTL) - عمودياً مع أيقونة دائرية #}
+                        <div class="header-all-cat-primary-col">
+                            {% for cat in all_cat_dropdown_items %}
+                            <a href="{{ cat.url | localized_url if cat.resource_type != 'url' else cat.url }}"
+                                class="header-all-cat-item-link" data-cat-index="{{ loop.index0 }}" role="menuitem">
+                                <span class="header-all-cat-item-icon">
+                                    {% if safeget(cat, 'image') %}
+                                    <img src="{{ image_url(safeget(cat, 'image'), w=80, q=100, f='auto') }}" alt=""
+                                        width="40" height="40">
+                                    {% else %}
+                                    <img src="{{ image_url(('product-img.svg' | asset_url), w=80, q=100, f='auto') }}"
+                                        alt="" width="40" height="40" class="header-all-cat-default-img">
+                                    {% endif %}
+                                </span>
+                                <span class="header-all-cat-item-label">{{ cat.label }}</span>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <span class="header-nav-sep header-sep-v"></span>
+
+            {# 3. التصنيفات الرئيسية فقط (بدون تصنيفات فرعية - روابط مباشرة) #}
+            <nav role="navigation" class="header-categories-nav main-nav-wrapper">
+                <ul class="main-nav header-categories-list header-theme-text-for-primary-bg">
+                    {% for menu in store.settings.menus.main_menu.items %}
+                    {% if menu.url %}
+                    {% set is_all_cat = safeget(menu, "url") == '/c/' or safeget(menu, "url") == '/categories/' %}
+                    {% if not is_all_cat %}
+                    <li class="top-level-link header-cat-item">
+                        <a href="{{ menu.url }}">
+                            <span>{{ menu.label }}</span>
+                        </a>
+                        <span class="header-nav-sep header-sep-v"></span>
+                    </li>
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                </ul>
+            </nav>
+
+            {# 4. زر المدينة + زر اللغة + الأيقونات (بنفس الشكل والترتيب) #}
+            <span class="header-nav-sep header-sep-v"></span>
+
+            <div class="header-bottom-right d-flex align-items-center flex-shrink-0 header-theme-text-for-primary-bg">
+
+                {% if show_country %}
+                <div class="header-delivery-area d-flex align-items-center" onclick="zidOpenRegionSettingDialog()"
+                    role="button" tabindex="0">
+
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M7 18C5.17107 18.4117 4 19.0443 4 19.7537C4 20.9943 7.58172 22 12 22C16.4183 22 20 20.9943 20 19.7537C20 19.0443 18.8289 18.4117 17 18"
+                            stroke="#050505" stroke-width="1.5" stroke-linecap="round" />
+                        <path
+                            d="M14.5 9C14.5 10.3807 13.3807 11.5 12 11.5C10.6193 11.5 9.5 10.3807 9.5 9C9.5 7.61929 10.6193 6.5 12 6.5C13.3807 6.5 14.5 7.61929 14.5 9Z"
+                            stroke="#050505" stroke-width="1.5" />
+                        <path
+                            d="M13.2574 17.4936C12.9201 17.8184 12.4693 18 12.0002 18C11.531 18 11.0802 17.8184 10.7429 17.4936C7.6543 14.5008 3.51519 11.1575 5.53371 6.30373C6.6251 3.67932 9.24494 2 12.0002 2C14.7554 2 17.3752 3.67933 18.4666 6.30373C20.4826 11.1514 16.3536 14.5111 13.2574 17.4936Z"
+                            stroke="#050505" stroke-width="1.5" />
+                    </svg>
+
+                    {% if session.shipping_destination %}
+                    <div class="d-flex align-items-center">
+                        <span>{{ _("Delivery to:") }}</span> <span class="header-delivery-text">{{ session.shipping_destination.name }}</span>
+                    </div>
+                    {% else %}
+                    <div class="d-flex align-items-center">
+                        <span class="header-delivery-text">{{ session.country.names[session.lang] }}</span>
+                    </div>
+                    {% endif %}
+
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 9.00005C18 9.00005 13.5811 15 12 15C10.4188 15 6 9 6 9" stroke="#050505"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+
+                </div>
+                {% endif %}
+
+                {% if show_country and multiple_languages and show_language %}
+                <span class="header-nav-sep header-sep-v"></span>
+                {% endif %}
+
+                {% if multiple_languages and show_language %}
+                <div class="header-language-area d-flex align-items-center" onclick="zidOpenRegionSettingDialog()"
+                    role="button" tabindex="0">
+
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_55_3960)">
+                            <path
+                                d="M10 0.5C15.238 0.5 19.5 4.76198 19.5 10C19.5 15.238 15.238 19.5 10 19.5C4.76198 19.5 0.5 15.238 0.5 10C0.5 4.76198 4.76198 0.5 10 0.5ZM11.167 5.3291C11.167 6.21839 10.7527 7.04918 10.0498 7.58398L9.90527 7.68652L9.07617 8.23926C8.81984 8.40953 8.66699 8.69566 8.66699 9.00293V9.58301C8.66699 10.4559 7.95533 11.167 7.08301 11.167H5.83301C4.73107 11.1668 3.83318 10.2689 3.83301 9.16699V8.53516C3.83301 8.03593 3.65734 7.54646 3.3418 7.16113L3.19824 7.00293L2.12793 5.93262L1.84082 6.62207C1.40799 7.66351 1.16699 8.8038 1.16699 10C1.16699 14.8711 5.12886 18.833 10 18.833H10.5V13.75C10.5 12.4178 11.5848 11.333 12.917 11.333H13.75C14.623 11.333 15.333 12.044 15.333 12.917V13.2754C15.3331 13.7212 15.555 14.1369 15.9268 14.3848L16.7256 14.916L17.1475 15.1973L17.4229 14.7715C18.3108 13.3954 18.833 11.759 18.833 10C18.833 5.73393 15.7936 2.16533 11.7666 1.34473L11.167 1.22266V5.3291ZM12.917 12C11.9517 12 11.167 12.7847 11.167 13.75V18.7773L11.7666 18.6553C13.5354 18.2953 15.1082 17.4021 16.3203 16.1592L16.7412 15.7275L16.2402 15.3936L15.5576 14.9395C14.9993 14.5673 14.6671 13.9456 14.667 13.2754V12.917C14.667 12.4117 14.2553 12 13.75 12H12.917ZM10 1.16699C6.98098 1.16699 4.31462 2.69096 2.72168 5.00488L2.48535 5.34766L3.66992 6.53223C4.19678 7.05838 4.5 7.78946 4.5 8.53516V9.16699C4.50018 9.9032 5.09828 10.4998 5.83301 10.5H7.08301C7.5898 10.5 8 10.0877 8 9.58301V9.00293C8 8.47189 8.26325 7.98038 8.70508 7.68555L9.53516 7.13184C10.139 6.72917 10.5 6.05467 10.5 5.3291V1.16699H10Z"
+                                fill="#404040" stroke="#050505" />
+                        </g>
+                        <defs>
+                            <clipPath id="clip0_55_3960">
+                                <rect width="20" height="20" fill="white" />
+                            </clipPath>
+                        </defs>
+                    </svg>
+
+                    <span class="header-lang-text">{{ session.lang | upper }}</span>
+
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18 9.00005C18 9.00005 13.5811 15 12 15C10.4188 15 6 9 6 9" stroke="#050505"
+                            stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+
+                </div>
+                {% endif %}
+
+                <span class="header-nav-sep header-sep-v"></span>
+
+                {# ترتيب الأيقونات: المفضلة - العروض - السلة - الحساب (كما في الصورة) #}
+                <div class="header-action-icons d-flex align-items-center">
+                    <a href="/wishlist" class="header-icon-btn" title="{{ _('Wishlist') }}">
+
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M19.4626 3.99415C16.7809 2.34923 14.4404 3.01211 13.0344 4.06801C12.4578 4.50096 12.1696 4.71743 12 4.71743C11.8304 4.71743 11.5422 4.50096 10.9656 4.06801C9.55962 3.01211 7.21909 2.34923 4.53744 3.99415C1.01807 6.15294 0.221721 13.2749 8.33953 19.2834C9.88572 20.4278 10.6588 21 12 21C13.3412 21 14.1143 20.4278 15.6605 19.2834C23.7783 13.2749 22.9819 6.15294 19.4626 3.99415Z"
+                                stroke="#050505" stroke-width="1.5" stroke-linecap="round" />
+                        </svg>
+                    </a>
+                    <a href="{{ url_for('cart_page') }}" class="header-icon-btn a-shopping-cart"
+                        title="{{ _('Cart') }}">
+
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M3.87289 17.0194L2.66933 9.83981C2.48735 8.75428 2.39637 8.21152 2.68773 7.85576C2.9791 7.5 3.51461 7.5 4.58564 7.5H19.4144C20.4854 7.5 21.0209 7.5 21.3123 7.85576C21.6036 8.21152 21.5126 8.75428 21.3307 9.83981L20.1271 17.0194C19.7282 19.3991 19.5287 20.5889 18.7143 21.2945C17.9 22 16.726 22 14.3782 22H9.62182C7.27396 22 6.10003 22 5.28565 21.2945C4.47127 20.5889 4.27181 19.3991 3.87289 17.0194Z"
+                                stroke="#050505" stroke-width="1.5" />
+                            <path d="M17.5 7.5C17.5 4.46243 15.0376 2 12 2C8.96243 2 6.5 4.46243 6.5 7.5"
+                                stroke="#050505" stroke-width="1.5" />
+                        </svg>
+                        <span class="cart-badge d-none"></span>
+                    </a>
+
+                    <button type="button" class="header-icon-btn" title="{{ _('Offers') }}" data-open-offers-offcanvas
+                        aria-label="{{ _('Offers') }}">
+
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M12 22C16.4183 22 20 18.4183 20 14C20 8 12 2 12 2C11.6117 4.48692 11.2315 5.82158 10 8C8.79908 7.4449 8.5 7 8 5.75C6 8 4 11 4 14C4 18.4183 7.58172 22 12 22Z"
+                                stroke="#050505" stroke-width="1.5" stroke-linejoin="round" />
+                            <path d="M10 17L14 13" stroke="#050505" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                            <path d="M10 13H10.009M13.991 17H14" stroke="#050505" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </button>
+                    <button type="button" onclick="handleLoginAction()" class="header-icon-btn" id="desktop-login-btn"
+                        title="{{ _('Login') }}">
+                        <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            class="header-icon-svg">
+                            <path
+                                d="M16.5 26H10.5909C9.04549 26 7.81631 25.248 6.71266 24.1966C4.45336 22.0441 8.1628 20.324 9.57757 19.4816C11.6784 18.2307 14.1368 17.7719 16.5 18.1052C17.3575 18.2261 18.1926 18.4514 19 18.7809"
+                                stroke="#050505" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            <path
+                                d="M20.5 10.5C20.5 12.9853 18.4853 15 16 15C13.5147 15 11.5 12.9853 11.5 10.5C11.5 8.01472 13.5147 6 16 6C18.4853 6 20.5 8.01472 20.5 10.5Z"
+                                stroke="#050505" stroke-width="1.5" />
+                            <path d="M22.5 26L22.5 19M19 22.5H26" stroke="#050505" stroke-width="1.5"
+                                stroke-linecap="round" />
+                        </svg>
+                    </button>
+                    <button type="button" onclick="window.location.href='{{ url_for('profile') }}'"
+                        class="header-icon-btn" id="desktop-hello-btn" style="display: none"
+                        title="{{ _('My Account') }}">
+                        <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            class="header-icon-svg">
+                            <path
+                                d="M16.5 26H10.5909C9.04549 26 7.81631 25.248 6.71266 24.1966C4.45336 22.0441 8.1628 20.324 9.57757 19.4816C11.6784 18.2307 14.1368 17.7719 16.5 18.1052C17.3575 18.2261 18.1926 18.4514 19 18.7809"
+                                stroke="#050505" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                            <path
+                                d="M20.5 10.5C20.5 12.9853 18.4853 15 16 15C13.5147 15 11.5 12.9853 11.5 10.5C11.5 8.01472 13.5147 6 16 6C18.4853 6 20.5 8.01472 20.5 10.5Z"
+                                stroke="#050505" stroke-width="1.5" />
+                            <path d="M22.5 26L22.5 19M19 22.5H26" stroke="#050505" stroke-width="1.5"
+                                stroke-linecap="round" />
+                        </svg>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        var toggle = document.getElementById('header-all-cat-toggle');
+        var panel = document.getElementById('header-all-cat-panel');
+        var dropdown = document.getElementById('header-all-cat-dropdown');
+        if (!toggle || !panel) return;
+
+        /* فتح/إغلاق الدروب دون: بالضغط على header-all-cat-toggle فقط. المحتوى الجوا: عند المرور (hover) على التصنيف الرئيسي يظهر الفرعي */
+
+        function closePanel() {
+            dropdown.classList.remove('open');
+            toggle.setAttribute('aria-expanded', 'false');
+            clearHoverState();
+        }
+
+        function openPanel() {
+            dropdown.classList.add('open');
+            toggle.setAttribute('aria-expanded', 'true');
+            setHoverIndex(0);
+        }
+
+        function togglePanel() {
+            if (dropdown.classList.contains('open')) closePanel();
+            else openPanel();
+        }
+
+        function clearHoverState() {
+            dropdown.querySelectorAll('.header-all-cat-item-link').forEach(function (el) { el.classList.remove('hover'); });
+            dropdown.querySelectorAll('.header-all-cat-subcontent').forEach(function (el) { el.classList.remove('active'); });
+        }
+
+        function setHoverIndex(index) {
+            clearHoverState();
+            var link = dropdown.querySelector('.header-all-cat-item-link[data-cat-index="' + index + '"]');
+            var sub = dropdown.querySelector('.header-all-cat-subcontent[data-cat-index="' + index + '"]');
+            if (link) link.classList.add('hover');
+            if (sub) sub.classList.add('active');
+        }
+
+        /* الزر فقط: كليك يفتح/يقفل */
+        toggle.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            togglePanel();
+        });
+
+        /* الجوا: hover على التصنيف الرئيسي يعرض الفرعيات */
+        dropdown.querySelectorAll('.header-all-cat-item-link[data-cat-index]').forEach(function (link) {
+            link.addEventListener('mouseenter', function () {
+                var idx = this.getAttribute('data-cat-index');
+                setHoverIndex(idx);
+            });
+        });
+
+        document.addEventListener('click', function (e) {
+            if (dropdown.classList.contains('open') && !dropdown.contains(e.target)) closePanel();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && dropdown.classList.contains('open')) closePanel();
+        });
+    })();
+</script>
+
+{% if store.settings.checkout.gift_order_settings.is_gift_order_customer_motivation_enabled == '1' %}
+<div id="tooltip" class="d-none popover" role="tooltip">
+    <div class="arrow"></div>
+    <div class="gift-popover-body">
+        <img src="{{ 'gift-popover-icon.svg' | asset_url }}" width="24" height="24" />
+        <p class="h6 my-2">{{ _('Send as gift') }}</p>
+        <button class="btn round primary d-block">
+            <a href="/cart" class="no-border d-block">{{ _('continue') }}</a>
+        </button>
+    </div>
+</div>
+{% endif %}

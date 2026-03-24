@@ -1,0 +1,12 @@
+<section class="categories-section" id="{{ sectionId }}" section-id="{{ sectionId }}">
+    {% for item in settings.categories %}
+    <div class="category-item">
+        <a href="{{ item.url }}">
+            <img loading="lazy" src="{{ image_url(item.image) }}" alt="{{ item.title }}">
+            <div class="category-item-title">
+                <h4>{{ item.title }}</h4>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</section>

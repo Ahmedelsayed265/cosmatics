@@ -1,0 +1,13 @@
+<section class="banners-grid" id="{{ sectionId }}" section-id="{{ sectionId }}">
+    <div class="container-fluid">
+        <div class="banners-grid-wrapper">
+            {% for item in (settings.banners or []) %}
+            <div class="banner-item">
+                <a href="{{ item.url }}">
+                    <img src="{{ image_url(item.image) }}" alt="{{ item.title }}">
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

@@ -1,0 +1,54 @@
+<section class="main-categories-sale" id="main-categories-sale-{{ sectionId }}">
+    <div class="sale-grid">
+        {% set first = settings.first_category %}
+        <div class="category-item first-category">
+            <a href="{{ first.url or '#' }}" class="category-wrapper">
+                <div class="category-image">
+                    {% if first.image %}
+                        <img src="{{ image_url(first.image, w=600, q=100) }}" alt="{{ first.title }}" loading="lazy" decoding="async" />
+                    {% else %}
+                        <img src="{{ image_url(('category-img.svg' | asset_url), h=500, q=100, f='auto') }}" alt="Default" />
+                    {% endif %}
+                </div>
+                {% if first.title %}
+                <div class="category-label">
+                    <span>{{ first.title }}</span>
+                </div>
+                {% endif %}
+            </a>
+        </div>
+
+        {% set sale = settings.sale_offer %}
+        <div class="sale-center-content">
+            <div class="sale-inner-wrapper">
+                <div class="sale-titles">
+                    <h2>{{ sale.title1 }}</h2>
+                    <h2>{{ sale.title2 }}</h2>
+                    <h2>{{ sale.title3 }}</h2>
+                </div>
+                {% if sale.subtitle %}
+                    <p class="sale-subtitle">{{ sale.subtitle }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        {% set second = settings.second_category %}
+        <div class="category-item second-category">
+            <a href="{{ second.url or '#' }}" class="category-wrapper">
+                <div class="category-image">
+                    {% if second.image %}
+                        <img src="{{ image_url(second.image, w=600, q=100) }}" alt="{{ second.title }}" loading="lazy" decoding="async" />
+                    {% else %}
+                         <img src="{{ image_url(('category-img.svg' | asset_url), h=500, q=100, f='auto') }}" alt="Default" />
+                    {% endif %}
+                </div>
+                {% if second.title %}
+                <div class="category-label">
+                    <span>{{ second.title }}</span>
+                </div>
+                {% endif %}
+            </a>
+        </div>
+    </div>
+</section>
+

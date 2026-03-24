@@ -1,0 +1,96 @@
+{
+  "section_id": "uuid",
+  "template": "sections/products-tabs.jinja",
+  "icon": "fal fa-th-list",
+  "name": {
+    "ar": "علامات تبويب المنتجات",
+    "en": "Product Tabs"
+  },
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": {
+        "ar": "العنوان الرئيسي",
+        "en": "Main title"
+      },
+      "default": "الجديد + المفضل"
+    },
+    {
+      "id": "subtitle",
+      "type": "text",
+      "label": {
+        "ar": "العنوان الفرعي",
+        "en": "Subtitle"
+      },
+      "default": "هدايا سهلة يحبها الجميع"
+    },
+    {
+      "id": "title_color",
+      "type": "color",
+      "label": {
+        "ar": "لون العنوان الرئيسي",
+        "en": "Title color"
+      }
+    },
+    {
+      "id": "subtitle_color",
+      "type": "color",
+      "label": {
+        "ar": "لون العنوان الفرعي",
+        "en": "Subtitle color"
+      }
+    },
+    {
+      "id": "tabs",
+      "type": "list",
+      "label": {
+        "ar": "علامات التبويب",
+        "en": "Tabs"
+      },
+      "max_items": 10,
+      "settings": [
+        {
+          "id": "tab_title",
+          "type": "text",
+          "label": {
+            "ar": "عنوان علامة التبويب",
+            "en": "Tab title"
+          }
+        },
+        {
+          "id": "products",
+          "type": "products",
+          "label": {
+            "ar": "اختر منتجات",
+            "en": "Select products"
+          }
+        }
+      ]
+    },
+    {
+      "id": "tab_active_text_color",
+      "type": "color",
+      "label": {
+        "ar": "لون نص التبويب النشط",
+        "en": "Active tab text color"
+      }
+    },
+    {
+      "id": "tab_active_border_color",
+      "type": "color",
+      "label": {
+        "ar": "لون إطار التبويب النشط",
+        "en": "Active tab border color"
+      }
+    },
+    {
+      "id": "tab_inactive_text_color",
+      "type": "color",
+      "label": {
+        "ar": "لون نص التبويب غير النشط",
+        "en": "Inactive tab text color"
+      }
+    }
+  ]
+}

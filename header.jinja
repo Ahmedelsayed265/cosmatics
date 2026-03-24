@@ -1,0 +1,32 @@
+<header id="{{ sectionId }}" section-id="{{ sectionId }}" class='d-flex flex-column'>
+
+  {% include 'vitrin:shared/store_messages.jinja' %}
+  {% set ab_settings=settings %}{% include 'components/header-announcement-bar.jinja' %}
+
+  {% set header_options_raw = safeget(settings, "header_options", []) %}
+  {% set header_options = header_options_raw if header_options_raw is iterable and header_options_raw is not boolean and header_options_raw is not string else [] %}
+  {% set multiple_countries = store.countries | length > 1 %}
+  {% set multiple_languages = store.languages | length > 1 %}
+  {% set show_country = 'hide_country' not in header_options %}
+  {% set show_language = 'hide_language' not in header_options %}
+
+  <div {% if settings.header_sticky %} id="fixed-header" {% endif %} style="z-index: 9">
+    {% include 'components/header-search-header.jinja' %}
+    {% include 'components/header-mega-menu.jinja' %}
+    {% include 'components/header-account-lang-currency.jinja' %}
+
+    <div style="position: relative; z-index: -1">
+      <div class="sm-search-div">
+        <div class="autocomplete" style="position: relative">
+          <input type="text" data-cat-id="{{ category.id if category is defined else '' }}"
+            class="form-control search-input-input"
+            placeholder="{% if settings.header_search_placeholder %}{{ settings.header_search_placeholder }}{% else %}{{ _('Search') }}{% endif %}"
+            style="font-size: 14px">
+          <div class="autocomplete-items"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% set menu_settings=settings %}{% include 'components/header-sliding-menu.jinja' %}
+  {% include 'components/header-search-modal.jinja' %}
+</header>

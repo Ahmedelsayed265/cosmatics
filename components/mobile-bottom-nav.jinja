@@ -1,0 +1,86 @@
+{# ====== شريط التنقل السفلي للموبايل فقط: الرئيسية | التصنيفات | العروض | السلة | حسابي ====== #}
+{% set _nav_path = session.url.path | default('', true) %}
+{% set _nav_active = namespace(value='home') %}
+{% if session.template == 'cart_page' or '/cart' in _nav_path %}{% set _nav_active.value = 'cart' %}
+{% elif session.template == 'login_page' or '/auth/' in _nav_path or '/account' in _nav_path %}{% set _nav_active.value = 'account' %}
+{% elif '/categories' in _nav_path %}{% set _nav_active.value = 'categories' %}
+{% endif %}
+<nav class="mobile-bottom-nav d-block d-lg-none" aria-label="{{ _('Main navigation') }}">
+    <div class="mobile-bottom-nav-inner">
+        <a href="/" class="mobile-bottom-nav-item{% if _nav_active.value == 'home' %} mobile-bottom-nav-item-active{% endif %}" aria-label="{{ _('Home') }}">
+            <span class="mobile-bottom-nav-icon">
+               
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8.99956 22L8.74893 18.4911C8.61418 16.6046 10.1083 15 11.9996 15C13.8909 15 15.3849 16.6046 15.2502 18.4911L14.9996 22" stroke="#666666" stroke-width="1.5"/>
+                <path d="M2.35164 13.2135C1.99862 10.9162 1.82211 9.76763 2.25641 8.74938C2.69071 7.73112 3.65427 7.03443 5.58138 5.64106L7.02123 4.6C9.41853 2.86667 10.6172 2 12.0002 2C13.3833 2 14.582 2.86667 16.9793 4.6L18.4191 5.64106C20.3462 7.03443 21.3098 7.73112 21.7441 8.74938C22.1784 9.76763 22.0019 10.9162 21.6489 13.2135L21.3478 15.1724C20.8474 18.4289 20.5972 20.0572 19.4292 21.0286C18.2613 22 16.5539 22 13.1391 22H10.8614C7.44658 22 5.73915 22 4.57124 21.0286C3.40333 20.0572 3.15311 18.4289 2.65267 15.1724L2.35164 13.2135Z" stroke="#666666" stroke-width="1.5" stroke-linejoin="round"/>
+            </svg>
+
+            </span>
+            <span class="mobile-bottom-nav-label">{{ _('Home') }}</span>
+        </a>
+
+        <a href="/categories/" class="mobile-bottom-nav-item mobile-bottom-nav-item-btn{% if _nav_active.value == 'categories' %} mobile-bottom-nav-item-active{% endif %}" aria-label="{{ _('Categories') }}">
+            <span class="mobile-bottom-nav-icon">
+
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 18C2 16.4596 2 15.6893 2.34673 15.1235C2.54074 14.8069 2.80693 14.5407 3.12353 14.3467C3.68934 14 4.45956 14 6 14C7.54044 14 8.31066 14 8.87647 14.3467C9.19307 14.5407 9.45926 14.8069 9.65327 15.1235C10 15.6893 10 16.4596 10 18C10 19.5404 10 20.3107 9.65327 20.8765C9.45926 21.1931 9.19307 21.4593 8.87647 21.6533C8.31066 22 7.54044 22 6 22C4.45956 22 3.68934 22 3.12353 21.6533C2.80693 21.4593 2.54074 21.1931 2.34673 20.8765C2 20.3107 2 19.5404 2 18Z" stroke="#666666" stroke-width="1.5"/>
+                <path d="M14 18C14 16.4596 14 15.6893 14.3467 15.1235C14.5407 14.8069 14.8069 14.5407 15.1235 14.3467C15.6893 14 16.4596 14 18 14C19.5404 14 20.3107 14 20.8765 14.3467C21.1931 14.5407 21.4593 14.8069 21.6533 15.1235C22 15.6893 22 16.4596 22 18C22 19.5404 22 20.3107 21.6533 20.8765C21.4593 21.1931 21.1931 21.4593 20.8765 21.6533C20.3107 22 19.5404 22 18 22C16.4596 22 15.6893 22 15.1235 21.6533C14.8069 21.4593 14.5407 21.1931 14.3467 20.8765C14 20.3107 14 19.5404 14 18Z" stroke="#666666" stroke-width="1.5"/>
+                <path d="M2 6C2 4.45956 2 3.68934 2.34673 3.12353C2.54074 2.80693 2.80693 2.54074 3.12353 2.34673C3.68934 2 4.45956 2 6 2C7.54044 2 8.31066 2 8.87647 2.34673C9.19307 2.54074 9.45926 2.80693 9.65327 3.12353C10 3.68934 10 4.45956 10 6C10 7.54044 10 8.31066 9.65327 8.87647C9.45926 9.19307 9.19307 9.45926 8.87647 9.65327C8.31066 10 7.54044 10 6 10C4.45956 10 3.68934 10 3.12353 9.65327C2.80693 9.45926 2.54074 9.19307 2.34673 8.87647C2 8.31066 2 7.54044 2 6Z" stroke="#666666" stroke-width="1.5"/>
+                <path d="M14 6C14 4.45956 14 3.68934 14.3467 3.12353C14.5407 2.80693 14.8069 2.54074 15.1235 2.34673C15.6893 2 16.4596 2 18 2C19.5404 2 20.3107 2 20.8765 2.34673C21.1931 2.54074 21.4593 2.80693 21.6533 3.12353C22 3.68934 22 4.45956 22 6C22 7.54044 22 8.31066 21.6533 8.87647C21.4593 9.19307 21.1931 9.45926 20.8765 9.65327C20.3107 10 19.5404 10 18 10C16.4596 10 15.6893 10 15.1235 9.65327C14.8069 9.45926 14.5407 9.19307 14.3467 8.87647C14 8.31066 14 7.54044 14 6Z" stroke="#666666" stroke-width="1.5"/>
+            </svg>
+
+            </span>
+            <span class="mobile-bottom-nav-label">{{ _('Categories') }}</span>
+        </a>
+
+        <button type="button" class="mobile-bottom-nav-item mobile-bottom-nav-item-btn" data-open-offers-offcanvas aria-label="{{ _('Offers') }}">
+            <span class="mobile-bottom-nav-icon">
+                
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18.058 8.53645L17.058 7.92286C16.0553 7.30762 15.554 7 15 7C14.446 7 13.9447 7.30762 12.942 7.92286L11.942 8.53645C10.9935 9.11848 10.5192 9.40949 10.2596 9.87838C10 10.3473 10 10.9129 10 12.0442L10 17.9094C10 19.8377 10 20.8019 10.5858 21.4009C11.1716 22 12.1144 22 14 22H16C17.8856 22 18.8284 22 19.4142 21.4009C20 20.8019 20 19.8377 20 17.9094L20 12.0442C20 10.9129 20 10.3473 19.7404 9.87838C19.4808 9.40949 19.0065 9.11848 18.058 8.53645Z" stroke="#666666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M14 7.10809C13.3612 6.4951 12.9791 6.17285 12.4974 6.05178C11.9374 5.91102 11.3491 6.06888 10.1725 6.3846L8.99908 6.69947C7.88602 6.99814 7.32949 7.14748 6.94287 7.5163C6.55624 7.88513 6.40642 8.40961 6.10679 9.45857L4.55327 14.8971C4.0425 16.6852 3.78712 17.5792 4.22063 18.2836C4.59336 18.8892 6.0835 19.6339 7.5 20" stroke="#666666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M14.4947 10C15.336 9.44058 16.0828 8.54291 16.5468 7.42653C17.5048 5.12162 16.8944 2.75724 15.1836 2.14554C13.4727 1.53383 11.3091 2.90644 10.3512 5.21135C10.191 5.59667 10.0747 5.98366 10 6.36383" stroke="#666666" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+
+            </span>
+            <span class="mobile-bottom-nav-label">{{ _('Offers') }}</span>
+        </button>
+
+        <a href="{{ url_for('cart_page') }}" class="mobile-bottom-nav-item{% if _nav_active.value == 'cart' %} mobile-bottom-nav-item-active{% endif %}" aria-label="{{ _('Cart') }}">
+            <span class="mobile-bottom-nav-icon">
+                
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.5 8V6.36364C7.5 3.95367 9.51472 2 12 2C14.4853 2 16.5 3.95367 16.5 6.36364V8" stroke="#666666" stroke-width="1.5"/>
+                <path d="M13.8816 7.5H10.1184C6.22973 7.5 4.7255 8.48796 3.6501 12.2373C2.68147 15.6144 2.19716 17.3029 2.70352 18.6124C3.01361 19.4143 3.56418 20.1097 4.28549 20.6104C6.8944 22.4216 16.9865 22.5043 19.7145 20.6104C20.4358 20.1097 20.9864 19.4143 21.2965 18.6124C21.8028 17.3029 21.3185 15.6144 20.3499 12.2373C19.3173 8.63723 17.9313 7.5 13.8816 7.5Z" stroke="#666666" stroke-width="1.5"/>
+                <path d="M11 11H13" stroke="#666666" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+
+            </span>
+            <span class="mobile-bottom-nav-label">{{ _('Cart') }}</span>
+        </a>
+
+        <a href="{{ url_for('login_page') }}" class="mobile-bottom-nav-item mobile-bottom-nav-account{% if _nav_active.value == 'account' %} mobile-bottom-nav-item-active{% endif %}" aria-label="{{ _('My Account') }}">
+            <span class="mobile-bottom-nav-icon">
+                
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6.57757 15.4816C5.1628 16.324 1.45336 18.0441 3.71266 20.1966C4.81631 21.248 6.04549 22 7.59087 22H16.4091C17.9545 22 19.1837 21.248 20.2873 20.1966C22.5466 18.0441 18.8372 16.324 17.4224 15.4816C14.1048 13.5061 9.89519 13.5061 6.57757 15.4816Z" stroke="#666666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M16.5 6.5C16.5 8.98528 14.4853 11 12 11C9.51472 11 7.5 8.98528 7.5 6.5C7.5 4.01472 9.51472 2 12 2C14.4853 2 16.5 4.01472 16.5 6.5Z" stroke="#666666" stroke-width="1.5"/>
+            </svg>
+
+            </span>
+            <span class="mobile-bottom-nav-label">{{ _('My Account') }}</span>
+        </a>
+    </div>
+</nav>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var accountLink = document.querySelector('.mobile-bottom-nav-account');
+    if (accountLink && typeof window.handleLoginAction === 'function') {
+        accountLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.handleLoginAction('', false);
+        });
+    }
+});
+</script>
