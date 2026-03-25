@@ -1,0 +1,95 @@
+{
+  "section_id": "uuid",
+  "template": "sections/sale-with-banners.jinja",
+  "icon": "fal fa-columns",
+  "name": {
+    "ar": "قسم عروض مع بانرات",
+    "en": "Sale with Banners Section"
+  },
+  "settings": [
+    {
+      "id": "right_banners",
+      "type": "list",
+      "label": {
+        "ar": "البانرات اليمنى",
+        "en": "Right Banners"
+      },
+      "settings": [
+        {
+          "id": "right_banner_image",
+          "type": "image",
+          "label": {
+            "ar": "صورة البانر",
+            "en": "Banner Image"
+          }
+        },
+        {
+          "id": "right_banner_url",
+          "type": "url",
+          "label": {
+            "ar": "رابط البانر",
+            "en": "Banner URL"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sale_offer_title1",
+      "type": "text",
+      "label": {
+        "ar": "العرض - العنوان الاول",
+        "en": "Offer - Title 1"
+      }
+    },
+    {
+      "id": "sale_offer_title2",
+      "type": "text",
+      "label": {
+        "ar": "العرض - العنوان الثاني",
+        "en": "Offer - Title 2"
+      }
+    },
+    {
+      "id": "sale_offer_title3",
+      "type": "text",
+      "label": {
+        "ar": "العرض - العنوان الثالث",
+        "en": "Offer - Title 3"
+      }
+    },
+    {
+      "id": "sale_offer_subtitle",
+      "type": "text",
+      "label": {
+        "ar": "العرض - العنوان الفرعي",
+        "en": "Offer - Subtitle"
+      }
+    },
+    {
+      "id": "left_banners",
+      "type": "list",
+      "label": {
+        "ar": "البانرات اليسرى",
+        "en": "Left Banners"
+      },
+      "settings": [
+        {
+          "id": "left_banner_image",
+          "type": "image",
+          "label": {
+            "ar": "صورة البانر",
+            "en": "Banner Image"
+          }
+        },
+        {
+          "id": "left_banner_url",
+          "type": "url",
+          "label": {
+            "ar": "رابط البانر",
+            "en": "Banner URL"
+          }
+        }
+      ]
+    }
+  ]
+}

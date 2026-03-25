@@ -1,0 +1,61 @@
+<section class="shop-the-look s_block" id="{{ sectionId }}" section-id="{{ sectionId }}">
+
+    <div class="stl-single-banner">
+        {% if settings.image %}
+        <img src="{{ image_url(settings.image, w=1920, f='auto') }}" alt="Shop the look" class="stl-main-img">
+        {% endif %}
+
+        {% for hotspot in safeget(settings, 'hotspots', []) %}
+        {% set product = hotspot.product_item %}
+        {% if product %}
+        <div class="stl-hotspot stl-trigger-{{ settings.trigger }}"
+            style="left: {{ hotspot.x_pos }}%; top: {{ hotspot.y_pos }}%;">
+            <div class="stl-dot" {% if settings.trigger=='click' %}onclick="toggleStlPopup(this)" {% endif %}></div>
+            <div class="stl-popup">
+                <div class="stl-popup-content">
+                    <div class="stl-product-thumb">
+                        <img src="{{ product.main_image.image.small if product.main_image else image_url(('product-img.svg' | asset_url), w=100) }}"
+                            alt="{{ product.name }}">
+                    </div>
+
+                    <div class="stl-product-info">
+                        <h4 class="stl-product-title">
+                            <a href="/products/{{ product.slug }}">{{ product.name }}</a>
+                        </h4>
+                        <div class="stl-product-prices">
+                            {% if product.formatted_sale_price %}
+                            <span class="stl-price current">{{ product.formatted_sale_price }}</span>
+                            <span class="stl-price old">{{ product.formatted_price }}</span>
+                            {% else %}
+                            <span class="stl-price current">{{ product.formatted_price }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+</section>
+
+
+<script>
+    window.toggleStlPopup = function (dot) {
+        const hotspot = dot.closest('.stl-hotspot');
+        const isActive = hotspot.classList.contains('active');
+
+        document.querySelectorAll('.stl-hotspot').forEach(el => el.classList.remove('active'));
+
+        if (!isActive) {
+            hotspot.classList.add('active');
+        }
+    }
+
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('.stl-hotspot')) {
+            document.querySelectorAll('.stl-hotspot').forEach(el => el.classList.remove('active'));
+        }
+    });
+</script>

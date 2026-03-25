@@ -1,0 +1,69 @@
+{
+  "section_id": "uuid",
+  "template": "sections/month-brands.jinja",
+  "icon": "fal fa-columns",
+  "name": {
+    "ar": "ماركات الشهر",
+    "en": "Month Brands Section"
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": {
+        "ar": "العنوان",
+        "en": "Title"
+      }
+    },
+    {
+      "type": "url",
+      "id": "view_all_url",
+      "label": {
+        "ar": "رابط عرض الكل",
+        "en": "View All URL"
+      }
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": {
+        "ar": "نص عرض الكل",
+        "en": "View All Text"
+      }
+    },
+    {
+      "type": "list",
+      "id": "brands",
+      "label": {
+        "ar": "الماركات",
+        "en": "Brands"
+      },
+      "settings": [
+        {
+          "type": "image",
+          "id": "image",
+          "label": {
+            "ar": "الصورة",
+            "en": "Image"
+          }
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": {
+            "ar": "الرابط",
+            "en": "URL"
+          }
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": {
+            "ar": "العنوان",
+            "en": "Title"
+          }
+        }
+      ]
+    }
+  ]
+}

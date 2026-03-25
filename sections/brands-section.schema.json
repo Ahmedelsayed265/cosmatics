@@ -1,0 +1,63 @@
+{
+  "section_id": "uuid",
+  "template": "sections/brands-section.jinja",
+  "icon": "fa fa-bandcamp",
+  "name": {
+    "ar": "تصفح الماركات",
+    "en": "Browse Brands"
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": {
+        "ar": "العنوان",
+        "en": "Title"
+      },
+      "default": "تصفح البرندات"
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": {
+        "ar": "نص عرض الكل",
+        "en": "View All Text"
+      },
+      "default": "عرض الكل"
+    },
+    {
+      "type": "url",
+      "id": "view_all_url",
+      "label": {
+        "ar": "رابط عرض الكل",
+        "en": "View All URL"
+      }
+    },
+    {
+      "type": "list",
+      "id": "brands",
+      "label": {
+        "ar": "الماركات",
+        "en": "Brands"
+      },
+      "settings": [
+        {
+          "type": "image",
+          "id": "logo",
+          "label": {
+            "ar": "شعار الماركة",
+            "en": "Brand Logo"
+          }
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": {
+            "ar": "رابط الماركة",
+            "en": "Brand URL"
+          }
+        }
+      ]
+    }
+  ]
+}

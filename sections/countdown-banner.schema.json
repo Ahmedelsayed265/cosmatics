@@ -1,0 +1,60 @@
+{
+  "section_id": "uuid",
+  "template": "sections/countdown-banner.jinja",
+  "icon": "fa fa-clock",
+  "name": {
+    "ar": "بنر عد تنازلي",
+    "en": "Countdown Banner"
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": {
+        "ar": "العنوان",
+        "en": "Title"
+      },
+      "default": "عروض على كيفك"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": {
+        "ar": "العنوان الفرعي",
+        "en": "Subtitle"
+      },
+      "default": "عروض 1+1"
+    },
+    {
+      "type": "text",
+      "id": "end_date",
+      "label": {
+        "ar": "تاريخ الانتهاء",
+        "en": "End Date"
+      },
+      "info": {
+        "ar": "تنسيق: Oct 25, 2026 13:00:00",
+        "en": "Format: Oct 25, 2026 13:00:00"
+      },
+      "default": "Oct 25, 2026 13:00:00"
+    },
+    {
+       "type": "color",
+       "id": "bg_color",
+       "label": {
+         "ar": "لون الخلفية",
+         "en": "Background Color"
+       },
+       "default": "#FFF9C4"
+    },
+    {
+       "type": "color",
+       "id": "text_color",
+       "label": {
+         "ar": "لون النص",
+         "en": "Text Color"
+       },
+       "default": "#000000"
+    }
+  ]
+}

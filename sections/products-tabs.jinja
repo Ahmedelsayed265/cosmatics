@@ -33,7 +33,7 @@
 {% set slider_loop_val = (_loop == true or _loop == 1 or _loop == '1' or _loop == 'true') %}
 
 <section id="products-tabs-{{ sectionId }}"
-         class="products-tabs-section container-fluid mrg"
+         class="products-tabs-section container-fluid s_block"
          section-id="{{ sectionId }}"
          data-products-tabs
          data-base-url="{{ store_permalink | e }}"
@@ -50,7 +50,7 @@
          data-slider-speed="{{ slider_speed_val }}"
          data-slider-arrows="{{ 'true' if slider_arrows_val else 'false' }}"
          data-slider-loop="{{ 'true' if slider_loop_val else 'false' }}">
-  <div class="products-tabs-container">
+  <div class="products-tabs-container container-fluid">
     <div class="products-tabs-top-row">
       <header class="products-tabs-header products-tabs-header--{{ title_align }}">
         {% if section_title %}

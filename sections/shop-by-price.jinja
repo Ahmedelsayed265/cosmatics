@@ -1,0 +1,75 @@
+<section class="shop-by-price s_block" id="{{ sectionId }}" section-id="{{ sectionId }}">
+    <div class="container-fluid">
+        {% if settings.title %}
+        <h3 class="section-title">{{ settings.title }}</h3>
+        {% endif %}
+
+        <div class="swiper shop-by-price-slider" data-shop-by-price-slider>
+            <div class="swiper-wrapper">
+                {% for price_item in safeget(settings, 'prices', []) %}
+                <div class="swiper-slide">
+                    <a href="{{ price_item.url }}" class="shop-by-price-item">
+                        <div class="price-tag-wrapper">
+                            <svg width="100%" height="auto" viewBox="0 0 138 99" fill="none"
+                                xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+                                <path
+                                    d="M135.761 40.3649L136.932 24.0879C137.738 12.8939 131.23 12.8399 125.28 14.1159L100.94 19.3339L98.8566 48.2769L135.761 40.3649Z"
+                                    fill="url(#paint0_linear_{{ sectionId }}_{{ loop.index0 }})" />
+                                <path
+                                    d="M129.996 5.78046L129.309 41.1294C129.162 44.212 125.37 46.8987 120.515 47.3606L19.9386 57.189C14.6428 57.6694 9.71233 59.4562 6.23843 62.1546L0 67L0.878365 17.0003C0.990143 13.8992 4.79852 11.1851 9.68329 10.7232L119.747 0.0682278C125.394 -0.465303 130.167 2.19507 129.996 5.78046Z"
+                                    fill="#270012" />
+                                <path
+                                    d="M131.978 77.0562L138 24C136.98 32.9894 128.309 35.4992 120.649 36.5403L13.3548 47.0279C10.3654 47.4345 8.2306 49.2372 8.22041 51.365L8.00005 94.3295C7.98476 97.237 11.8493 99.4701 15.9341 98.9149L114.627 89.5964C122.288 88.5554 129.447 83.3814 131.978 77.0562Z"
+                                    fill="#990046" />
+                                <defs>
+                                    <linearGradient id="paint0_linear_{{ sectionId }}_{{ loop.index0 }}" x1="133.309"
+                                        y1="7.32101" x2="120.249" y2="23.5702" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="#990046" stop-opacity="0.9" />
+                                        <stop offset="1" stop-color="#D80063" stop-opacity="0.9" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <div class="price-content">
+                                <span class="price-subtitle">{{ price_item.subtitle }}</span>
+                                <span class="price-val">{{ price_item.title }}</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    (function () {
+        function initSlider() {
+            var section = document.querySelector('[section-id="{{ sectionId }}"]');
+            if (!section) return;
+
+            var sliderEl = section.querySelector('.shop-by-price-slider');
+            if (!sliderEl) return;
+
+            if (window.Swiper) {
+                new Swiper(sliderEl, {
+                    slidesPerView: 2,
+                    spaceBetween: 10,
+                    rtl: document.documentElement.dir === 'rtl',
+                    breakpoints: {
+                        480: { slidesPerView: 3, spaceBetween: 10 },
+                        768: { slidesPerView: 4, spaceBetween: 15 },
+                        1024: { slidesPerView: 6, spaceBetween: 15 },
+                        1400: { slidesPerView: 7, spaceBetween: 15 }
+                    }
+                });
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initSlider);
+        } else {
+            setTimeout(initSlider, 100);
+        }
+    })();
+</script>

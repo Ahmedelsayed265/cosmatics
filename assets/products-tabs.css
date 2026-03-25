@@ -152,10 +152,6 @@
   min-height: 280px;
 }
 
-.products-tabs-slider.swiper {
-  padding-bottom: 30px; /* Space for pagination */
-}
-
 .products-tabs-slider .swiper-wrapper {
   display: flex;
 }

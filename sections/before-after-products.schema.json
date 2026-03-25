@@ -1,0 +1,63 @@
+{
+  "section_id": "uuid",
+  "template": "sections/before-after-products.jinja",
+  "icon": "fa fa-columns",
+  "name": {
+    "ar": "قبل وبعد مع منتج",
+    "en": "Before & After with Product"
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": {
+        "ar": "العنوان الرئيسي",
+        "en": "Main Title"
+      },
+      "default": "قبل وبعد استخدام منتجاتنا"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": {
+        "ar": "العنوان الفرعي",
+        "en": "Subtitle"
+      },
+      "default": "اشهد قوة التحول في حلول العناية بالبشرة لدينا"
+    },
+    {
+      "type": "list",
+      "id": "items",
+      "label": {
+        "ar": "العناصر",
+        "en": "Items"
+      },
+      "settings": [
+        {
+          "type": "image",
+          "id": "before_image",
+          "label": {
+            "ar": "صورة قبل",
+            "en": "Before Image"
+          }
+        },
+        {
+          "type": "image",
+          "id": "after_image",
+          "label": {
+            "ar": "صورة بعد",
+            "en": "After Image"
+          }
+        },
+        {
+          "type": "product",
+          "id": "product_item",
+          "label": {
+            "ar": "المنتج المرتبط",
+            "en": "Linked Product"
+          }
+        }
+      ]
+    }
+  ]
+}

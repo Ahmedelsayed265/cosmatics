@@ -1,0 +1,34 @@
+{
+  "section_id": "uuid",
+  "template": "sections/masonry-gallery.jinja",
+  "icon": "fa fa-th-large",
+  "name": {
+    "ar": "معرض الصور (قائمة)",
+    "en": "Masonry Gallery (List)"
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": { "ar": "العنوان", "en": "Title" }
+    },
+    {
+      "type": "list",
+      "id": "banners",
+      "label": { "ar": "قائمة الصور", "en": "Banners List" },
+      "max": 4,
+      "settings": [
+        {
+          "type": "image",
+          "id": "image",
+          "label": { "ar": "الصورة", "en": "Image" }
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": { "ar": "الرابط", "en": "URL" }
+        }
+      ]
+    }
+  ]
+}

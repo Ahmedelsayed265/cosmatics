@@ -1,0 +1,37 @@
+<section class="sale-with-banners" id="{{ sectionId }}" section-id="{{ sectionId }}">
+    <div class="banners-grid">
+        {# Left Banners Column #}
+        <div class="banners-column left-banners">
+            {% for banner in safeget(settings, 'left_banners', []) %}
+            <a href="{{ banner.left_banner_url | default('#') }}" class="banner-item">
+                <img src="{{ image_url(banner.left_banner_image, w=400, q=100) }}" alt="Left Banner" loading="lazy"
+                    decoding="async" />
+            </a>
+            {% endfor %}
+        </div>
+
+        {# Center Offer Column #}
+        <div class="sale-center-content">
+            <div class="sale-inner-wrapper">
+                <div class="sale-titles">
+                    {% if settings.sale_offer_title1 %}<h2>{{ settings.sale_offer_title1 }}</h2>{% endif %}
+                    {% if settings.sale_offer_title2 %}<h2>{{ settings.sale_offer_title2 }}</h2>{% endif %}
+                    {% if settings.sale_offer_title3 %}<h2>{{ settings.sale_offer_title3 }}</h2>{% endif %}
+                </div>
+                {% if settings.sale_offer_subtitle %}
+                <p class="sale-subtitle">{{ settings.sale_offer_subtitle }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        {# Right Banners Column #}
+        <div class="banners-column right-banners">
+            {% for banner in safeget(settings, 'right_banners', []) %}
+            <a href="{{ banner.right_banner_url | default('#') }}" class="banner-item">
+                <img src="{{ image_url(banner.right_banner_image, w=400, q=100) }}" alt="Right Banner" loading="lazy"
+                    decoding="async" />
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>

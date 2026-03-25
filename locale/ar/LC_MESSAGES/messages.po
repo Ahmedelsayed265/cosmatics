@@ -1101,3 +1101,15 @@ msgstr "أصلي 100%"
 
 msgid "click_here_for_more_from"
 msgstr "انقر هنا للمزيد من "
+
+msgid "day"
+msgstr "يوم"
+
+msgid "hour"
+msgstr "ساعة"
+
+msgid "minute"
+msgstr "دقيقة"
+
+msgid "second"
+msgstr "ثانية"

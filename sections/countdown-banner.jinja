@@ -1,0 +1,89 @@
+<section class="countdown-banner s_block" id="{{ sectionId }}" section-id="{{ sectionId }}"
+         style="background-color: {{ settings.bg_color }}; color: {{ settings.text_color }};">
+    <div class="container-fluid">
+        <div class="countdown-flex-container">
+            {# Titles part #}
+            <div class="countdown-content">
+                <h2 class="countdown-title">{{ settings.title }}</h2>
+                <p class="countdown-subtitle">{{ settings.subtitle }}</p>
+            </div>
+            
+            {# Countdown part #}
+            <div class="countdown-timer" data-end-date="{{ settings.end_date }}">
+                <div class="countdown-unit">
+                    <span class="unit-val days">00</span>
+                    <span class="unit-label">{{ _('day') }}</span>
+                </div>
+                <span class="unit-colon">:</span>
+                <div class="countdown-unit">
+                    <span class="unit-val hours">00</span>
+                    <span class="unit-label">{{ _('hour') }}</span>
+                </div>
+                <span class="unit-colon">:</span>
+                <div class="countdown-unit">
+                    <span class="unit-val minutes">00</span>
+                    <span class="unit-label">{{ _('minute') }}</span>
+                </div>
+                <span class="unit-colon">:</span>
+                <div class="countdown-unit">
+                    <span class="unit-val seconds">00</span>
+                    <span class="unit-label">{{ _('second') }}</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<script>
+(function() {
+    function initCountdown() {
+        var section = document.querySelector('[section-id="{{ sectionId }}"]');
+        if (!section) return;
+
+        var timerEl = section.querySelector('.countdown-timer');
+        var endDateStr = timerEl.getAttribute('data-end-date');
+        var endDate = new Date(endDateStr).getTime();
+
+        if (isNaN(endDate)) {
+            console.error('Invalid countdown date:', endDateStr);
+            return;
+        }
+
+        var daysEl = timerEl.querySelector('.days');
+        var hoursEl = timerEl.querySelector('.hours');
+        var minsEl = timerEl.querySelector('.minutes');
+        var secsEl = timerEl.querySelector('.seconds');
+
+        function update() {
+            var now = new Date().getTime();
+            var distance = endDate - now;
+
+            if (distance < 0) {
+                clearInterval(interval);
+                timerEl.style.display = 'none';
+                return;
+            }
+
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            daysEl.innerText = days < 10 ? '0' + days : days;
+            hoursEl.innerText = hours < 10 ? '0' + hours : hours;
+            minsEl.innerText = minutes < 10 ? '0' + minutes : minutes;
+            secsEl.innerText = seconds < 10 ? '0' + seconds : seconds;
+        }
+
+        var interval = setInterval(update, 1000);
+        update();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCountdown);
+    } else {
+        initCountdown();
+    }
+})();
+</script>

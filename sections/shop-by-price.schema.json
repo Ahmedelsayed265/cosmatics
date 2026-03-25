@@ -1,0 +1,54 @@
+{
+  "section_id": "uuid",
+  "template": "sections/shop-by-price.jinja",
+  "icon": "fa fa-play",
+  "name": {
+    "ar": "تسوق حسب السعر",
+    "en": "Shop by Price"
+  },
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": {
+        "ar": "العنوان",
+        "en": "Title"
+      }
+    },
+    {
+      "id": "prices",
+      "type": "list",
+      "label": {
+        "ar": "الاسعار",
+        "en": "Prices"
+      },
+      "settings": [
+        {
+          "id": "subtitle",
+          "type": "text",
+          "label": {
+            "ar": "العنوان الفرعي (مثل: أقل من)",
+            "en": "Subtitle (e.g., Less than)"
+          },
+          "default": "أقل من"
+        },
+        {
+          "id": "title",
+          "type": "text",
+          "label": {
+            "ar": "السعر (مثل: 150 ريال)",
+            "en": "Price (e.g., 150 SAR)"
+          }
+        },
+        {
+          "id": "url",
+          "type": "url",
+          "label": {
+            "ar": "الرابط",
+            "en": "URL"
+          }
+        }
+      ]
+    }
+  ]
+}

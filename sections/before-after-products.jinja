@@ -1,0 +1,200 @@
+<section class="before-after-products s_block" id="{{ sectionId }}" section-id="{{ sectionId }}">
+    <div class="container-fluid">
+        <div class="section-header text-center">
+            <h2 class="section-title">{{ settings.title }}</h2>
+            <p class="section-subtitle">{{ settings.subtitle }}</p>
+        </div>
+
+        <div class="swiper before-after-slider" data-before-after-slider>
+            <div class="swiper-wrapper">
+                {% for item in safeget(settings, 'items', []) %}
+                {% set product = item.product_item %}
+                <div class="swiper-slide">
+                    <div class="ba-card">
+
+                        {# Comparison Part #}
+                        <div class="ba-comparison">
+                            {# After image (full width, behind) #}
+                            <div class="ba-image-container ba-after">
+                                {% if item.after_image %}
+                                <img src="{{ image_url(item.after_image, w=800, q=100, f='auto') }}" alt="After"
+                                    class="ba-img">
+                                {% endif %}
+                                <span class="ba-label after">{{ _('بعد') }}</span>
+                            </div>
+                            {# Before image (clipped by width) #}
+                            <div class="ba-image-container ba-before">
+                                {% if item.before_image %}
+                                <img src="{{ image_url(item.before_image, w=800, q=100, f='auto') }}" alt="Before"
+                                    class="ba-img">
+                                {% endif %}
+                                <span class="ba-label before">{{ _('قبل') }}</span>
+                            </div>
+
+                            {# Drag handle #}
+                            <div class="ba-handle">
+                                <div class="ba-handle-line"></div>
+                                <div class="ba-handle-btn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="m18 8 4 4-4 4M6 8l-4 4 4 4" />
+                                    </svg>
+                                </div>
+                                <div class="ba-handle-line"></div>
+                            </div>
+
+                            {# Invisible range input on top #}
+                            <input type="range" min="0" max="100" value="50" class="ba-slider">
+                        </div>
+
+                        {# Product Footer #}
+                        {% if product %}
+                        <div class="ba-product-footer">
+                            <div class="ba-thumb">
+                                <a href="/products/{{ product.slug }}">
+                                    <img src="{{ product.main_image.image.small if product.main_image else image_url(('product-img.svg' | asset_url), w=100) }}"
+                                        alt="{{ product.name }}">
+                                </a>
+                            </div>
+
+                            <div class="ba-info">
+                                {% if product.categories and product.categories|length > 0 %}
+                                <p class="ba-cat">{{ product.categories[-1].name }}</p>
+                                {% endif %}
+                                <h3 class="ba-title">
+                                    <a href="/products/{{ product.slug }}">{{ product.name | safe }}</a>
+                                </h3>
+                                <div class="ba-prices">
+                                    <div class="price-row">
+                                        {% if product.formatted_sale_price is not none %}
+                                        <span class="ba-price current">{{ product.formatted_sale_price }}</span>
+                                        <span class="ba-price old">{{ product.formatted_price }}</span>
+                                        {% else %}
+                                        <span class="ba-price current">{{ product.formatted_price }}</span>
+                                        {% endif %}
+                                    </div>
+                                    {% if product.discount_percentage %}
+                                    <span class="ba-discount">-{{ product.discount_percentage }}%</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="ba-cart-wrap">
+                                <button type="button" class="ba-cart-btn"
+                                    onclick="productCartAddToCart(this, '{{ product.id }}')"
+                                    aria-label="{{ _('Add to cart') }}">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M19.5 11.5C18.4791 8.47991 17.2039 7.5 13.4291 7.5H9.65019C5.74529 7.5 4.23479 8.48796 3.1549 12.2373C2.18223 15.6144 1.6959 17.3029 2.20436 18.6124C2.51576 19.4143 3.06862 20.1097 3.79294 20.6104C5.24007 21.6109 8.98007 22.084 12.5 21.9878"
+                                            stroke="white" stroke-width="1.5" stroke-linecap="round" />
+                                        <path
+                                            d="M7 8V6.36364C7 3.95367 9.01472 2 11.5 2C13.9853 2 16 3.95367 16 6.36364V8"
+                                            stroke="white" stroke-width="1.5" />
+                                        <path d="M14 18H22M18 22L18 14" stroke="white" stroke-width="1.5"
+                                            stroke-linecap="round" />
+                                        <path d="M10.5 11H12.5" stroke="white" stroke-width="1.5"
+                                            stroke-linecap="round" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+</section>
+
+<script>
+    (function () {
+        function initBABanner() {
+            var section = document.querySelector('[section-id="{{ sectionId }}"]');
+            if (!section) return;
+
+            var isRTL = document.documentElement.dir === 'rtl';
+
+            // ── 1. Swiper ──────────────────────────────────────────────
+            var sliderEl = section.querySelector('.before-after-slider');
+            if (window.Swiper) {
+                new Swiper(sliderEl, {
+                    slidesPerView: 1.15,
+                    spaceBetween: 14,
+                    rtl: isRTL,
+                    pagination: {
+                        el: sliderEl.querySelector('.swiper-pagination'),
+                        clickable: true,
+                    },
+                    breakpoints: {
+                        580: { slidesPerView: 2.1, spaceBetween: 14 },
+                        900: { slidesPerView: 3, spaceBetween: 16 },
+                        1200: { slidesPerView: 4, spaceBetween: 18 },
+                    }
+                });
+            }
+
+            // ── 2. Before/After comparison logic ──────────────────────
+            var comparisons = section.querySelectorAll('.ba-comparison');
+
+            comparisons.forEach(function (comp) {
+                var slider = comp.querySelector('.ba-slider');
+                var before = comp.querySelector('.ba-before');
+                var handle = comp.querySelector('.ba-handle');
+                var imgs = comp.querySelectorAll('.ba-img');
+
+                function update() {
+                    var rawVal = parseFloat(slider.value);
+                    // Correct for RTL inversion if needed
+                    // If isRTL, sliding RIGHT (towards 0) should move line RIGHT (100% left).
+                    // Browsers usually swap range thumb in RTL, so sliding thumb 'start' to 'end' 
+                    // matches visual movement. But we need to map the percentage to 'left'.
+
+                    var visualPercent = isRTL ? (100 - rawVal) : rawVal;
+
+                    var pWidth = comp.offsetWidth;
+                    imgs.forEach(function (img) { img.style.width = pWidth + 'px'; });
+
+                    before.style.width = visualPercent + '%';
+                    handle.style.left = visualPercent + '%';
+                }
+
+                slider.addEventListener('input', update);
+
+                // Fix for Swiper scroll conflict
+                slider.addEventListener('touchstart', function () {
+                    if (sliderEl && sliderEl.swiper) sliderEl.swiper.allowTouchMove = false;
+                });
+                slider.addEventListener('touchend', function () {
+                    if (sliderEl && sliderEl.swiper) sliderEl.swiper.allowTouchMove = true;
+                });
+
+                update(); // initial sync
+            });
+
+            window.addEventListener('resize', function () {
+                comparisons.forEach(function (comp) {
+                    var slider = comp.querySelector('.ba-slider');
+                    var before = comp.querySelector('.ba-before');
+                    var handle = comp.querySelector('.ba-handle');
+                    var imgs = comp.querySelectorAll('.ba-img');
+                    var rawVal = parseFloat(slider.value);
+                    var visualPercent = isRTL ? (100 - rawVal) : rawVal;
+                    var pWidth = comp.offsetWidth;
+                    imgs.forEach(function (img) { img.style.width = pWidth + 'px'; });
+                    before.style.width = visualPercent + '%';
+                    handle.style.left = visualPercent + '%';
+                });
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initBABanner);
+        } else {
+            setTimeout(initBABanner, 100);
+        }
+    })();
+</script>

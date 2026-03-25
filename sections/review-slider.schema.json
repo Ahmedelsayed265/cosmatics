@@ -1,0 +1,53 @@
+{
+  "section_id": "uuid",
+  "template": "sections/review-slider.jinja",
+  "icon": "fa fa-commenting-o",
+  "name": {
+    "ar": "سلايدر آراء العملاء",
+    "en": "Customer Reviews Slider"
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": { "ar": "العنوان الرئيسي", "en": "Main Title" },
+      "default": "آراء العملاء"
+    },
+    {
+      "type": "list",
+      "id": "reviews",
+      "label": { "ar": "قائمة الآراء", "en": "Reviews List" },
+      "settings": [
+        {
+          "type": "image",
+          "id": "bg_image",
+          "label": { "ar": "صورة الخلفية", "en": "Background Image" }
+        },
+        {
+          "type": "product",
+          "id": "linked_product",
+          "label": { "ar": "المنتج المرتبط", "en": "Linked Product" }
+        },
+        {
+          "type": "textarea",
+          "id": "review_text",
+          "label": { "ar": "نص التقييم", "en": "Review Text" }
+        },
+        {
+          "type": "text",
+          "id": "reviewer_name",
+          "label": { "ar": "اسم العميل", "en": "Customer Name" }
+        },
+        {
+          "type": "range",
+          "id": "stars",
+          "label": { "ar": "التقييم (1-5)", "en": "Rating (1-5)" },
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+<section class="month-brands s_block" id="{{ sectionId }}" section-id="{{ sectionId }}">
+    <div class="container-fluid">
+        <div class="view-all-header">
+            <h2 class="section-title">{{ settings.title }}</h2>
+
+            {% if settings.view_all_url %}
+            <a href="{{ settings.view_all_url }}" class="view-all-link">{{ settings.view_all_text }}</a>
+            {% endif %}
+        </div>
+
+        <div class="swiper month-brands-slider" data-month-brands-slider>
+            <div class="swiper-wrapper">
+                {% for item in safeget(settings, 'brands', []) %}
+                <div class="swiper-slide">
+                    <a href="{{ item.url | default('#') }}" class="brand-card">
+                        <div class="brand-card-image">
+                            {% if item.image %}
+                                <img src="{{ image_url(item.image, w=400, q=100, f='auto') }}" alt="{{ item.title }}" loading="lazy">
+                            {% else %}
+                                <img src="{{ image_url(('product-img.svg' | asset_url), w=400, q=100, f='auto') }}" alt="Placeholder" loading="lazy">
+                            {% endif %}
+                        </div>
+                        <div class="brand-card-footer">
+                            <span class="brand-name">{{ item.title }}</span>
+                            <span class="brand-arrow">
+                                <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6.74995 0.75C6.74995 0.75 0.750013 5.16893 0.75 6.75005C0.749987 8.33116 6.75 12.75 6.75 12.75" 
+                                          stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </span>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+    </div>
+</section>
+
+<script>
+(function() {
+    function initBrandsSlider() {
+        var section = document.querySelector('[section-id="{{ sectionId }}"]');
+        if (!section) return;
+
+        var sliderEl = section.querySelector('.month-brands-slider');
+        if (!sliderEl) return;
+
+        if (window.Swiper) {
+            new Swiper(sliderEl, {
+                slidesPerView: 1.5,
+                spaceBetween: 15,
+                rtl: document.documentElement.dir === 'rtl',
+                pagination: {
+                    el: sliderEl.querySelector('.swiper-pagination'),
+                    clickable: true,
+                },
+                breakpoints: {
+                    480: { slidesPerView: 2.2, spaceBetween: 15 },
+                    768: { slidesPerView: 3.2, spaceBetween: 20 },
+                    1024: { slidesPerView: 4, spaceBetween: 20 }
+                }
+            });
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initBrandsSlider);
+    } else {
+        setTimeout(initBrandsSlider, 100);
+    }
+})();
+</script>

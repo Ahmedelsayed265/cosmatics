@@ -1,0 +1,50 @@
+{
+  "section_id": "uuid",
+  "template": "sections/shop-the-look.jinja",
+  "icon": "fa fa-eye",
+  "name": {
+    "ar": "تسوق المظهر (بانر واحد)",
+    "en": "Shop the Look (Single Banner)"
+  },
+  "settings": [
+    {
+      "type": "image",
+      "id": "image",
+      "label": { "ar": "الصورة الكبيرة", "en": "Main Image" }
+    },
+    {
+      "type": "select",
+      "id": "trigger",
+      "label": { "ar": "طريقة تفعيل النقطة", "en": "Trigger Type" },
+      "options": [
+        { "value": "hover", "label": { "ar": "عند وضع الماوس (Hover)", "en": "On Hover" } },
+        { "value": "click", "label": { "ar": "عند الضغط (Click)", "en": "On Click" } }
+      ],
+      "default": "hover"
+    },
+    {
+      "type": "list",
+      "id": "hotspots",
+      "label": { "ar": "النقاط التفاعلية", "en": "Hotspots" },
+      "settings": [
+        {
+          "type": "range",
+          "id": "x_pos",
+          "label": { "ar": "الموقع الأفقي (X)", "en": "X Position" },
+          "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50
+        },
+        {
+          "type": "range",
+          "id": "y_pos",
+          "label": { "ar": "الموقع الرأسي (Y)", "en": "Y Position" },
+          "min": 0, "max": 100, "step": 1, "unit": "%", "default": 50
+        },
+        {
+          "type": "product",
+          "id": "product_item",
+          "label": { "ar": "المنتج", "en": "Product" }
+        }
+      ]
+    }
+  ]
+}

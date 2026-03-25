@@ -1,0 +1,63 @@
+<section class="brands-section" id="{{ sectionId }}" section-id="{{ sectionId }}">
+    <div class="container-fluid">
+        <div class="view-all-header">
+            <h2 class="section-title">{{ settings.title }}</h2>
+
+            {% if settings.view_all_url %}
+            <a href="{{ settings.view_all_url }}" class="view-all-link">
+                {{ settings.view_all_text }}
+            </a>
+            {% endif %}
+        </div>
+
+        <div class="swiper brands-slider" data-brands-slider>
+            <div class="swiper-wrapper">
+                {% for item in safeget(settings, 'brands', []) %}
+                <div class="swiper-slide">
+                    <a href="{{ item.url | default('#') }}" class="brand-item">
+                        {% if item.logo %}
+                        <img src="{{ image_url(item.logo, w=200, f='auto') }}" alt="Brand Logo" loading="lazy">
+                        {% endif %}
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    (function () {
+        function initBrands() {
+            var section = document.querySelector('[section-id="{{ sectionId }}"]');
+            if (!section) return;
+
+            var sliderEl = section.querySelector('.brands-slider');
+            if (window.Swiper) {
+                new Swiper(sliderEl, {
+                    slidesPerView: 3.5,
+                    spaceBetween: 20,
+                    loop: true,
+                    autoplay: {
+                        delay: 0,
+                        disableOnInteraction: true,
+                    },
+                    speed: 1000,
+                    freeMode: true,
+                    rtl: document.documentElement.dir === 'rtl',
+                    breakpoints: {
+                        640: { slidesPerView: 4.5, spaceBetween: 30 },
+                        992: { slidesPerView: 6.5, spaceBetween: 40 },
+                        1200: { slidesPerView: 8.5, spaceBetween: 50 },
+                    }
+                });
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initBrands);
+        } else {
+            setTimeout(initBrands, 100);
+        }
+    })();
+</script>
