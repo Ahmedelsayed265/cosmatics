@@ -1,0 +1,9 @@
+<section id="{{ sectionId }}" section-id="{{ sectionId }}" class="gallery-section">
+    <div class="video-container">
+        <video width="100%" height="auto" loop playsinline {% if settings.controls %}controls{% endif %} {% if
+            settings.autoplay %}autoplay muted{% endif %}>
+            <source src="{{ settings.video }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+</section>

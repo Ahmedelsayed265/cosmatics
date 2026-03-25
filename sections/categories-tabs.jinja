@@ -1,0 +1,358 @@
+{% set tabs_list = safeget(settings, "tabs", []) %}
+{% set has_tabs = tabs_list | length > 0 %}
+
+<section id="{{ sectionId }}"
+         section-id="{{ sectionId }}"
+         class="categories-tabs-section mrg"
+         data-placeholder-img="{{ image_url(('product-img.svg' | asset_url), w=235, q=100, f='auto') }}"
+         aria-labelledby="categories-tabs-heading-{{ sectionId }}"
+         style="{% if safeget(settings, 'primary_color') %}--primary-color: {{ settings.primary_color }};{% endif %}{% if safeget(settings, 'tab_border') %}--tab-border: {{ settings.tab_border }};{% endif %}{% if safeget(settings, 'tab_text') %}--tab-text: {{ settings.tab_text }};{% endif %}{% if safeget(settings, 'tab_active_text') %}--tab-active-text: {{ settings.tab_active_text }};{% endif %}">
+  <div class="categories-tabs-container-fluid container-fluid">
+
+    {% if has_tabs %}
+      <nav class="categories-tabs-nav" aria-label="{{ _('Product categories') }}">
+        <div class="categories-tabs-wrapper"
+             role="tablist"
+             aria-label="{{ _('Select category') }}">
+          {% for tab in tabs_list %}
+            {% set cat = safeget(tab, 'category') or {} %}
+            {% set cat_id = cat.id if cat is mapping else (tab.category_id | default('')) %}
+            {% set cat_name = cat.name if cat is mapping else (tab.name | default('')) %}
+            {% set tab_label = tab.name | default(cat_name) | default('Tab') %}
+            {% set tab_img = tab.image if tab.image is string else (safeget(tab, 'image.url') or safeget(tab, 'image.image') or '') %}
+            <button type="button"
+                    class="categories-tabs-tab{% if loop.first %} categories-tabs-tab--active{% endif %}"
+                    role="tab"
+                    id="tab-{{ sectionId }}-{{ loop.index0 }}"
+                    aria-selected="{{ 'true' if loop.first else 'false' }}"
+                    aria-controls="categories-tabs-panel-{{ sectionId }}-{{ loop.index0 }}"
+                    data-index="{{ loop.index0 }}"
+                    data-category-id="{{ cat_id }}"
+                    data-category-slug="{{ cat.slug if cat is mapping else (tab.slug | default('')) }}"
+                    tabindex="{{ '0' if loop.first else '-1' }}">
+              {% if tab_img %}
+                <img class="categories-tabs-tab-img" src="{{ image_url(tab_img, w=48, h=48, q=80, f='auto') }}" alt="" width="24" height="24" loading="lazy">
+              {% endif %}
+              <span class="categories-tabs-tab-label">{{ tab_label }}</span>
+            </button>
+          {% endfor %}
+        </div>
+      </nav>
+
+      <div class="categories-tabs-products-area">
+        {% for tab in tabs_list %}
+          {% set tab_products = safeget(tab, 'products', []) %}
+          {% if tab_products is mapping %}
+            {% set tab_results = safeget(tab_products, 'results', []) %}
+          {% else %}
+            {% set tab_results = tab_products %}
+          {% endif %}
+          
+          {% if tab_results is none %}{% set tab_results = [] %}{% endif %}
+          {% if tab_results | length == 0 %}
+            {% set dot_key = 'tabs.' ~ loop.index0 ~ '.products.results' %}
+            {% set tab_results = safeget(settings, dot_key, []) %}
+          {% endif %}
+          {% if tab_results is none or (tab_results is not iterable) or (tab_results is string) %}{% set tab_results = [] %}{% endif %}
+          {% if tab_results | length == 0 %}
+            {% set flat_products = safeget(settings, 'tabs_' ~ loop.index0 ~ '_products', {}) %}
+            {% set tab_results = safeget(flat_products, 'results', []) if flat_products is mapping else [] %}
+          {% endif %}
+
+          <div class="categories-tabs-panel{% if tab_results | length > 0 %} has-products{% endif %}"
+               role="tabpanel"
+               id="categories-tabs-panel-{{ sectionId }}-{{ loop.index0 }}"
+               aria-labelledby="tab-{{ sectionId }}-{{ loop.index0 }}"
+               aria-live="polite"
+               {% if not loop.first %}hidden{% endif %}>
+            {% if tab_results | length > 0 %}
+              <div class="categories-tabs-products-wrapper" style="position: relative;">
+                <div class="swiper categories-tabs-products-slider" data-categories-tabs-slider>
+                  <div class="swiper-wrapper">
+                    {% for product in tab_results %}
+                      <div class="swiper-slide">
+                        {% include 'components/product-card.jinja' %}
+                      </div>
+                    {% endfor %}
+                  </div>
+                  <div class="swiper-pagination"></div>
+                </div>
+              </div>
+            {% else %}
+              <p class="categories-tabs-empty-text">{{ _("No products in this category") }}</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% if has_tabs %}
+<style>
+  .categories-tabs-section {
+    --primary-color: var(--primary-color, #333);
+    --tab-border: var(--tab-border, #e0e0e0);
+    --tab-active-border: var(--primary-color);
+    --tab-text: var(--tab-text, #757575);
+    --tab-active-text: var(--tab-active-text, var(--primary-color));
+  }
+
+  .categories-tabs-nav {
+    margin-bottom: 24px;
+  }
+  .categories-tabs-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding: 8px 4px;
+  }
+  .categories-tabs-wrapper::-webkit-scrollbar {
+    height: 6px;
+  }
+  .categories-tabs-wrapper::-webkit-scrollbar-thumb {
+    background: var(--tab-border);
+    border-radius: 3px;
+  }
+  .categories-tabs-tab {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--tab-text);
+    background: transparent;
+    border: 1px solid var(--tab-border);
+    border-radius: 0px;
+    padding: 8px;
+    cursor: pointer;
+    transition: border-color 0.25s ease, color 0.25s ease, background-color 0.25s ease;
+    white-space: nowrap;
+    font-family: inherit;
+    position: relative;
+    border: 0 !important;
+  }
+  .categories-tabs-tab--active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: var(--primary-color);
+  }
+  .categories-tabs-tab:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+  }
+  .categories-tabs-tab:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+  }
+  .categories-tabs-tab--active {
+    border-color: var(--tab-active-border);
+    color: var(--tab-active-text);
+  }
+  .categories-tabs-tab-icon {
+    font-size: 1.1em;
+    line-height: 1;
+  }
+  .categories-tabs-tab-img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    flex-shrink: 0;
+    border-radius: 4px;
+  }
+  .categories-tabs-tab-label {
+    line-height: 1.2;
+  }
+  .categories-tabs-products-area {
+    position: relative;
+    min-height: 340px;
+  }
+  .categories-tabs-panel {
+    position: relative;
+    z-index: 1;
+    min-height: 320px;
+  }
+  .categories-tabs-panel[hidden] {
+    display: none !important;
+  }
+  .categories-tabs-products-wrapper {
+    min-height: 320px;
+  }
+  /* Swiper Styles Override */
+  .categories-tabs-products-slider {
+    padding-bottom: 24px;
+  }
+  .categories-tabs-products-slider .swiper-pagination {
+    bottom: 0 !important;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+  }
+  .categories-tabs-products-slider .swiper-pagination-bullet {
+    width: 8px;
+    height: 3px;
+    border-radius: 0;
+    background: #ccc;
+    opacity: 1;
+    margin: 0 !important;
+  }
+  .categories-tabs-products-slider .swiper-pagination-bullet-active {
+    background: var(--primary-color);
+    width: 30px;
+  }
+
+
+  @media (max-width: 767px) {
+    .categories-tabs-products-area,
+    .categories-tabs-panel,
+    .categories-tabs-products-wrapper {
+      min-height: 260px;
+    }
+  }
+  .categories-tabs-empty-text {
+    text-align: center;
+    color: var(--tab-text);
+    margin: 24px 0;
+    font-size: 16px;
+  }
+  @media (max-width: 767px) {
+    .categories-tabs-wrapper {
+      justify-content: flex-start;
+      gap: 8px;
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+    .categories-tabs-tab {
+      font-size: 14px;
+      font-weight: 400;
+      padding: 10px 16px;
+      gap: 6px;
+    }
+  }
+</style>
+
+<script>
+(function() {
+  var sectionEl = document.querySelector('[section-id="{{ sectionId }}"]');
+  if (!sectionEl) return;
+
+  var tabs = sectionEl.querySelectorAll('.categories-tabs-tab');
+  var panels = sectionEl.querySelectorAll('.categories-tabs-panel');
+  var swipers = {};
+
+  function getSwiperOptions(panel) {
+    return {
+      slidesPerView: 2.2,
+      spaceBetween: 10,
+      loop: false,
+      rtl: document.documentElement.dir === 'rtl',
+      watchOverflow: true,
+      observer: true,
+      observeParents: true,
+      pagination: {
+        el: panel.querySelector('.swiper-pagination'),
+        clickable: true,
+      },
+      breakpoints: {
+        320: { slidesPerView: 2.2, spaceBetween: 10 },
+        640: { slidesPerView: 2.5, spaceBetween: 12 },
+        768: { slidesPerView: 4, spaceBetween: 16 },
+        1024: { slidesPerView: 5.5, spaceBetween: 20 },
+      }
+    };
+  }
+
+  function initSwiper(panel) {
+    if (!panel) return;
+    var panelId = panel.id;
+    var sliderEl = panel.querySelector('.swiper');
+    if (!sliderEl) return;
+
+    if (swipers[panelId] && typeof swipers[panelId].destroy === 'function') {
+      swipers[panelId].destroy(true, true);
+      delete swipers[panelId];
+    }
+
+    if (window.Swiper) {
+      swipers[panelId] = new Swiper(sliderEl, getSwiperOptions(panel));
+    }
+  }
+
+  function switchTo(index) {
+    index = Math.max(0, Math.min(index, tabs.length - 1));
+    tabs.forEach(function(t, i) {
+      var isActive = i === index;
+      t.classList.toggle('categories-tabs-tab--active', isActive);
+      t.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      t.setAttribute('tabindex', isActive ? '0' : '-1');
+    });
+    panels.forEach(function(panel, i) {
+      if (panel) {
+        panel.hidden = (i !== index);
+      }
+    });
+    var activePanel = panels[index];
+    if (activePanel) {
+      setTimeout(function() {
+        initSwiper(activePanel);
+      }, 50);
+    }
+  }
+
+  tabs.forEach(function(tab, i) {
+    tab.addEventListener('click', function() { switchTo(i); });
+    tab.addEventListener('keydown', function(e) {
+      var idx = i;
+      var next = idx;
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        next = idx - 1;
+      } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        next = idx + 1;
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        next = 0;
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        next = tabs.length - 1;
+      }
+      if (next !== idx && next >= 0 && next < tabs.length) {
+        switchTo(next);
+        tabs[next].focus();
+      }
+    });
+  });
+
+  function start() {
+    var activeTab = sectionEl.querySelector('.categories-tabs-tab--active');
+    if (activeTab) {
+      var initialIdx = Array.from(tabs).indexOf(activeTab);
+      var initialPanel = panels[initialIdx];
+      if (initialPanel) {
+        initSwiper(initialPanel);
+      }
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    setTimeout(start, 50);
+  }
+
+})();
+</script>
+{% endif %}

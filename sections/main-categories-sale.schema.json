@@ -8,114 +8,84 @@
   },
   "settings": [
     {
-      "id": "first_category",
-      "type": "fieldset",
+      "id": "category_one_image",
+      "type": "image",
       "label": {
-        "ar": "الجانب الأيمن",
-        "en": "Right Side"
-      },
-      "settings": [
-        {
-          "id": "image",
-          "type": "image",
-          "label": {
-            "ar": "صورة التصنيف",
-            "en": "Category Image"
-          }
-        },
-        {
-          "id": "title",
-          "type": "text",
-          "label": {
-            "ar": "عنوان التصنيف",
-            "en": "Category Title"
-          }
-        },
-        {
-          "id": "url",
-          "type": "url",
-          "label": {
-            "ar": "رابط التصنيف",
-            "en": "Category URL"
-          }
-        }
-      ]
+        "ar": "التصنيف الاول - صورة",
+        "en": "Category One - Image"
+      }
     },
     {
-      "id": "sale_offer",
-      "type": "fieldset",
+      "id": "category_one_title",
+      "type": "text",
       "label": {
-        "ar": "الجانب الأوسط",
-        "en": "Center Side"
-      },
-      "settings": [
-        {
-          "id": "title1",
-          "type": "text",
-          "label": {
-            "ar": "العنوان الاول",
-            "en": "Title 1"
-          }
-        },
-        {
-          "id": "title2",
-          "type": "text",
-          "label": {
-            "ar": "العنوان الثاني",
-            "en": "Title 2"
-          }
-        },
-        {
-          "id": "title3",
-          "type": "text",
-          "label": {
-            "ar": "العنوان الثالث",
-            "en": "Title 3"
-          }
-        },
-        {
-          "id": "subtitle",
-          "type": "text",
-          "label": {
-            "ar": "العنوان الفرعي",
-            "en": "Subtitle"
-          }
-        }
-      ]
+        "ar": "التصنيف الاول - عنوان",
+        "en": "Category One - Title"
+      }
     },
     {
-      "id": "second_category",
-      "type": "fieldset",
+      "id": "category_one_url",
+      "type": "url",
       "label": {
-        "ar": "الجانب الأيسر",
-        "en": "Left Side"
-      },
-      "settings": [
-        {
-          "id": "image",
-          "type": "image",
-          "label": {
-            "ar": "صورة التصنيف",
-            "en": "Category Image"
-          }
-        },
-        {
-          "id": "title",
-          "type": "text",
-          "label": {
-            "ar": "عنوان التصنيف",
-            "en": "Category Title"
-          }
-        },
-        {
-          "id": "url",
-          "type": "url",
-          "label": {
-            "ar": "رابط التصنيف",
-            "en": "Category URL"
-          }
-        }
-      ]
+        "ar": "التصنيف الاول - رابط",
+        "en": "Category One - URL"
+      }
+    },
+    {
+      "id": "sale_offer_title1",
+      "type": "text",
+      "label": {
+        "ar": "العرض - العنوان الاول",
+        "en": "Offer - Title 1"
+      }
+    },
+    {
+      "id": "sale_offer_title2",
+      "type": "text",
+      "label": {
+        "ar": "العرض - العنوان الثاني",
+        "en": "Offer - Title 2"
+      }
+    },
+    {
+      "id": "sale_offer_title3",
+      "type": "text",
+      "label": {
+        "ar": "العرض - العنوان الثالث",
+        "en": "Offer - Title 3"
+      }
+    },
+    {
+      "id": "sale_offer_subtitle",
+      "type": "text",
+      "label": {
+        "ar": "العرض - العنوان الفرعي",
+        "en": "Offer - Subtitle"
+      }
+    },
+    {
+      "id": "category_two_image",
+      "type": "image",
+      "label": {
+        "ar": "التصنيف الثاني - صورة",
+        "en": "Category Two - Image"
+      }
+    },
+    {
+      "id": "category_two_title",
+      "type": "text",
+      "label": {
+        "ar": "التصنيف الثاني - عنوان",
+        "en": "Category Two - Title"
+      }
+    },
+    {
+      "id": "category_two_url",
+      "type": "url",
+      "label": {
+        "ar": "التصنيف الثاني - رابط",
+        "en": "Category Two - URL"
+      }
     }
   ]
 }

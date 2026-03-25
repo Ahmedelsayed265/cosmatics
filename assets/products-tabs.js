@@ -45,13 +45,7 @@
                     if (prevEl) prevEl.style.display = 'none';
                 }
 
-                if (config.sliderPagination !== false) { // Default to showing pagination if not explicitly disabled
-                    options.pagination = {
-                        el: panel.querySelector('.swiper-pagination'),
-                        clickable: true,
-                        dynamicBullets: true,
-                    };
-                }
+
 
                 return options;
             }

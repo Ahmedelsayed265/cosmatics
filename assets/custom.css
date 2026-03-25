@@ -4368,6 +4368,7 @@ button {
 .category-image {
   height: 100%;
   width: 100%;
+  padding: 0;
 }
 
 .category-image img {
@@ -4375,11 +4376,6 @@ button {
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.8s ease;
-}
-
-.category-wrapper:hover .category-image img {
-  transform: scale(1.08);
 }
 
 .category-label {
@@ -4402,7 +4398,7 @@ button {
 
 /* Light background for labels on light images if needed */
 .second-category .category-label {
-   background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.4);
 }
 
 .sale-center-content {
@@ -4421,19 +4417,19 @@ button {
 
 .sale-titles h2 {
   margin: 0;
-  font-size: 3.2rem;
+  font-size: 56px;
   font-weight: 900;
-  line-height: 1.1;
-  color: #300b1c; /* Burgundy from image */
+  line-height: 1.6;
+  color: var(--primary-color);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .sale-subtitle {
   margin-top: 25px;
-  font-size: 1.4rem;
+  font-size: 32px;
   font-weight: 600;
-  color: #300b1c;
+  color: var(--primary-color);
 }
 
 @media (max-width: 1024px) {
@@ -4455,7 +4451,7 @@ button {
     width: 100%;
   }
   .sale-center-content {
-    order: 0; /* Keep it in the middle as per mobile image */
+    order: 0;
     padding: 60px 20px;
     width: 100%;
   }

@@ -1,0 +1,78 @@
+{
+  "section_id": "uuid",
+  "template": "sections/categories-tabs.jinja",
+  "icon": "fal fa-th-large",
+  "name": {
+    "ar": "تابات التصنيفات",
+    "en": "Categories Tabs"
+  },
+  "settings": [
+    {
+      "id": "tabs",
+      "type": "list",
+      "label": {
+        "ar": "التابات",
+        "en": "Tabs"
+      },
+      "max_items": 12,
+      "settings": [
+        {
+          "id": "name",
+          "type": "text",
+          "label": {
+            "ar": "اسم التاب (إن تركت فارغاً يُستخدم اسم التصنيف)",
+            "en": "Tab label (leave empty to use category name)"
+          }
+        },
+        {
+          "id": "image",
+          "type": "image",
+          "label": {
+            "ar": "صورة التاب",
+            "en": "Tab image"
+          }
+        },
+        {
+          "id": "products",
+          "type": "products",
+          "label": {
+            "ar": "اختر قائمة المنتجات",
+            "en": "Select category products"
+          }
+        }
+      ]
+    },
+    {
+      "id": "primary_color",
+      "type": "color",
+      "label": {
+        "ar": "لون التاب النشط والحد",
+        "en": "Active tab & border color"
+      }
+    },
+    {
+      "id": "tab_border",
+      "type": "color",
+      "label": {
+        "ar": "حد التاب غير النشط",
+        "en": "Inactive tab border"
+      }
+    },
+    {
+      "id": "tab_text",
+      "type": "color",
+      "label": {
+        "ar": "لون نص التاب غير النشط",
+        "en": "Inactive tab text"
+      }
+    },
+    {
+      "id": "tab_active_text",
+      "type": "color",
+      "label": {
+        "ar": "لون نص التاب النشط",
+        "en": "Active tab text"
+      }
+    }
+  ]
+}
