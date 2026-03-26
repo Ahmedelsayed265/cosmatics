@@ -1,10 +1,5 @@
 {#
   Product Tabs Section - قسم علامات تبويب المنتجات
-  ================================================
-  - عنوان رئيسي + فرعي (قابل للتعديل من الإعدادات)
-  - تبويبات ديناميكية: كل تبويب إما قائمة منتجات من الإعدادات أو معرّف مجموعة (جلب عند النقر)
-  - شريط تمرير منتجات مع تحميل هيكلي وحالة فارغة وتأثير تلاشي
-  - متجاوب: موبايل منتجان في الصف، تمرير التبويبات أفقيًا، توسيط العناوين
 #}
 
 {% set _lang = safeget(session, 'lang') or 'ar' %}
@@ -21,17 +16,6 @@
 {% set store_permalink = safeget(store, 'permalink') or '' %}
 {% if store_permalink and not store_permalink.endswith('/') %}{% set store_permalink = store_permalink ~ '/' %}{% endif %}
 
-{% set _speed = safeget(settings, 'slider_speed') %}
-{% set slider_speed_val = 300 %}
-{% if _speed is not none and _speed != '' %}{% set slider_speed_val = _speed | int %}{% endif %}
-{% if slider_speed_val is none or slider_speed_val < 1 %}{% set slider_speed_val = 300 %}{% endif %}
-
-{% set _arrows = safeget(settings, 'slider_arrows') %}
-{% set slider_arrows_val = (_arrows != false and _arrows != 0 and _arrows != '0' and _arrows != 'false') %}
-
-{% set _loop = safeget(settings, 'slider_loop') %}
-{% set slider_loop_val = (_loop == true or _loop == 1 or _loop == '1' or _loop == 'true') %}
-
 <section id="products-tabs-{{ sectionId }}"
          class="products-tabs-section container-fluid s_block"
          section-id="{{ sectionId }}"
@@ -47,9 +31,10 @@
            {% if safeget(settings, 'tab_inactive_text_color') %}--products-tabs-inactive-text: {{ settings.tab_inactive_text_color }};{% endif %}
            {% if safeget(settings, 'tab_inactive_border_color') %}--products-tabs-inactive-border: {{ settings.tab_inactive_border_color }};{% endif %}
          "
-         data-slider-speed="{{ slider_speed_val }}"
-         data-slider-arrows="{{ 'true' if slider_arrows_val else 'false' }}"
-         data-slider-loop="{{ 'true' if slider_loop_val else 'false' }}">
+         data-autoplay="{{ (settings.slider_autoplay | default(false)) | lower }}"
+         data-delay="{{ settings.slider_autoplay_delay | default(3000) }}"
+         data-arrows="{{ (settings.slider_show_arrows | default(false)) | lower }}"
+         data-pagination="{{ (settings.slider_show_pagination | default(false)) | lower }}">
   <div class="products-tabs-container container-fluid">
     <div class="products-tabs-top-row">
       <header class="products-tabs-header products-tabs-header--{{ title_align }}">
@@ -65,8 +50,6 @@
         <div class="products-tabs-tabs-wrap" role="tablist" aria-label="{{ _('Select product collection') }}">
           {% for tab in tabs_list %}
             {% set tab_label = safeget(tab, 'tab_title') | default('Tab ' ~ loop.index) %}
-            {% set coll_id = safeget(tab, 'collection_id') or '' %}
-            {% set limit = (safeget(tab, 'product_limit') | default(12)) | int %}
             <button type="button"
                     class="products-tabs-tab{% if loop.first %} products-tabs-tab--active{% endif %}"
                     role="tab"
@@ -74,8 +57,6 @@
                     aria-selected="{{ 'true' if loop.first else 'false' }}"
                     aria-controls="products-tabs-panel-{{ sectionId }}-{{ loop.index0 }}"
                     data-index="{{ loop.index0 }}"
-                    data-collection-id="{{ coll_id | e }}"
-                    data-product-limit="{{ limit }}"
                     tabindex="{{ '0' if loop.first else '-1' }}">
               <span class="products-tabs-tab-label">{{ tab_label }}</span>
             </button>
@@ -95,27 +76,15 @@
             {% set tab_results = tab_products %}
           {% endif %}
           {% if tab_results is none %}{% set tab_results = [] %}{% endif %}
-          {% set dot_key = 'tabs.' ~ loop.index0 ~ '.products.results' %}
-          {% if tab_results | length == 0 %}{% set tab_results = safeget(settings, dot_key, []) %}{% endif %}
-          {% if tab_results is none or tab_results is string %}{% set tab_results = [] %}{% endif %}
-          {% set flat_key = 'tabs_' ~ loop.index0 ~ '_products' %}
-          {% if tab_results | length == 0 %}
-            {% set flat = safeget(settings, flat_key, {}) %}
-            {% set tab_results = safeget(flat, 'results', []) if flat is mapping else [] %}
-          {% endif %}
-          {% set coll_id = safeget(tab, 'collection_id') or '' %}
-          {% set limit = (safeget(tab, 'product_limit') | default(12)) | int %}
+          
           {% set has_products_server = tab_results and (tab_results | length) > 0 %}
-          {% set needs_fetch = (not has_products_server) and coll_id %}
 
-          <div class="products-tabs-panel{% if has_products_server %} has-products{% endif %}{% if needs_fetch %} needs-fetch{% endif %}"
+          <div class="products-tabs-panel{% if has_products_server %} has-products{% endif %}"
                role="tabpanel"
                id="products-tabs-panel-{{ sectionId }}-{{ loop.index0 }}"
                aria-labelledby="products-tab-{{ sectionId }}-{{ loop.index0 }}"
                aria-live="polite"
                data-index="{{ loop.index0 }}"
-               data-collection-id="{{ coll_id | e }}"
-               data-product-limit="{{ limit }}"
                {% if not loop.first %}hidden{% endif %}>
             <div class="products-tabs-slider-wrap">
               <div class="swiper products-tabs-slider" data-products-tabs-slider>
@@ -129,32 +98,14 @@
                   {% endif %}
                 </div>
 
-                {% if not has_products_server %}
-                  {% if needs_fetch %}
-                    <div class="products-tabs-loading" data-products-tabs-loading aria-hidden="false">
-                      <div class="products-tabs-skeleton" aria-label="{{ _('Loading') }}">
-                        {% for i in [1,2,3,4,5,6] %}
-                          <div class="products-tabs-skeleton-card">
-                            <div class="products-tabs-skeleton-img"></div>
-                            <div class="products-tabs-skeleton-line"></div>
-                            <div class="products-tabs-skeleton-line short"></div>
-                            <div class="products-tabs-skeleton-line price"></div>
-                          </div>
-                        {% endfor %}
-                      </div>
-                    </div>
-                    <div class="products-tabs-content products-tabs-content--fade" data-products-tabs-content aria-hidden="true"></div>
-                  {% else %}
-                    <div class="products-tabs-empty" data-products-tabs-empty aria-label="{{ _('No products') }}">
-                      <p class="products-tabs-empty-text">{{ _("No products in this collection") }}</p>
-                    </div>
-                  {% endif %}
+                {% if settings.slider_show_pagination | default(false) %}
+                <div class="swiper-pagination custom-swiper-pagination"></div>
                 {% endif %}
 
-                {# Add swiper controls if needed #}
-
+                {% if settings.slider_show_arrows | default(false) %}
                 <div class="swiper-button-next"></div>
                 <div class="swiper-button-prev"></div>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -175,13 +126,9 @@
     baseUrl: '{{ store_permalink | e }}',
     lang: '{{ _lang }}',
     placeholderImg: '{{ image_url(("product-img.svg" | asset_url), w=235, q=100, f="auto") | e }}',
-    sliderSpeed: {{ slider_speed_val }},
-    sliderArrows: {{ 'true' if slider_arrows_val else 'false' }},
-    sliderLoop: {{ 'true' if slider_loop_val else 'false' }},
     nextLabel: {{ _('Next') | tojson }},
     prevLabel: {{ _('Previous') | tojson }}
   };
 })();
 </script>
-{# Slick is initialized only by products-tabs.js when a tab is visible (avoids squished layout when switching tabs, especially on mobile) #}
 {% endif %}

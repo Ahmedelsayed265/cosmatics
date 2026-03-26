@@ -1,61 +1,71 @@
 {
   "section_id": "uuid",
   "template": "sections/brands-section.jinja",
-  "icon": "fa fa-bandcamp",
+  "icon": "fa fa-building",
   "name": {
-    "ar": "تصفح الماركات",
-    "en": "Browse Brands"
+    "ar": "الماركات التجارية",
+    "en": "Brands Section"
   },
   "settings": [
     {
       "type": "text",
       "id": "title",
-      "label": {
-        "ar": "العنوان",
-        "en": "Title"
-      },
-      "default": "تصفح البرندات"
+      "label": { "ar": "العنوان", "en": "Title" },
+      "default": "الماركات التجارية"
     },
     {
       "type": "text",
-      "id": "view_all_text",
-      "label": {
-        "ar": "نص عرض الكل",
-        "en": "View All Text"
-      },
-      "default": "عرض الكل"
+      "id": "view_all_label",
+      "label": { "ar": "عنوان رابط الكل", "en": "View All Label" },
+      "default": "مشاهدة الكل"
     },
     {
       "type": "url",
       "id": "view_all_url",
-      "label": {
-        "ar": "رابط عرض الكل",
-        "en": "View All URL"
-      }
+      "label": { "ar": "رابط الكل", "en": "View All URL" }
+    },
+    {
+      "type": "header",
+      "label": { "ar": "إعدادات السلايدر", "en": "Slider Settings" }
+    },
+    {
+      "id": "slider_autoplay",
+      "type": "checkbox",
+      "label": { "ar": "تشغيل تلقائي", "en": "Autoplay" },
+      "default": false
+    },
+    {
+      "id": "slider_autoplay_delay",
+      "type": "number",
+      "label": { "ar": "سرعة التشغيل التلقائي (بالمللي ثانية)", "en": "Autoplay Delay (ms)" },
+      "default": 0
+    },
+    {
+      "id": "slider_show_arrows",
+      "type": "checkbox",
+      "label": { "ar": "إظهار أسهم التنقل", "en": "Show Navigation Arrows" },
+      "default": false
+    },
+    {
+      "id": "slider_show_pagination",
+      "type": "checkbox",
+      "label": { "ar": "إظهار نقاط الترقيم", "en": "Show Pagination" },
+      "default": false
     },
     {
       "type": "list",
-      "id": "brands",
-      "label": {
-        "ar": "الماركات",
-        "en": "Brands"
-      },
+      "id": "logos",
+      "label": { "ar": "قائمة الشعارات", "en": "Logo List" },
       "settings": [
         {
           "type": "image",
-          "id": "logo",
-          "label": {
-            "ar": "شعار الماركة",
-            "en": "Brand Logo"
-          }
+          "id": "image",
+          "label": { "ar": "الشعار", "en": "Logo" }
         },
         {
           "type": "url",
           "id": "url",
-          "label": {
-            "ar": "رابط الماركة",
-            "en": "Brand URL"
-          }
+          "label": { "ar": "الرابط", "en": "URL" }
         }
       ]
     }

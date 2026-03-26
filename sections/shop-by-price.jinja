@@ -4,7 +4,11 @@
         <h3 class="section-title">{{ settings.title }}</h3>
         {% endif %}
 
-        <div class="swiper shop-by-price-slider" data-shop-by-price-slider>
+        <div class="swiper shop-by-price-slider" 
+             data-autoplay="{{ (settings.slider_autoplay | default(false)) | lower }}"
+             data-delay="{{ settings.slider_autoplay_delay | default(3000) }}"
+             data-arrows="{{ (settings.slider_show_arrows | default(false)) | lower }}"
+             data-pagination="{{ (settings.slider_show_pagination | default(false)) | lower }}">
             <div class="swiper-wrapper">
                 {% for price_item in safeget(settings, 'prices', []) %}
                 <div class="swiper-slide">
@@ -38,6 +42,15 @@
                 </div>
                 {% endfor %}
             </div>
+
+            {% if settings.slider_show_pagination | default(false) %}
+            <div class="swiper-pagination custom-swiper-pagination"></div>
+            {% endif %}
+
+            {% if settings.slider_show_arrows | default(false) %}
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+            {% endif %}
         </div>
     </div>
 </section>
@@ -51,16 +64,33 @@
             var sliderEl = section.querySelector('.shop-by-price-slider');
             if (!sliderEl) return;
 
+            var isAutoplay = sliderEl.getAttribute('data-autoplay') === 'true';
+            var autoplayDelay = parseInt(sliderEl.getAttribute('data-delay')) || 3000;
+            var isArrows = sliderEl.getAttribute('data-arrows') === 'true';
+            var isPagination = sliderEl.getAttribute('data-pagination') === 'true';
+
             if (window.Swiper) {
                 new Swiper(sliderEl, {
                     slidesPerView: 2,
                     spaceBetween: 10,
                     rtl: document.documentElement.dir === 'rtl',
+                    autoplay: isAutoplay ? {
+                        delay: autoplayDelay,
+                        disableOnInteraction: false
+                    } : false,
+                    pagination: isPagination ? {
+                        el: sliderEl.querySelector('.swiper-pagination'),
+                        clickable: true
+                    } : false,
+                    navigation: isArrows ? {
+                        nextEl: sliderEl.querySelector('.swiper-button-next'),
+                        prevEl: sliderEl.querySelector('.swiper-button-prev')
+                    } : false,
                     breakpoints: {
                         480: { slidesPerView: 3, spaceBetween: 10 },
                         768: { slidesPerView: 4, spaceBetween: 15 },
-                        1024: { slidesPerView: 6, spaceBetween: 15 },
-                        1400: { slidesPerView: 7, spaceBetween: 15 }
+                        1024: { slidesPerView: 5, spaceBetween: 15 },
+                        1400: { slidesPerView: 6, spaceBetween: 15 }
                     }
                 });
             }
@@ -69,7 +99,7 @@
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initSlider);
         } else {
-            setTimeout(initSlider, 100);
+            initSlider();
         }
     })();
 </script>

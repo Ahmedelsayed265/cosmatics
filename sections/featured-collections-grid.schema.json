@@ -1,0 +1,116 @@
+{
+  "section_id": "uuid",
+  "template": "sections/featured-collections-grid.jinja",
+  "icon": "fa fa-th-large",
+  "name": {
+    "ar": "المجموعات المميزة (3 أعمدة)",
+    "en": "Featured Groups (3 Columns)"
+  },
+  "settings": [
+    {
+      "id": "col_1_title",
+      "type": "text",
+      "label": { "ar": "عنوان العمود 1", "en": "Col 1 Title" },
+      "default": "إشترى أكثر وبالك مرتاح"
+    },
+    {
+      "id": "col_1_title_color",
+      "type": "color",
+      "label": { "ar": "لون العنوان 1", "en": "Col 1 Title Color" },
+      "default": "#333333"
+    },
+    {
+      "id": "col_1_bg_color",
+      "type": "color",
+      "label": { "ar": "لون خلفية العمود 1", "en": "Col 1 BG Color" },
+      "default": "#f1f1e8"
+    },
+    {
+      "id": "col_1_items",
+      "type": "list",
+      "label": { "ar": "بنرات العمود 1", "en": "Col 1 Banners" },
+      "settings": [
+        {
+          "id": "image",
+          "type": "image",
+          "label": { "ar": "الصورة", "en": "Image" }
+        },
+        {
+          "id": "title",
+          "type": "text",
+          "label": { "ar": "العنوان", "en": "Title" }
+        },
+        { "id": "url", "type": "url", "label": { "ar": "الرابط", "en": "URL" } }
+      ]
+    },
+    {
+      "id": "col_2_title",
+      "type": "text",
+      "label": { "ar": "عنوان العمود 2", "en": "Col 2 Title" },
+      "default": "عروض عناية"
+    },
+    {
+      "id": "col_2_title_color",
+      "type": "color",
+      "label": { "ar": "لون العنوان 2", "en": "Col 2 Title Color" },
+      "default": "#333333"
+    },
+    {
+      "id": "col_2_bg_color",
+      "type": "color",
+      "label": { "ar": "لون خلفية العمود 2", "en": "Col 2 BG Color" },
+      "default": "#fdf8d1"
+    },
+    {
+      "id": "col_2_items",
+      "type": "list",
+      "label": { "ar": "بنرات العمود 2", "en": "Col 2 Banners" },
+      "settings": [
+        {
+          "id": "image",
+          "type": "image",
+          "label": { "ar": "الصورة", "en": "Image" }
+        },
+        { "id": "url", "type": "url", "label": { "ar": "الرابط", "en": "URL" } }
+      ]
+    },
+    {
+      "id": "col_3_title",
+      "type": "text",
+      "label": { "ar": "عنوان العمود 3", "en": "Col 3 Title" },
+      "default": "شوف كل الخصومات"
+    },
+    {
+      "id": "col_3_title_color",
+      "type": "color",
+      "label": { "ar": "لون العنوان 3", "en": "Col 1 Title Color" },
+      "default": "#333333"
+    },
+    {
+      "id": "col_3_bg_color",
+      "type": "color",
+      "label": { "ar": "لون خلفية العمود 3", "en": "Col 1 BG Color" },
+      "default": "#f8f8f8"
+    },
+    {
+      "id": "col_3_items",
+      "type": "list",
+      "label": {
+        "ar": "بنرات العمود 3",
+        "en": "Col 3 Banners"
+      },
+      "settings": [
+        {
+          "id": "image",
+          "type": "image",
+          "label": { "ar": "الصورة", "en": "Image" }
+        },
+        {
+          "id": "url",
+          "type": "url",
+          "label": { "ar": "الرابط", "en": "URL" }
+        }
+      ]
+    }
+  ]
+}

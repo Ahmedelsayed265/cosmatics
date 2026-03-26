@@ -1,0 +1,38 @@
+{% set sectionId = section_id | default('img-text-' ~ loop.index0) %}
+{% set image_pos = settings.image_position | default('right') %}
+
+<section class="image-text-section s_block" id="{{ sectionId }}" 
+         style="background-color: {{ settings.bg_color | default('#ffffff') }};">
+    
+    <div class="img-text-flex {% if image_pos == 'right' %}flex-reversed{% endif %}">
+        
+        {# Text Column #}
+        <div class="img-text-column text-column">
+            <div class="text-content">
+                <h2 class="img-text-title" style="color: {{ settings.title_color | default('#330017') }};">
+                    {{ settings.title }}
+                </h2>
+                <p class="img-text-subtitle" style="color: {{ settings.subtitle_color | default('#666666') }};">
+                    {{ settings.subtitle }}
+                </p>
+                {% if settings.btn_text %}
+                <a href="{{ settings.btn_url | default('#') }}" class="img-text-btn" 
+                   style="color: {{ settings.btn_color | default('#330017') }}; border-bottom-color: {{ settings.btn_color | default('#330017') }};">
+                    {{ settings.btn_text }}
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+        {# Image Column #}
+        <div class="img-text-column image-column">
+            {% if settings.image %}
+            <img src="{{ image_url(settings.image, w=1200, f='auto') }}" alt="{{ settings.title }}" loading="lazy">
+            {% else %}
+            <img src="{{ image_url(('product-img.svg' | asset_url), w=1200, f='auto') }}" alt="Placeholder" loading="lazy">
+            {% endif %}
+        </div>
+
+    </div>
+</section>
+

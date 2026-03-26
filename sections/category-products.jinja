@@ -8,7 +8,11 @@
             {% endif %}
         </div>
 
-        <div class="swiper category-products-slider">
+        <div class="swiper category-products-slider"
+             data-autoplay="{{ settings.slider_autoplay | default(false) }}"
+             data-delay="{{ settings.slider_autoplay_delay | default(3000) }}"
+             data-arrows="{{ settings.slider_show_arrows | default(false) }}"
+             data-pagination="{{ settings.slider_show_pagination | default(false) }}">
             <div class="swiper-wrapper">
                 {% for product in safeget(settings, "category.products.results", []) %}
                 <div class="swiper-slide">
@@ -16,30 +20,64 @@
                 </div>
                 {% endfor %}
             </div>
+
+            {% if settings.slider_show_pagination | default(false) %}
+            <div class="swiper-pagination custom-swiper-pagination"></div>
+            {% endif %}
+
+            {% if settings.slider_show_arrows | default(false) %}
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+            {% endif %}
         </div>
     </div>
 </section>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        new Swiper('[section-id="{{ sectionId }}"] .swiper', {
-            slidesPerView: 1,
-            spaceBetween: 0,
-            loop: true,
-            breakpoints: {
-                640: {
-                    slidesPerView: 2.5,
-                    spaceBetween: 8,
-                },
-                768: {
-                    slidesPerView: 4,
-                    spaceBetween: 16,
-                },
-                1024: {
-                    slidesPerView: 5.5,
-                    spaceBetween: 20,
-                },
-            },
-        });
-    });
+    (function () {
+        function initCategorySlider() {
+            var section = document.querySelector('[section-id="{{ sectionId }}"]');
+            if (!section) return;
+
+            var sliderEl = section.querySelector('.category-products-slider');
+            if (!sliderEl) return;
+
+            var isAutoplay = sliderEl.getAttribute('data-autoplay') === 'true';
+            var autoplayDelay = parseInt(sliderEl.getAttribute('data-delay')) || 3000;
+            var isArrows = sliderEl.getAttribute('data-arrows') === 'true';
+            var isPagination = sliderEl.getAttribute('data-pagination') === 'true';
+
+            if (window.Swiper) {
+                new Swiper(sliderEl, {
+                    slidesPerView: 2.2,
+                    spaceBetween: 10,
+                    loop: false,
+                    rtl: document.documentElement.dir === 'rtl',
+                    autoplay: isAutoplay ? {
+                        delay: autoplayDelay,
+                        disableOnInteraction: false
+                    } : false,
+                    pagination: isPagination ? {
+                        el: sliderEl.querySelector('.swiper-pagination'),
+                        clickable: true
+                    } : false,
+                    navigation: isArrows ? {
+                        nextEl: sliderEl.querySelector('.swiper-button-next'),
+                        prevEl: sliderEl.querySelector('.swiper-button-prev')
+                    } : false,
+                    breakpoints: {
+                        640: { slidesPerView: 2.5, spaceBetween: 12 },
+                        768: { slidesPerView: 4, spaceBetween: 16 },
+                        1024: { slidesPerView: 5.5, spaceBetween: 20 }
+                    }
+                });
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initCategorySlider);
+        } else {
+            setTimeout(initCategorySlider, 100);
+        }
+    })();
 </script>

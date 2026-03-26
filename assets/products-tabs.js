@@ -11,20 +11,26 @@
         
         sections.forEach((section) => {
             const sectionId = section.getAttribute('section-id');
-            const config = (window.__productsTabsConfig && window.__productsTabsConfig[sectionId]) || {};
             const tabs = section.querySelectorAll('.products-tabs-tab');
             const panels = section.querySelectorAll('.products-tabs-panel');
             const swipers = {};
+
+            // Read settings from data attributes
+            const isAutoplay = section.getAttribute('data-autoplay') === 'true';
+            const autoplayDelay = parseInt(section.getAttribute('data-delay')) || 3000;
+            const showArrows = section.getAttribute('data-arrows') === 'true';
+            const showPagination = section.getAttribute('data-pagination') === 'true';
 
             function getSwiperOptions(panel) {
                 const options = {
                     slidesPerView: 2.2,
                     spaceBetween: 10,
-                    loop: config.sliderLoop === true,
+                    loop: false,
                     rtl: document.documentElement.dir === 'rtl',
                     watchOverflow: true,
                     observer: true,
                     observeParents: true,
+                    autoplay: isAutoplay ? { delay: autoplayDelay, disableOnInteraction: false } : false,
                     breakpoints: {
                         320: { slidesPerView: 2.2, spaceBetween: 10 },
                         640: { slidesPerView: 2.5, spaceBetween: 12 },
@@ -33,19 +39,19 @@
                     }
                 };
 
-                if (config.sliderArrows === true) {
+                if (showArrows) {
                     options.navigation = {
                         nextEl: panel.querySelector('.swiper-button-next'),
                         prevEl: panel.querySelector('.swiper-button-prev'),
                     };
-                } else {
-                    const nextEl = panel.querySelector('.swiper-button-next');
-                    const prevEl = panel.querySelector('.swiper-button-prev');
-                    if (nextEl) nextEl.style.display = 'none';
-                    if (prevEl) prevEl.style.display = 'none';
                 }
 
-
+                if (showPagination) {
+                    options.pagination = {
+                        el: panel.querySelector('.swiper-pagination'),
+                        clickable: true,
+                    };
+                }
 
                 return options;
             }
@@ -56,13 +62,11 @@
                 const sliderEl = panel.querySelector('.swiper');
                 if (!sliderEl) return;
 
-                // Destroy existing instance for this panel if it exists
                 if (swipers[panelId] && typeof swipers[panelId].destroy === 'function') {
                     swipers[panelId].destroy(true, true);
                     delete swipers[panelId];
                 }
 
-                // Initialize Swiper
                 if (window.Swiper) {
                     swipers[panelId] = new Swiper(sliderEl, getSwiperOptions(panel));
                 }
@@ -74,7 +78,6 @@
                 const targetPanelId = clickedTab.getAttribute('aria-controls');
                 const targetPanel = section.querySelector(`#${targetPanelId}`);
 
-                // Update tabs state
                 tabs.forEach((t) => {
                     t.classList.remove('products-tabs-tab--active');
                     t.setAttribute('aria-selected', 'false');
@@ -84,22 +87,18 @@
                 clickedTab.setAttribute('aria-selected', 'true');
                 clickedTab.setAttribute('tabindex', '0');
 
-                // Update panels state
                 panels.forEach((p) => {
                     p.setAttribute('hidden', '');
                 });
 
                 if (targetPanel) {
                     targetPanel.removeAttribute('hidden');
-                    
-                    // Small delay to ensure display: block is applied before Swiper calculation
                     setTimeout(() => {
                         initSwiper(targetPanel);
                     }, 50);
                 }
             }
 
-            // Bind click events
             tabs.forEach((tab) => {
                 tab.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -107,7 +106,6 @@
                 });
             });
 
-            // Initial initialization for the active panel
             const initialTab = section.querySelector('.products-tabs-tab--active');
             if (initialTab) {
                 const initialPanelId = initialTab.getAttribute('aria-controls');
@@ -119,7 +117,6 @@
         });
     }
 
-    // Initialize on DOMContentLoaded or immediately if already loaded
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initProductsTabs);
     } else {

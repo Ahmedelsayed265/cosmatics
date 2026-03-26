@@ -10,87 +10,85 @@
     {
       "id": "title",
       "type": "text",
-      "label": {
-        "ar": "العنوان الرئيسي",
-        "en": "Main title"
-      },
+      "label": { "ar": "العنوان الرئيسي", "en": "Main title" },
       "default": "الجديد + المفضل"
     },
     {
       "id": "subtitle",
       "type": "text",
-      "label": {
-        "ar": "العنوان الفرعي",
-        "en": "Subtitle"
-      },
+      "label": { "ar": "العنوان الفرعي", "en": "Subtitle" },
       "default": "هدايا سهلة يحبها الجميع"
     },
     {
-      "id": "title_color",
-      "type": "color",
-      "label": {
-        "ar": "لون العنوان الرئيسي",
-        "en": "Title color"
-      }
+      "type": "header",
+      "label": { "ar": "إعدادات السلايدر", "en": "Slider Settings" }
     },
     {
-      "id": "subtitle_color",
-      "type": "color",
-      "label": {
-        "ar": "لون العنوان الفرعي",
-        "en": "Subtitle color"
-      }
+      "id": "slider_autoplay",
+      "type": "checkbox",
+      "label": { "ar": "تشغيل تلقائي", "en": "Autoplay" },
+      "default": false
+    },
+    {
+      "id": "slider_autoplay_delay",
+      "type": "number",
+      "label": { "ar": "سرعة التشغيل التلقائي (بالمللي ثانية)", "en": "Autoplay Delay (ms)" },
+      "default": 3000
+    },
+    {
+      "id": "slider_show_arrows",
+      "type": "checkbox",
+      "label": { "ar": "إظهار أسهم التنقل", "en": "Show Navigation Arrows" },
+      "default": false
+    },
+    {
+      "id": "slider_show_pagination",
+      "type": "checkbox",
+      "label": { "ar": "إظهار نقاط الترقيم", "en": "Show Pagination" },
+      "default": false
     },
     {
       "id": "tabs",
       "type": "list",
-      "label": {
-        "ar": "علامات التبويب",
-        "en": "Tabs"
-      },
+      "label": { "ar": "علامات التبويب", "en": "Tabs" },
       "max_items": 10,
       "settings": [
         {
           "id": "tab_title",
           "type": "text",
-          "label": {
-            "ar": "عنوان علامة التبويب",
-            "en": "Tab title"
-          }
+          "label": { "ar": "عنوان علامة التبويب", "en": "Tab title" }
         },
         {
           "id": "products",
           "type": "products",
-          "label": {
-            "ar": "اختر منتجات",
-            "en": "Select products"
-          }
+          "label": { "ar": "اختر منتجات", "en": "Select products" }
         }
       ]
     },
     {
+      "id": "title_color",
+      "type": "color",
+      "label": { "ar": "لون العنوان الرئيسي", "en": "Title color" }
+    },
+    {
+      "id": "subtitle_color",
+      "type": "color",
+      "label": { "ar": "لون العنوان الفرعي", "en": "Subtitle color" }
+    },
+    {
       "id": "tab_active_text_color",
       "type": "color",
-      "label": {
-        "ar": "لون نص التبويب النشط",
-        "en": "Active tab text color"
-      }
+      "label": { "ar": "لون نص التبويب النشط", "en": "Active tab text color" }
     },
     {
       "id": "tab_active_border_color",
       "type": "color",
-      "label": {
-        "ar": "لون إطار التبويب النشط",
-        "en": "Active tab border color"
-      }
+      "label": { "ar": "لون إطار التبويب النشط", "en": "Active tab border color" }
     },
     {
       "id": "tab_inactive_text_color",
       "type": "color",
-      "label": {
-        "ar": "لون نص التبويب غير النشط",
-        "en": "Inactive tab text color"
-      }
+      "label": { "ar": "لون نص التبويب غير النشط", "en": "Inactive tab text color" }
     }
   ]
 }

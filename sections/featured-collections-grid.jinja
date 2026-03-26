@@ -1,0 +1,101 @@
+{% set sectionId = section_id | default('featured-collections-' ~ loop.index0) %}
+
+<section class="banners-grid-advanced s_block" id="{{ sectionId }}" section-id="{{ sectionId }}">
+    <div class="container-fluid">
+        <div class="banners-flex-wrapper columns-3">
+
+            {# Column 1 (Grid) #}
+            <div class="banner-column layout-grid_2"
+                style="background-color: {{ settings.col_1_bg_color | default('transparent') }};">
+                {% if settings.col_1_title %}
+                <div class="col-header">
+                    <h3 class="col-title" style="color: {{ settings.col_1_title_color | default('#000') }};">{{
+                        settings.col_1_title }}</h3>
+                </div>
+                {% endif %}
+
+                <div class="banners-items-container">
+                    {% for item in safeget(settings, 'col_1_items', []) %}
+                    <div class="banner-group-item">
+                        <a href="{{ item.url | default('#') }}" class="item-link">
+                            <div class="item-media">
+                                {% if item.image %}
+                                <img src="{{ image_url(item.image, w=400, f='auto') }}" alt="{{ item.title }}"
+                                    loading="lazy">
+                                {% else %}
+                                <img src="{{ image_url(('product-img.svg' | asset_url), w=400, f='auto') }}"
+                                    alt="Placeholder" loading="lazy">
+                                {% endif %}
+                            </div>
+                            {% if item.title %}
+                            <div class="item-grid-footer">
+                                <span class="item-grid-title">{{ item.title }}</span>
+                            </div>
+                            {% endif %}
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {# Column 2 (List/Flex-col) #}
+            <div class="banner-column layout-list_with_text"
+                style="background-color: {{ settings.col_2_bg_color | default('transparent') }};">
+                {% if settings.col_2_title %}
+                <div class="col-header">
+                    <h3 class="col-title" style="color: {{ settings.col_2_title_color | default('#000') }};">{{
+                        settings.col_2_title }}</h3>
+                </div>
+                {% endif %}
+
+                <div class="banners-items-container">
+                    {% for item in safeget(settings, 'col_2_items', []) %}
+
+                    <a href="{{ item.url | default('#') }}" class="item-link">
+                        <div class="item-media">
+                            {% if item.image %}
+                            <img src="{{ image_url(item.image, w=400, f='auto') }}" alt="{{ item.title }}"
+                                loading="lazy">
+                            {% else %}
+                            <img src="{{ image_url(('product-img.svg' | asset_url), w=400, f='auto') }}"
+                                alt="Placeholder" loading="lazy">
+                            {% endif %}
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {# Column 3 (Vertical Stack) #}
+            <div class="banner-column layout-vertical"
+                style="background-color: {{ settings.col_3_bg_color | default('transparent') }};">
+                {% if settings.col_3_title %}
+                <div class="col-header">
+                    <h3 class="col-title" style="color: {{ settings.col_3_title_color | default('#000') }};">{{
+                        settings.col_3_title }}</h3>
+                </div>
+                {% endif %}
+
+                <div class="banners-items-container">
+                    {% for item in safeget(settings, 'col_3_items', []) %}
+                    <div class="banner-group-item">
+                        <a href="{{ item.url | default('#') }}" class="item-link">
+                            <div class="item-media">
+                                {% if item.image %}
+                                <img src="{{ image_url(item.image, w=800, f='auto') }}" alt="{{ item.title }}"
+                                    loading="lazy">
+                                {% else %}
+                                <img src="{{ image_url(('product-img.svg' | asset_url), w=800, f='auto') }}"
+                                    alt="Placeholder" loading="lazy">
+                                {% endif %}
+
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

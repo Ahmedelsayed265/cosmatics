@@ -1,27 +1,39 @@
-<section class="brands-section" id="{{ sectionId }}" section-id="{{ sectionId }}">
+<section class="brands-section s_block" id="{{ sectionId }}" section-id="{{ sectionId }}">
     <div class="container-fluid">
         <div class="view-all-header">
             <h2 class="section-title">{{ settings.title }}</h2>
 
             {% if settings.view_all_url %}
             <a href="{{ settings.view_all_url }}" class="view-all-link">
-                {{ settings.view_all_text }}
+                {{ settings.view_all_label | default('مشاهدة الكل') }}
             </a>
             {% endif %}
         </div>
 
-        <div class="swiper brands-slider" data-brands-slider>
+        <div class="swiper brands-slider" data-autoplay="{{ (settings.slider_autoplay | default(false)) | lower }}"
+            data-delay="{{ settings.slider_autoplay_delay | default(0) }}"
+            data-arrows="{{ (settings.slider_show_arrows | default(false)) | lower }}"
+            data-pagination="{{ (settings.slider_show_pagination | default(false)) | lower }}">
             <div class="swiper-wrapper">
-                {% for item in safeget(settings, 'brands', []) %}
+                {% for item in safeget(settings, 'logos', []) %}
                 <div class="swiper-slide">
                     <a href="{{ item.url | default('#') }}" class="brand-item">
-                        {% if item.logo %}
-                        <img src="{{ image_url(item.logo, w=200, f='auto') }}" alt="Brand Logo" loading="lazy">
+                        {% if item.image %}
+                        <img src="{{ image_url(item.image, w=200, f='auto') }}" alt="Brand Logo" loading="lazy">
                         {% endif %}
                     </a>
                 </div>
                 {% endfor %}
             </div>
+
+            {% if settings.slider_show_pagination | default(false) %}
+            <div class="swiper-pagination custom-swiper-pagination"></div>
+            {% endif %}
+
+            {% if settings.slider_show_arrows | default(false) %}
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+            {% endif %}
         </div>
     </div>
 </section>
@@ -33,18 +45,33 @@
             if (!section) return;
 
             var sliderEl = section.querySelector('.brands-slider');
+            if (!sliderEl) return;
+
+            var isAutoplay = sliderEl.getAttribute('data-autoplay') === 'true';
+            var autoplayDelay = parseInt(sliderEl.getAttribute('data-delay')) || 0;
+            var isArrows = sliderEl.getAttribute('data-arrows') === 'true';
+            var isPagination = sliderEl.getAttribute('data-pagination') === 'true';
+
             if (window.Swiper) {
                 new Swiper(sliderEl, {
                     slidesPerView: 3.5,
                     spaceBetween: 20,
                     loop: true,
-                    autoplay: {
-                        delay: 0,
-                        disableOnInteraction: true,
-                    },
-                    speed: 1000,
-                    freeMode: true,
+                    autoplay: isAutoplay ? {
+                        delay: autoplayDelay,
+                        disableOnInteraction: false,
+                    } : false,
+                    speed: 3000,
+                    freeMode: (isAutoplay && autoplayDelay === 0),
                     rtl: document.documentElement.dir === 'rtl',
+                    pagination: isPagination ? {
+                        el: sliderEl.querySelector('.swiper-pagination'),
+                        clickable: true,
+                    } : false,
+                    navigation: isArrows ? {
+                        nextEl: sliderEl.querySelector('.swiper-button-next'),
+                        prevEl: sliderEl.querySelector('.swiper-button-prev'),
+                    } : false,
                     breakpoints: {
                         640: { slidesPerView: 4.5, spaceBetween: 30 },
                         992: { slidesPerView: 6.5, spaceBetween: 40 },
@@ -57,7 +84,7 @@
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initBrands);
         } else {
-            setTimeout(initBrands, 100);
+            initBrands();
         }
     })();
 </script>

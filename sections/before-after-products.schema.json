@@ -8,54 +8,62 @@
   },
   "settings": [
     {
-      "type": "text",
       "id": "title",
-      "label": {
-        "ar": "العنوان الرئيسي",
-        "en": "Main Title"
-      },
-      "default": "قبل وبعد استخدام منتجاتنا"
-    },
-    {
       "type": "text",
-      "id": "subtitle",
-      "label": {
-        "ar": "العنوان الفرعي",
-        "en": "Subtitle"
-      },
-      "default": "اشهد قوة التحول في حلول العناية بالبشرة لدينا"
+      "label": { "ar": "العنوان", "en": "Title" }
     },
     {
+      "type": "header",
+      "label": { "ar": "إعدادات السلايدر (للكروت)", "en": "Slider Settings (Cards)" }
+    },
+    {
+      "id": "slider_autoplay",
+      "type": "checkbox",
+      "label": { "ar": "تشغيل تلقائي", "en": "Autoplay" },
+      "default": false
+    },
+    {
+      "id": "slider_autoplay_delay",
+      "type": "number",
+      "label": { "ar": "سرعة التشغيل التلقائي (بالمللي ثانية)", "en": "Autoplay Delay (ms)" },
+      "default": 3000
+    },
+    {
+      "id": "slider_show_arrows",
+      "type": "checkbox",
+      "label": { "ar": "إظهار أسهم التنقل", "en": "Show Navigation Arrows" },
+      "default": false
+    },
+    {
+      "id": "slider_show_pagination",
+      "type": "checkbox",
+      "label": { "ar": "إظهار نقاط الترقيم", "en": "Show Pagination" },
+      "default": false
+    },
+    {
+      "id": "image_before",
+      "type": "image",
+      "label": { "ar": "الصورة قبل", "en": "Image Before" }
+    },
+    {
+      "id": "image_after",
+      "type": "image",
+      "label": { "ar": "الصورة بعد", "en": "Image After" }
+    },
+    {
+      "id": "linked_product",
+      "type": "product",
+      "label": { "ar": "المنتج المرتبط (اختياري)", "en": "Linked Product (Optional)" }
+    },
+    {
+      "id": "products",
       "type": "list",
-      "id": "items",
-      "label": {
-        "ar": "العناصر",
-        "en": "Items"
-      },
+      "label": { "ar": "قائمة منتجات أخرى", "en": "Other Products List" },
       "settings": [
         {
-          "type": "image",
-          "id": "before_image",
-          "label": {
-            "ar": "صورة قبل",
-            "en": "Before Image"
-          }
-        },
-        {
-          "type": "image",
-          "id": "after_image",
-          "label": {
-            "ar": "صورة بعد",
-            "en": "After Image"
-          }
-        },
-        {
+          "id": "product",
           "type": "product",
-          "id": "product_item",
-          "label": {
-            "ar": "المنتج المرتبط",
-            "en": "Linked Product"
-          }
+          "label": { "ar": "المنتج", "en": "Product" }
         }
       ]
     }

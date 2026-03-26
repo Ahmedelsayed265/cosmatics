@@ -2,16 +2,16 @@
     <div class="container-fluid">
         {% if settings.title %}
             <div class="view-all-header">
-                <h2>{{ settings.title }}</h2>
+                <h2 class="section-title">{{ settings.title }}</h2>
             </div>
         {% endif %}
 
         <div class="masonry-wrapper">
             {% for item in safeget(settings, 'banners', []) %}
             <div class="masonry-item-container">
-                <a href="{{ item.url | default('#') }}" class="gallery-item free-item">
+                <a href="{{ item.url | default('#') }}" class="gallery-item">
                     {% if item.image %}
-                        <img src="{{ image_url(item.image, w=600, f='auto') }}" alt="Gallery Item" loading="lazy">
+                        <img src="{{ image_url(item.image, w=800, f='auto') }}" alt="Gallery Item" loading="lazy">
                     {% endif %}
                 </a>
             </div>

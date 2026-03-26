@@ -8,7 +8,11 @@
             {% endif %}
         </div>
 
-        <div class="swiper month-brands-slider" data-month-brands-slider>
+        <div class="swiper month-brands-slider" 
+             data-autoplay="{{ (settings.slider_autoplay | default(false)) | lower }}"
+             data-delay="{{ settings.slider_autoplay_delay | default(3000) }}"
+             data-arrows="{{ (settings.slider_show_arrows | default(false)) | lower }}"
+             data-pagination="{{ (settings.slider_show_pagination | default(false)) | lower }}">
             <div class="swiper-wrapper">
                 {% for item in safeget(settings, 'brands', []) %}
                 <div class="swiper-slide">
@@ -33,7 +37,15 @@
                 </div>
                 {% endfor %}
             </div>
-            <div class="swiper-pagination"></div>
+            
+            {% if settings.slider_show_pagination | default(false) %}
+            <div class="swiper-pagination custom-swiper-pagination"></div>
+            {% endif %}
+
+            {% if settings.slider_show_arrows | default(false) %}
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+            {% endif %}
         </div>
     </div>
 </section>
@@ -47,15 +59,28 @@
         var sliderEl = section.querySelector('.month-brands-slider');
         if (!sliderEl) return;
 
+        var isAutoplay = sliderEl.getAttribute('data-autoplay') === 'true';
+        var autoplayDelay = parseInt(sliderEl.getAttribute('data-delay')) || 3000;
+        var isArrows = sliderEl.getAttribute('data-arrows') === 'true';
+        var isPagination = sliderEl.getAttribute('data-pagination') === 'true';
+
         if (window.Swiper) {
             new Swiper(sliderEl, {
                 slidesPerView: 1.5,
                 spaceBetween: 15,
                 rtl: document.documentElement.dir === 'rtl',
-                pagination: {
+                autoplay: isAutoplay ? {
+                    delay: autoplayDelay,
+                    disableOnInteraction: false
+                } : false,
+                pagination: isPagination ? {
                     el: sliderEl.querySelector('.swiper-pagination'),
-                    clickable: true,
-                },
+                    clickable: true
+                } : false,
+                navigation: isArrows ? {
+                    nextEl: sliderEl.querySelector('.swiper-button-next'),
+                    prevEl: sliderEl.querySelector('.swiper-button-prev')
+                } : false,
                 breakpoints: {
                     480: { slidesPerView: 2.2, spaceBetween: 15 },
                     768: { slidesPerView: 3.2, spaceBetween: 20 },
@@ -68,7 +93,7 @@
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initBrandsSlider);
     } else {
-        setTimeout(initBrandsSlider, 100);
+        initBrandsSlider();
     }
 })();
 </script>
