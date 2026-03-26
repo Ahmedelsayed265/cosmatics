@@ -7,29 +7,47 @@
     <link rel="stylesheet" type="text/css" href="{{ 'ekko-lightbox.css' | asset_url }}" />
 
     <link rel="stylesheet" type="text/css" href="{{ ('product-details.css?v=' ~ ver)  | asset_url }}" />
-
+    <script>window.__playLabel = {{ _('Play') | tojson }}; window.__pauseLabel = {{ _('Pause') | tojson }};</script>
 {% endblock %}
 
 
 {% block main_content %}
 
+    <section class="breadcrumb-section product-breadcrumb-section">
+        <nav aria-label="{{ _('Breadcrumb') }}">
+            <ol class="breadcrumb">
+                <div class="container-fluid d-flex flex-wrap align-items-center">
+                    <li class="breadcrumb-item">
+                        <a href="/">{{ _("Home") }}</a>
+                    </li>
+                    {% if product.categories and product.categories|length > 0 %}
+                    {% set main_cat = product.categories[0] %}
+                    {% set main_cat_name = main_cat.name if main_cat.name is string else (safeget(main_cat.name, session.lang) or safeget(main_cat.name, 'ar') or safeget(main_cat.name, 'en') or '') %}
+                    <li class="breadcrumb-item">
+                        <a href="/categories/{{ main_cat.id }}/{{ main_cat.slug }}">{{ main_cat_name }}</a>
+                    </li>
+                    {% endif %}
+                    <li class="breadcrumb-item active" aria-current="page">{{ product.name | safe }}</li>
+                </div>
+            </ol>
+        </nav>
+    </section>
+
     <section class="product products-details-page">
-        <div class="container pb-5">
-            <section class="products-details mb-5">
+        <div class="container-fluid pb-5">
+            <section class="products-details mb-2">
                 <div>
-                    <div class="row">
+                    <div class="row products-details-row">
 
-                        <div class="col-lg-6">
+                        <div class="col-12 col-lg-7 col-product-gallery">
 
-                            <!--GALLERY-->
-                            <div id="wrap">
+                            <div id="wrap" class="product-gallery-wrap">
                                 <div class="row">
                                     <div class="col-12 col-product-image-wrapper">
 
                                         <!-- Carousel -->
-                                        <div class="box-1-1 product-images-carousel product-images-carousel-init {% if product.selected_product.media | length <= 0 %}d-none{% endif %}">
-                                            <div class="content">
-                                                <div id="product-images" class="product-images slide gallery">
+                                        <div class="product-images-carousel product-images-carousel-init {% if product.selected_product.media | length <= 0 %}d-none{% endif %}">
+                                         <div id="product-images" class="product-images slide gallery">
                                                     <div id="product-images-slick">
                                                         {% for image in product.selected_product.media %}
                                                             <div>
@@ -42,7 +60,7 @@
                                                                                 <img id="main-video-icon"
                                                                                   class="play-icon"
                                                                                   src="{{ 'video-play.svg' | asset_url }}"
-                                                                                  alt="play"
+                                                                                  alt="{{ _('Play') }}"
                                                                                   width="25"
                                                                                   onClick="showIframe(this, '{{ image.link }}')"
                                                                                 />
@@ -76,26 +94,21 @@
                                                         {% endfor %}
                                                     </div>
                                                 </div>
-                                            </div>
                                         </div>
 
                                         <div class="row lg-thumbs d-lg-flex product-images-carousel-thumbs {% if product.selected_product.media | length <= 1 %}d-none-important{% endif %}">
                                             {% for image in product.selected_product.media %}
-                                                <div class="col-3">
-                                                    <div class="box-1-1">
-                                                        <div class="content">
-                                                            <a class="d-flex align-items-center justify-content-center thumb-image-a" data-index="{{ loop.index0 }}"
+                                                <div class="col-thumbs {% if loop.index0 == 0 %}thumb-active{% endif %}">
+                                                       <a class="d-flex align-items-center justify-content-center thumb-image-a" data-index="{{ loop.index0 }}"
                                                                style="width: 100%; height: 100%;" >
                                                                 <img src="{{ image.image.medium }}" data-index="{{ loop.index0 }}">
                                                                 {% if image.provider and image.link %}
                                                                   <img id="video-play-icon" class="play-icon"
-                                                                    src="{{ 'video-play.svg' | asset_url }}" alt="play"
+                                                                    src="{{ 'video-play.svg' | asset_url }}" alt="{{ _('Play') }}"
                                                                     data-index="{{ loop.index0 }}"
                                                                   />
                                                                 {% endif %}
                                                             </a>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             {% endfor %}
                                         </div>
@@ -115,22 +128,69 @@
 
                         </div>
 
-                        <div class="col-lg-6  col-product-info {% if product.selected_product.media | length <= 1 %}col-product-info-single-image{% endif %}">
+                        <div class="col-12 col-lg-5 col-product-info {% if product.selected_product.media | length <= 1 %}col-product-info-single-image{% endif %}">
 
-
-
-                            <section>
+                            <section class="product-info-section">
+                                {% if product.categories and product.categories|length > 0 %}
+                                {% set main_cat = product.categories[0] %}
+                                {% set main_cat_name = main_cat.name if main_cat.name is string else (safeget(main_cat.name, session.lang) or safeget(main_cat.name, 'ar') or safeget(main_cat.name, 'en') or '') %}
+                                <div class="product-category-origin-row d-flex align-items-center flex-wrap">
+                                    {% if main_cat.image %}
+                                    <img class="product-category-origin-img" src="{{ image_url(main_cat.image, w=80, h=80, q=90, f='auto') }}" alt="{{ main_cat_name }}" loading="lazy" width="48" height="48">
+                                    {% endif %}
+                                    <span class="product-category-origin-authentic">{{ _("authentic_100") }}</span>
+                                    <span class="product-category-origin-prefix">{{ _("click_here_for_more_from") }}</span>
+                                    <a href="/categories/{{ main_cat.id }}/{{ main_cat.slug }}" class="product-category-origin-name">{{ main_cat_name }}</a>
+                                </div>
+                                {% endif %}
                                 {% if product.badge %}
                                    {% include 'vitrin:products/badge.jinja' %}
                                 {% endif %}
-                                <h1>{{ product.name | safe }}</h1>
-                                <div class="d-flex flex-column flex-lg-row product-features">
+                                <div class="product-rating-share-row d-flex align-items-center justify-content-between flex-wrap">
+                                    <div class="product-actions-icons d-flex align-items-center">
+                                        {% if store.settings.products.wishlist_enabled == true %}
+                                        <span class="add-to-wishlist position-relative product-page-wishlist" data-wishlist-id="{{ product.id }}">
+                                            {% if not session.is_guest %}
+                                            <a style="display: none;" class="product-icon-btn product-icon-favorite icon-heart-mask filled" zid-visible-wishlist="{{ product.id }}" onclick="addToWishlist(this, '{{ product.id }}')" href="javascript:void(0)" aria-label="{{ _('Add to wishlist') }}"></a>
+                                            <a class="product-icon-btn product-icon-favorite icon-heart-mask" zid-hidden-wishlist="{{ product.id }}" onclick="addToWishlist(this, '{{ product.id }}')" href="javascript:void(0)" aria-label="{{ _('Add to wishlist') }}"></a>
+                                            {% else %}
+                                            <a class="product-icon-btn product-icon-favorite icon-heart-mask" href="{{ url_for('login_page', query_params={"redirect_to": session.path} ) }}" aria-label="{{ _('Add to wishlist') }}"></a>
+                                            {% endif %}
+                                            <img class="loader d-none" src="{{ 'spinner.gif' | asset_url }}" width="20" height="20"/>
+                                        </span>
+                                        {% endif %}
+                                        <button type="button" class="product-icon-btn product-icon-share product-share-native-btn" aria-label="{{ _('share product') }}" data-product-url="{{ product.html_url }}" data-product-name="{{ product.name | e }}">
+
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M21 6.5C21 8.15685 19.6569 9.5 18 9.5C16.3431 9.5 15 8.15685 15 6.5C15 4.84315 16.3431 3.5 18 3.5C19.6569 3.5 21 4.84315 21 6.5Z" stroke="#050505" stroke-width="1.5"/>
+<path d="M9 12C9 13.6569 7.65685 15 6 15C4.34315 15 3 13.6569 3 12C3 10.3431 4.34315 9 6 9C7.65685 9 9 10.3431 9 12Z" stroke="#050505" stroke-width="1.5"/>
+<path d="M21 17.5C21 19.1569 19.6569 20.5 18 20.5C16.3431 20.5 15 19.1569 15 17.5C15 15.8431 16.3431 14.5 18 14.5C19.6569 14.5 21 15.8431 21 17.5Z" stroke="#050505" stroke-width="1.5"/>
+<path d="M8.72852 10.7498L15.2285 7.75031M8.72852 13.2503L15.2285 16.2498" stroke="#050505" stroke-width="1.5"/>
+</svg>
+                                        </button>
+                                    </div>
                                     {% if product.rating %}
-                                        <div>
-                                            {% set rating=product.rating.average %}{% include 'components/rating-stars.jinja' %}
-                                            {% if product.rating.total_count > 0 %}<span class="product-card-rating-count">({{ product.rating.total_count }})</span>{% endif %}
-                                        </div>
+                                    <div class="product-rating-block d-flex align-items-center">
+                                        {% set rating=product.rating.average %}{% include 'components/rating-stars.jinja' %}
+                                        {% if product.rating.total_count > 0 %}<span class="product-card-rating-count">({{ product.rating.total_count }}){{ _("reviews")}} </span>{% endif %}
+                                    </div>
                                     {% endif %}
+                                </div>
+
+                                <h1>{{ product.name | safe }}</h1>
+                                <p class="product-viewing-now d-flex align-items-center mb-0">
+                                    <span class="product-viewing-now-icon" aria-hidden="true">
+
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M2 8C2 8 6.47715 3 12 3C17.5228 3 22 8 22 8" stroke="#050505" stroke-width="1.5" stroke-linejoin="round"/>
+<path d="M12 7C7.08671 7 3.43133 11.7818 2 14C3.43133 16.2182 7.08671 21 12 21C16.9133 21 20.5687 16.2182 22 14C20.5687 11.7818 16.9133 7 12 7Z" stroke="#050505" stroke-width="1.5"/>
+<path d="M15 14C15 12.3431 13.6569 11 12 11C10.3431 11 9 12.3431 9 14C9 15.6569 10.3431 17 12 17C13.6569 17 15 15.6569 15 14Z" stroke="#050505" stroke-width="1.5" stroke-linejoin="round"/>
+</svg>
+                                    </span>
+                                    <span class="product-viewing-now-text">{{ _("viewing_product_before") }}<span class="product-viewing-now-number">250</span>{{ _("viewing_product_after") }}</span>
+                                </p>
+                                <div class="d-flex flex-column flex-lg-row product-features">
+                                  
                                     {% if product.sold_products_count %}
                                         <div class="product-count d-flex align-items-center">
                                             <span class="icon-military_tech" style="color: #FFCF57; font-size: 16px"></span>&nbsp;
@@ -162,20 +222,20 @@
                                 </div>
 
                                 {% if product.short_description %}
-                                    <p class="text-short-description">
-                                        {{ product.short_description | safe }}
-                                        &nbsp;<a id="product-description-a" href="#product-description" class="text-color-primary">{{ _("more information") }}</a>
-                                    </p>
+                                    <p class="text-short-description">{{ product.short_description | replace('<br>', ' ') | replace('<br/>', ' ') | replace('</p>', ' ') | replace('<p>', ' ') | striptags | trim }} <a id="product-description-a" href="#product-description-{{ product.id }}" class="text-color-primary">{{ _("more information") }}</a></p>
                                 {% endif %}
-                                <div class="d-flex">
-                                    <div>
-                                        <h2 class="product-formatted-price theme-text-primary">{% if product.selected_product.formatted_sale_price %}{{ product.selected_product.formatted_sale_price }}{% else %}{{ product.selected_product.formatted_price }}{% endif %}</h2>
-                                        <p>
-                                            <del class="product-formatted-price-old">{% if product.selected_product.formatted_sale_price %} {{ product.selected_product.formatted_price }}{% endif %}</del>
-                                            <span class="product-formatted-price-discount" style="color:#f25f5f;">{% if product.selected_product.formatted_sale_price %}  &nbsp;  &nbsp;{{ _("Discount") }}&nbsp;{{ product.discount_percentage }}%{% endif %}</span>
-                                        </p>
+                                <div class="product-price-block">
+                                    {% if product.selected_product.formatted_sale_price %}
+                                    <p class="product-price-old-line mb-0"><del class="product-formatted-price-old">{{ product.selected_product.formatted_price }}</del></p>
+                                    <div class="product-price-current-row d-flex align-items-center flex-wrap">
+                                        <span class="product-formatted-price-discount-badge">-{{ product.discount_percentage }}%</span>
+                                        <h2 class="product-formatted-price product-formatted-price-current mb-0">{{ product.selected_product.formatted_sale_price }}</h2>
                                     </div>
-
+                                    {% else %}
+                                    <div class="product-price-current-row">
+                                        <h2 class="product-formatted-price product-formatted-price-current mb-0">{{ product.selected_product.formatted_price }}</h2>
+                                    </div>
+                                    {% endif %}
                                 </div>
 
                                 <div>
@@ -188,15 +248,14 @@
                             </section>
 
 
-                            <div class="border-product"></div>
-                            <div style="margin-bottom: 25px" class="div-product-sku {% if not product.selected_product.sku %}d-none{% endif %}">
+                            <div class="div-product-sku {% if not product.selected_product.sku %}d-none{% endif %}">
                                 <h4 class="product-title">{{ _("product sku") }}</h4>
                                 <div class="product-sku">
                                     {{ product.selected_product.sku }}
                                 </div>
                             </div>
 
-                            <div style="margin-bottom: 25px" class="div-product-weight {% if not product.selected_product.weight.value %}d-none{% endif %}">
+                            <div  class="div-product-weight {% if not product.selected_product.weight.value %}d-none{% endif %}">
                                 <h4 class="product-title">{{ _("Weight") }}</h4>
                                 <div class="product-weight">
                                     {{ product.selected_product.weight.value }}&nbsp;{{ product.selected_product.weight.unit }}
@@ -212,18 +271,21 @@
 
                                     <!-- new custom fields update -->
                                     {% if product.custom_input_fields  %}
-                                        <div class="border-product" style="margin-top: 25px"></div>
                                         {% include 'vitrin:products/custom_input_fields.jinja' %}
                                     {% endif %}
                                 </div>
 
                                 {% if product.selected_product.is_infinite or product.selected_product.quantity > 0 %}
-                                    <div class="border-product" style="margin-top: 15px"></div>
+                                    <div class="product-no-return-notice">
+                                        <span class="product-no-return-text">{{ _("This product is not returned or exchanged.") }}</span>
+                                    </div>
                                     <div class="select-quantity-div">
                                         <h4 class="product-title">{{ _("Quantity") }}</h4>
                                         <div class="form-group">
-                                            <div>
-                                                <select  id="product-quantity" name="quantity" class="select-quantity">
+                                            <div class="quantity-selector-wrap">
+                                                <button type="button" class="quantity-btn quantity-minus" aria-label="{{ _('Decrease quantity') }}">−</button>
+                                                <span class="quantity-value" id="product-quantity-display">1</span>
+                                                <select id="product-quantity" name="quantity" class="select-quantity" aria-hidden="true" tabindex="-1">
                                                     {% if product.selected_product.is_infinite or product.selected_product.quantity > 100 %}
                                                         {% set maxQuantity = 100 %}
                                                     {% else %}
@@ -234,13 +296,13 @@
                                                         <option value="{{ n }}" {% if n == 1 %}selected{% endif %}>{{ n }}</option>
                                                     {% endfor %}
                                                 </select>
+                                                <button type="button" class="quantity-btn quantity-plus" aria-label="{{ _('Increase quantity') }}">+</button>
                                             </div>
                                         </div>
                                     </div>
                                 {% endif %}
 
                                 <div class="section-out-of-stock-notify-me {% if not product.selected_product.in_stock %}d-block{% else %}d-none{% endif %}">
-                                    <div class="border-product" style="margin-top: 15px"></div>
                                     <div>
                                         <h4 class="product-title">{{ _("This product is out of stock") }}</h4>
                                         <form>
@@ -270,16 +332,15 @@
 
 
                             </form>
-                            
-                            <!-- Bundle Product Selection Container -->
+        
+                            <!-- Bundle Product Selection container-fluid -->
                             {% if product.product_class == 'dynamic_bundle' %}
                                 {% include 'vitrin:products/bundle-products.jinja' %}
                             {% endif %}
 
                             <div class="product-buttons {% if not product.selected_product.in_stock %}d-none{% else %}d-block{% endif %}">
-                                <div class="border-product"></div>
                                     <div class="d-flex align-center" style="gap: 10px;">
-                                        <button style="margin-bottom: 20px" class="btn btn-add-to-cart" type="button" onclick="productAddToCart()">
+                                        <button class="btn btn-add-to-cart" type="button" onclick="productAddToCart()">
                                             <div class="add-to-cart-icon fa fa-shopping-cart" style="mask: url({{ 'shopping-cart.svg' | asset_url }}) no-repeat center;"></div>
 
                                             <img class="add-to-cart-progress d-none" src="{{ 'spinner.gif' | asset_url }}" width="25" height="25"/>
@@ -299,17 +360,9 @@
                                             <span>{{ _("Buy now") }}</span>
                                         </button>
                                         {% endif %}
+                                    {% include 'vitrin:products/grouped-product.jinja' %}
 
-                                        {% if store.settings.products.wishlist_enabled == true %}
-                                            <span class="add-to-wishlist position-relative my-2" data-wishlist-id="{{ product.id }}">
-                                                {% if not session.is_guest %}
-                                                <a class="icon-heart-mask" onclick="addToWishlist(this, '{{ product.id }}')"></a>
-                                                {% else %}
-                                                <a class="icon-heart-mask" href="{{ url_for('login_page', query_params={"redirect_to": session.path} ) }}"></a>
-                                                {% endif %}
-                                                <img class="loader d-none" src="{{ 'spinner.gif' | asset_url }}" width="20" height="20"/>
-                                            </span>
-                                        {% endif %}
+
                                 </div>
 
                                 <div>
@@ -321,7 +374,6 @@
                             <div>
                                 <span id="product-view-add-to-cart"></span>
                             </div>
-                            <div class="border-product"></div>
                             <div class="border-product">
                                 <h4 class="product-title">{{ _("share product") }}</h4>
                                 <div class="product-icon">
@@ -372,56 +424,73 @@
             </section>
             {% endif %}
 
-            {% include 'vitrin:products/grouped-product.jinja' %}
+            {# Grouped product helper data for JS #}
+            {% if product.product_class == 'grouped_product' and product.group_products %}
+            <script>
+                window.groupedProductConfig = {{ product.group_products | tojson }};
+            </script>
+            {% endif %}
 
-            {% if product.metafields %}
-                <section id="product-description" class="mt-5">
-                    <div class="d-flex align-items-center">
-                        <div class="description-icon">
-                            <span class="icon-fact_check_black"></span>
-                        </div>
-                        <div class="description-title">
-                           {{ _("product information") }}
-                        </div>
-                    </div>
+            {% set _product_first_tab = namespace(active=true) %}
+            <div class="product-tabs-wrapper">
+                <ul class="nav nav-tabs product-tabs-nav" id="productTabs-{{ product.id }}" role="tablist">
+                    {% if product.metafields or product.description %}
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link product-tab-link {% if _product_first_tab.active %}active{% endif %}" id="product-description-tab-{{ product.id }}" data-bs-toggle="tab" data-toggle="tab" href="#product-description-{{ product.id }}" role="tab" aria-controls="product-description-{{ product.id }}" aria-selected="{% if _product_first_tab.active %}true{% else %}false{% endif %}">{{ _("product description") }}</a>
+                    </li>
+                    {% if _product_first_tab.active %}{% set _product_first_tab.active = false %}{% endif %}
+                    {% endif %}
+                    {% if product.has_variants %}
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link product-tab-link {% if _product_first_tab.active %}active{% endif %}" id="product-specs-tab-{{ product.id }}" data-bs-toggle="tab" data-toggle="tab" href="#product-specs-{{ product.id }}" role="tab" aria-controls="product-specs-{{ product.id }}" aria-selected="{% if _product_first_tab.active %}true{% else %}false{% endif %}">{{ _("Specifications") }}</a>
+                    </li>
+                    {% if _product_first_tab.active %}{% set _product_first_tab.active = false %}{% endif %}
+                    {% endif %}
+                    {% if store.settings.products.reviews_enabled %}
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link product-tab-link {% if _product_first_tab.active %}active{% endif %}" id="product-reviews-tab-{{ product.id }}" data-bs-toggle="tab" data-toggle="tab" href="#product-reviews-{{ product.id }}" role="tab" aria-controls="product-reviews-{{ product.id }}" aria-selected="{% if _product_first_tab.active %}true{% else %}false{% endif %}">{{ _("Reviews") }}</a>
+                    </li>
+                    {% if _product_first_tab.active %}{% set _product_first_tab.active = false %}{% endif %}
+                    {% endif %}
+                    {% if store.settings.products.questions_enabled %}
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link product-tab-link {% if _product_first_tab.active %}active{% endif %}" id="product-questions-tab-{{ product.id }}" data-bs-toggle="tab" data-toggle="tab" href="#product-questions-{{ product.id }}" role="tab" aria-controls="product-questions-{{ product.id }}" aria-selected="{% if _product_first_tab.active %}true{% else %}false{% endif %}">{{ _("Questions") }}</a>
+                    </li>
+                    {% if _product_first_tab.active %}{% set _product_first_tab.active = false %}{% endif %}
+                    {% endif %}
+                </ul>
+                {% set _product_first_pane = namespace(active=true) %}
+                <div class="tab-content product-tabs-content" id="productTabsContent-{{ product.id }}">
+
+            {% if product.metafields or product.description %}
+                <div class="tab-pane fade {% if _product_first_pane.active %}show active{% endif %}" id="product-description-{{ product.id }}" role="tabpanel" aria-labelledby="product-description-tab-{{ product.id }}">
+                {% if _product_first_pane.active %}{% set _product_first_pane.active = false %}{% endif %}
+                <section class="product-tab-section ">
+                    {% if product.metafields %}
+                    
                     <div class="description-paragrah text-justify description-text-clear">
                           {% set entity = product %}
                           {% include 'vitrin:shared/metafields.jinja' %}
                     </div>
-                </section>
-            {% endif %}
-
-            {% if product.description %}
-                <section id="product-description" class="mt-5">
-                    <div class="d-flex align-items-center">
-                        <div class="description-icon">
-                            <span class="icon-fact_check_black"></span>
-                        </div>
-                        <div class="description-title">
-                            {{ _("product description") }}
-                        </div>
-                    </div>
+                    {% endif %}
+                    {% if product.description %}
+                  
                     {% autoescape false %}
                         <div class="description-paragrah text-justify description-text-clear">
                             {{ product.description }}
                         </div>
                     {% endautoescape %}
+                    {% endif %}
                 </section>
+                </div>
             {% endif %}
 
             {% if product.has_variants %}
-                <section class="product-selection mt-5">
-                    <div>
-                        <div class="d-flex align-items-center">
-                            <div class="description-icon">
-                                <span class="icon-format_list_bulleted"></span>
-                            </div>
-                            <div class="description-title">
-                                {{ _("product description") }}
-                            </div>
-                        </div>
-
-                        <div class="card-table d-none d-lg-block">
+                <div class="tab-pane fade {% if _product_first_pane.active %}show active{% endif %}" id="product-specs-{{ product.id }}" role="tabpanel" aria-labelledby="product-specs-tab-{{ product.id }}">
+                {% if _product_first_pane.active %}{% set _product_first_pane.active = false %}{% endif %}
+                <section class="product-selection product-tab-section">
+                    <div class="product-specs-table-wrap">
+                        <div class="card-table d-none d-lg-block product-specs-header-row">
                             <div class="card">
                                 <div class="card-body card-table-header">
                                     <div class="row">
@@ -492,36 +561,41 @@
 
                     </div>
                 </section>
+                </div>
             {% endif %}
 
             {% if store.settings.products.reviews_enabled %}
-                <section class="mt-5 review-details">
-                    <div>
-                        <div class="d-flex flex-wrap align-items-center" style="width: 100%">
-                            <div class="description-icon">
-                                <span class="icon-reviews_black"></span>
-                            </div>
-                            <div class="description-title">
-                                {{ _("Reviews") }}
-                            </div>
+                <div class="tab-pane fade {% if _product_first_pane.active %}show active{% endif %}" id="product-reviews-{{ product.id }}" role="tabpanel" aria-labelledby="product-reviews-tab-{{ product.id }}">
+                {% if _product_first_pane.active %}{% set _product_first_pane.active = false %}{% endif %}
+                <section class="review-details product-tab-section">
+                    <div class="product-tab-section-body reviews-section-body">
+                        <div class="reviews-section-grid">
                             {% if product.rating %}
-                            <div class="rating-section">
-                                    <div>
-                                        {% set rating=product.rating.average %}{% include 'components/rating-stars.jinja' %}
-                                        <span class="product-card-rating-count">({{ product.rating.total_count }})</span>
-                                    </div>
+                            <div class="reviews-summary-block">
+                                <span class="reviews-summary-number">{{ product.rating.average }}</span>
+                                <div class="reviews-summary-stars">
+                                    {% set rating=product.rating.average %}{% include 'components/rating-stars.jinja' %}
+                                </div>
+                                <span class="reviews-summary-count">{{ _("Based on") }} {{ product.rating.total_count }} {{ _("reviews") }}</span>
                             </div>
                             {% endif %}
-
-                            &nbsp;
-                            <!-- Button trigger modal -->
-                            {% if session.is_guest %}
-                            <a href="/auth/login?redirect_to={{ url_for('add_product_review', slug=product.id) }}" class="btn btn-primary add-review-btn" onclick="event.preventDefault(); handleLoginAction('{{ url_for('add_product_review', slug=product.id) }}'); return false;"><span class="icon-add_circle"></span>{{ _("Add Comment ") }} </a>
-                            {% else %}
-                            <a href="{{ url_for('add_product_review', slug=product.slug) }}" class="btn btn-primary add-review-btn" id="add-review-btn"><span class="icon-add_circle"></span>{{ _("Add Comment ") }}</a>
-                            {% endif %}
-                        </div>
-                        <div class="reviews-break-down-div description-paragrah">
+                            <div class="reviews-main-col">
+                                <div class="reviews-header-row">
+                                    <div class="reviews-sort-wrap">
+                                        <select class="reviews-sort-select" id="reviews-sort-select" aria-label="{{ _('Sort reviews') }}">
+                                            <option value="newest">{{ _("Newest first") }}</option>
+                                            <option value="oldest">{{ _("Oldest first") }}</option>
+                                            <option value="highest">{{ _("Highest rating") }}</option>
+                                            <option value="lowest">{{ _("Lowest rating") }}</option>
+                                        </select>
+                                    </div>
+                                    {% if session.is_guest %}
+                                    <a href="/auth/login?redirect_to={{ url_for('add_product_review', slug=product.id) }}" class="btn add-review-btn" onclick="event.preventDefault(); handleLoginAction('{{ url_for('add_product_review', slug=product.id) }}'); return false;">{{ _("Write your review") }}</a>
+                                    {% else %}
+                                    <a href="{{ url_for('add_product_review', slug=product.slug) }}" class="btn add-review-btn" id="add-review-btn"><span class="icon-add_circle"></span>{{ _("Write your review") }}</a>
+                                    {% endif %}
+                                </div>
+                                <div class="reviews-break-down-div description-paragrah reviews-break-down-hidden">
                             <div class="d-flex align-items-center mt-3 mb-4">
                                 {% if product.rating %}
                                 <h4 class="rating-average">{{ product.rating.average }}</h4>
@@ -577,52 +651,57 @@
                                 {% endif %}
                             </div>
                         </div>
-                        <div class="reviews-break-down-empty description-paragrah d-none">
-                            <div style="border: 1px solid #ccc; margin: 10px 0px; padding: 10px; border-radius: 3px">
-                                <span>{{ _("No reviews, add yours") }}</span>
-                            </div>
+                        {% if not product.reviews.results or product.reviews.results | length == 0 %}
+                        <div class="reviews-empty-state description-paragrah">
+                            <p class="reviews-empty-title">{{ _("No reviews yet") }}</p>
+                            <p class="reviews-empty-subtitle">{{ _("Be the first to rate this product") }}</p>
                         </div>
+                        {% endif %}
 
                         <div class="comment-section description-paragrah bg-transparent">
                             {% set reviews=product.reviews.results %}{% include 'components/customer-reviews.jinja' %}
 
                             {% if product.reviews.pages_count > 1 %}
-                            <div class="text-right">
-                                <a href="{{ url_for('product_reviews', slug=product.id) }} " type="button" class="btn all-reviews-btn">
+                            <div class="reviews-show-more-wrap">
+                                <a href="{{ url_for('product_reviews', slug=product.id) }}" type="button" class="btn all-reviews-btn">
                                     {{ _("All reviews") }}
                                 </a>
                             </div>
                             {% endif %}
                         </div>
 
+                        </div>
+                        </div>
                     </div>
                 </section>
+                </div>
             {% endif %}
             {% if store.settings.products.questions_enabled %}
-            <section class="mt-5 review-details">
-                <div>
-                    <div class="d-flex flex-wrap align-items-center" style="width: 100%">
-                        <div class="description-icon">
-                            <span class="icon-reviews_black"></span>
-                        </div>
+            <div class="tab-pane fade {% if _product_first_pane.active %}show active{% endif %}" id="product-questions-{{ product.id }}" role="tabpanel" aria-labelledby="product-questions-tab-{{ product.id }}">
+            {% if _product_first_pane.active %}{% set _product_first_pane.active = false %}{% endif %}
+            <section class="review-details product-tab-section">
+                <div class="product-tab-section-body">
+                    <div class="d-flex flex-wrap align-items-center product-tab-section-header" style="width: 100%">
+                      
                         <div class="description-title">
                             {{ _("Questions") }}
                         </div>
-                          <button type="button" class="btn btn-primary add-review-btn" id="addQuestionButton"><span class="icon-add_circle"></span>{{ _("Add your question") }}</button>
+                          <button type="button" class="btn btn-primary add-review-btn" id="addQuestionButton">{{ _("Add your question") }}</button>
                     </div>
                 </div>
                 {% set questions=product.questions %}{% include 'components/product-questions.jinja' %}
                 {% set product=product %}{% include 'components/product-question-add.jinja' %}
             </section>
+            </div>
              {% endif %}
+
+                </div>
+            </div>
 
             {% if (product.related_products | length) >  0 %}
                 <section class="mt-5 mb-5">
                     <div class="d-flex align-items-center">
-                        <div class="description-icon" style="font-size: 24px; height: 24px">
-                            <span class="icon-uniE011"></span>
-                        </div>
-                        <div class="description-title">
+                        <div class="section-title">
                             <div class="">{{ _("You may also like") }}</div>
                         </div>
                     </div>
@@ -659,7 +738,7 @@
             <div class="modal-dialog modal-lg modal-dialog-scrollable bundle-offer-products-dialog">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="{{ _('Close') }}">
                             <span aria-hidden="true">&times;</span>
                         </button>
                         <div class="bundle-offer-title"></div>
@@ -695,6 +774,135 @@
     <script>
         var productImages = {{ product.selected_product.media | tojson }};
         var customerWishlistIds = {{ customer.wishlist | tojson if customer else '[]' }};
+        var productVariants = {{ product.variants | tojson }};
+        var productOptionsData = {{ product.options | tojson }};
+
+        function renderVariantPricesOnOptions() {
+            try {
+                if (!Array.isArray(productVariants) || !productVariants.length) {
+                    return;
+                }
+                if (!Array.isArray(productOptionsData) || !productOptionsData.length) {
+                    return;
+                }
+
+                // We currently support showing prices for the first option (e.g. size)
+                var firstOption = productOptionsData[0];
+                if (!firstOption || !firstOption.name) {
+                    return;
+                }
+
+                var selector = '.size-box #product-variants-options ul[name="' + firstOption.name.replace(/"/g, '\\"') + '"]';
+                var ul = document.querySelector(selector);
+                if (!ul) {
+                    return;
+                }
+
+                var priceByValue = {};
+                productVariants.forEach(function (variant) {
+                    if (!variant || !Array.isArray(variant.attributes) || !variant.attributes.length) {
+                        return;
+                    }
+                    var attr = variant.attributes[0];
+                    if (!attr || !attr.value) {
+                        return;
+                    }
+                    if (!priceByValue[attr.value]) {
+                        priceByValue[attr.value] = variant.formatted_sale_price || variant.formatted_price;
+                    }
+                });
+
+                ul.querySelectorAll('li[value]').forEach(function (li) {
+                    var value = li.getAttribute('value');
+                    if (!value || !priceByValue[value]) {
+                        return;
+                    }
+                    if (li.querySelector('.variant-price')) {
+                        return;
+                    }
+                    var priceEl = document.createElement('span');
+                    priceEl.className = 'variant-price';
+                    priceEl.textContent = priceByValue[value];
+                    li.appendChild(priceEl);
+                });
+            } catch (e) {
+                console.error('Failed to render variant prices on options', e);
+            }
+        }
+
+        function syncQuantityDisplay() {
+            var sel = document.getElementById('product-quantity');
+            var display = document.getElementById('product-quantity-display');
+            if (sel && display) display.textContent = sel.value;
+        }
+        function initQuantitySelector() {
+            var wrap = document.querySelector('.quantity-selector-wrap');
+            if (!wrap) return;
+            var sel = document.getElementById('product-quantity');
+            var display = document.getElementById('product-quantity-display');
+            if (!sel || !display) return;
+            syncQuantityDisplay();
+            wrap.querySelector('.quantity-minus').addEventListener('click', function() {
+                var n = parseInt(sel.value, 10) || 1;
+                if (n > 1) { sel.value = n - 1; syncQuantityDisplay(); }
+            });
+            wrap.querySelector('.quantity-plus').addEventListener('click', function() {
+                var opts = sel.options;
+                var n = parseInt(sel.value, 10) || 1;
+                if (opts.length && n < parseInt(opts[opts.length - 1].value, 10)) { sel.value = n + 1; syncQuantityDisplay(); }
+            });
+            sel.addEventListener('change', syncQuantityDisplay);
+            var mo = new MutationObserver(syncQuantityDisplay);
+            mo.observe(sel, { childList: true, subtree: true });
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            initQuantitySelector();
+            renderVariantPricesOnOptions();
+        });
+
+        function initProductTabs() {
+            var wrapper = document.querySelector('.product-tabs-wrapper');
+            if (!wrapper) return;
+            var content = wrapper.querySelector('.tab-content, .product-tabs-content');
+            var links = wrapper.querySelectorAll('.product-tab-link[href^="#"]');
+            var panes = content ? content.querySelectorAll('.tab-pane') : [];
+            function showTab(paneId) {
+                var id = paneId && paneId.indexOf('#') === 0 ? paneId.slice(1) : paneId;
+                links.forEach(function(link) {
+                    var href = link.getAttribute('href') || '';
+                    if (href.replace('#', '') === id) {
+                        link.classList.add('active');
+                        link.setAttribute('aria-selected', 'true');
+                    } else {
+                        link.classList.remove('active');
+                        link.setAttribute('aria-selected', 'false');
+                    }
+                });
+                panes.forEach(function(pane) {
+                    if (pane.id === id) {
+                        pane.classList.add('active');
+                        pane.classList.add('show');
+                    } else {
+                        pane.classList.remove('active');
+                        pane.classList.remove('show');
+                    }
+                });
+            }
+            links.forEach(function(link) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    var href = this.getAttribute('href');
+                    if (href && href.indexOf('#') === 0) showTab(href);
+                });
+            });
+            var activePane = content && content.querySelector('.tab-pane.active');
+            if (activePane) {
+                showTab('#' + activePane.id);
+            } else if (panes.length) {
+                showTab(panes[0].id);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', initProductTabs);
 
         $(window).on('load', function () {
             if (window.checkout_dialog) {
@@ -801,6 +1009,10 @@
                   
                   if (typeof fetchCart === 'function') {
                       fetchCart()
+                  }
+
+                  if (typeof window.openSideCart === 'function') {
+                      window.openSideCart();
                   }
 
                   $('.added-notification').addClass("show");
@@ -1018,21 +1230,16 @@
                 $('.product-images-carousel-thumbs').removeClass('d-none-important');
                 $('.product-images-empty').addClass('d-none');
                 
-                if ($.fn.slick && $('#product-images-slick').hasClass('slick-initialized')) {
+                if ($('#product-images-slick').hasClass('slick-initialized')) {
                     $('#product-images-slick').slick('unslick');
                 }
-
-                $('#product-images-slick').removeClass('slick-initialized slick-slider slick-dotted');
-
+                
                 $('.product-images-carousel').addClass('product-images-carousel-init');
 
                 productImages = selected_product.media;
 
-                // Use native innerHTML to avoid jQuery.cleanData issues with Slick remnants in Safari
-                var slickEl = document.getElementById('product-images-slick');
-                if (slickEl) { slickEl.innerHTML = ''; }
-                var thumbsEl = document.querySelector('.product-images-carousel-thumbs');
-                if (thumbsEl) { thumbsEl.innerHTML = ''; }
+                $('#product-images-slick').html('');
+                $('.product-images-carousel-thumbs').html('');
 
                 for (var z = 0; z < productImages.length; z++) {
                     var prImage = productImages[z];
@@ -1043,7 +1250,7 @@
                         '<img src="' + (prImage.image && prImage.image.full_size ? prImage.image.full_size : '') + '" class="carousel-img" alt="' + (selected_product.name || '') + '">';
                     
                     if (prImage.provider && prImage.link) {
-                        imageHtml += '<img id="main-video-icon" class="play-icon" src="{{ "video-play.svg" | asset_url }}" alt="play" onclick="showIframe(this, \'' + prImage.link.replace(/'/g, '\\\'') + '\')"/>';
+                        imageHtml += '<img id="main-video-icon" class="play-icon" src="{{ "video-play.svg" | asset_url }}" alt="' + (window.__playLabel || 'Play') + '" onclick="showIframe(this, \'' + prImage.link.replace(/'/g, '\\\'') + '\')"/>';
                     }
                     
                     imageHtml += '</a>' +
@@ -1058,14 +1265,14 @@
 
                     $('#product-images-slick').append(imageHtml);
 
-                    var thumbHtml = '<div class="col-3">' +
-                        '<div class="box-1-1">' +
-                        '<div class="content">' +
+                    var thumbHtml = '<div class="col-thumbs' + (z === 0 ? ' thumb-active' : '') + '">' +
+                        '<div class="">' +
+                        '<div class="">' +
                         '<a class="d-flex align-items-center justify-content-center thumb-image-a" data-index="' + z + '" style="width: 100%; height: 100%;">' +
                         '<img src="' + (prImage.image && prImage.image.medium ? prImage.image.medium : '') + '" data-index="' + z + '">';
                     
                     if (prImage.provider && prImage.link) {
-                        thumbHtml += '<img id="video-play-icon" class="play-icon" src="{{ "video-play.svg" | asset_url }}" alt="play" data-index="' + z + '">';
+                        thumbHtml += '<img id="video-play-icon" class="play-icon" src="{{ "video-play.svg" | asset_url }}" alt="' + (window.__playLabel || 'Play') + '" data-index="' + z + '">';
                     }
                     
                     thumbHtml += '</a>' +
@@ -1076,9 +1283,7 @@
                     $('.product-images-carousel-thumbs').append(thumbHtml);
                 }
 
-                requestAnimationFrame(function() {
-                    initSlick(productImages);
-                });
+                initSlick(productImages);
             } else {
                 $('.product-images-carousel').addClass('d-none');
                 $('.product-images-carousel-thumbs').addClass('d-none-important');
@@ -1088,19 +1293,15 @@
 
         $('#product-description-a').click(function(event) {
             event.preventDefault();
-
-            var scrollOffset;
-            if (window.matchMedia('(max-width: 768px)').matches) {
-                scrollOffset = 15;
-            } else {
-                scrollOffset = 150;
+            var href = $(this).attr('href');
+            var tabTrigger = document.querySelector('#product-description-tab-{{ product.id }}');
+            if (href && href.indexOf('#') === 0 && tabTrigger) {
+                tabTrigger.click();
             }
-            
-            var targetElement = $($(this).attr('href'));
+            var scrollOffset = window.matchMedia('(max-width: 768px)').matches ? 15 : 150;
+            var targetElement = $(href);
             if (targetElement.length) {
-                $('html, body').animate({
-                    scrollTop: targetElement.offset().top - scrollOffset
-                }, 500);
+                $('html, body').animate({ scrollTop: targetElement.offset().top - scrollOffset }, 500);
             }
         });
 
@@ -1170,30 +1371,18 @@
             }
         });
 
-        var initSlickTimer = null;
-
-        function initSlick(productImages, retryCount) {
-            // Cancel any pending retry from a previous call
-            if (initSlickTimer) {
-                clearTimeout(initSlickTimer);
-                initSlickTimer = null;
-            }
-
+        function initSlick(productImages) {
             if (!productImages || !Array.isArray(productImages)) {
                 return;
             }
 
-            if (!$.fn.slick) {
-                if (!retryCount || retryCount < 50) {
-                    initSlickTimer = setTimeout(function() {
-                        initSlick(productImages, (retryCount || 0) + 1);
-                    }, 200);
-                }
+            if (typeof window.jQuery === 'undefined' || !window.jQuery.fn || !window.jQuery.fn.slick) {
                 return;
             }
 
-            // Prevent double initialization
-            if ($('#product-images-slick').hasClass('slick-initialized')) {
+            var $ = window.jQuery;
+            var $slider = $('#product-images-slick');
+            if (!$slider.length || $slider.hasClass('slick-initialized')) {
                 return;
             }
 
@@ -1206,19 +1395,20 @@
                 arrowPrevClass = 'icon-keyboard_arrow_right';
             }
 
-            $('#product-images-slick').slick({
+            $slider.slick({
                 infinite: false,
                 autoplay: false,
-                arrows: (productImages.length > 1),
+                arrows: false,
                 dots: (productImages.length > 1),
                 rtl: !(window.appDirection === 'ltr'),
-                nextArrow: '<button class="slick-next slick-arrow" aria-label="Next" type="button"><span class="' + arrowNextClass + '"></span></button>',
-                prevArrow: '<button class="slick-prev slick-arrow" aria-label="Previous" type="button"><span class="' + arrowPrevClass + '"></span></button>'
+                nextArrow: '<button class="slick-next slick-arrow" aria-label="{{ _('Next') | e }}" type="button"><span class="' + arrowNextClass + '"></span></button>',
+                prevArrow: '<button class="slick-prev slick-arrow" aria-label="{{ _('Previous') | e }}" type="button"><span class="' + arrowPrevClass + '"></span></button>'
             });
         }
 
         $('#product-images-slick').on('init', function(event, slick) {
             $('.product-images-carousel').removeClass('product-images-carousel-init');
+            $('.product-images-carousel-thumbs .col-thumbs').removeClass('thumb-active').eq(0).addClass('thumb-active');
         });
 
         function openPhotoSwipe(productImages, index) {
@@ -1273,29 +1463,67 @@
             var screenWidth = window.screen.width;
             var editingMode = {% if store.editing_mode %}true{% else %}false{% endif %};
 
-            if (screenWidth >= 768 || editingMode) {
+            if (screenWidth >= 0 || editingMode) {
                 $('#related-products.products-slider').slick({
-                    slidesToShow: 5,
-                    slidesToScroll: 5,
+                    slidesToShow: 7,
+                    slidesToScroll: 2,
                     infinite: false,
                     autoplay: false,
-                    arrows: true,
+                    arrows: false,
                     dots: false,
                     rtl: !(window.appDirection === 'ltr'),
-                    nextArrow: '<button class="slick-next slick-arrow" aria-label="Next" type="button"><span class="' + arrowNextClass + '"></span></button>',
-                    prevArrow: '<button class="slick-prev slick-arrow" aria-label="Previous" type="button"><span class="' + arrowPrevClass + '"></span></button>',
+                    nextArrow: '<button class="slick-next slick-arrow" aria-label="{{ _('Next') | e }}" type="button"><span class="' + arrowNextClass + '"></span></button>',
+                    prevArrow: '<button class="slick-prev slick-arrow" aria-label="{{ _('Previous') | e }}" type="button"><span class="' + arrowPrevClass + '"></span></button>',
                     responsive: [
                         {
-                            breakpoint: 992,
-                            settings: {
-                                slidesToShow: 5,
-                                slidesToScroll: 5
-                            }
-                        },
-                        {
-                            breakpoint: 768,
-                            settings: "unslick"
-                        }
+            breakpoint: 1400,
+            settings: {
+                slidesToShow: 6,
+                slidesToScroll: 2
+            }
+        },
+        {
+            breakpoint: 1200,
+            settings: {
+                slidesToShow: 5.2,
+                slidesToScroll: 2
+            }
+        },
+        {
+            breakpoint: 992,
+            settings: {
+                slidesToShow: 4,
+                slidesToScroll: 1
+            }
+        },
+        {
+            breakpoint: 768,
+            settings: {
+                slidesToShow: 3,
+                slidesToScroll: 1
+            }
+        },
+        {
+            breakpoint: 576,
+            settings: {
+                slidesToShow: 2.5,
+                slidesToScroll: 1
+            }
+        },
+        {
+            breakpoint: 500,
+            settings: {
+                slidesToShow: 2.2,
+                slidesToScroll: 1
+            }
+        },
+        {
+            breakpoint: 380,
+            settings: {
+                slidesToShow: 1.8,
+                slidesToScroll: 1
+            }
+        }
                     ]
                 });
             }
@@ -1358,19 +1586,20 @@
 
         $('#product-images-slick').on('beforeChange', function(event, slick, currentSlide, nextSlide) {
             if (slick && slick.$slides && slick.$slides[currentSlide]) {
-                const iframeContainers = slick.$slides[currentSlide].querySelector(".iframe-video");
-                if (iframeContainers) {
-                    $(iframeContainers).addClass("d-none");
-                    $(iframeContainers).children("iframe").attr("src", "");
+                const iframeVideo = slick.$slides[currentSlide].querySelector(".iframe-video");
+                if (iframeVideo) {
+                    $(iframeVideo).addClass("d-none");
+                    $(iframeVideo).children("iframe").attr("src", "");
                 }
             }
         });
 
         $('#product-images-slick').on('afterChange', function(event, slick, currentSlide, nextSlide) {
+            $('.product-images-carousel-thumbs .col-thumbs').removeClass('thumb-active').eq(currentSlide).addClass('thumb-active');
             if (slick && slick.$slides && slick.$slides[currentSlide]) {
-                const iframeContainers = slick.$slides[currentSlide].querySelector(".iframe-video");
-                if (iframeContainers) {
-                    const playIcon = $(iframeContainers).siblings(".image-link").children("#main-video-icon");
+                const iframeVideo = slick.$slides[currentSlide].querySelector(".iframe-video");
+                if (iframeVideo) {
+                    const playIcon = $(iframeVideo).siblings(".image-link").children("#main-video-icon");
                     if (playIcon.length) {
                         playIcon.click();
                     }
@@ -1386,7 +1615,42 @@
                     playIcon.click();
                 }
             }, 250);
+
+            var viewingNumberEl = document.querySelector(".product-viewing-now-number");
+            if (viewingNumberEl) {
+                function setRandomViewingCount() {
+                    viewingNumberEl.textContent = Math.floor(Math.random() * 250) + 1;
+                }
+                setRandomViewingCount();
+                setInterval(setRandomViewingCount, 10000);
+            }
+
+            document.querySelectorAll(".product-share-native-btn").forEach(function(btn) {
+                btn.addEventListener("click", function() {
+                    var url = this.getAttribute("data-product-url") || "";
+                    var title = this.getAttribute("data-product-name") || document.title || "";
+                    var text = title;
+                    if (navigator.share) {
+                        navigator.share({ title: title, text: text, url: url }).then(function() {}).catch(function(err) {
+                            if (err.name !== "AbortError") { fallbackShare(url, title); }
+                        });
+                    } else {
+                        fallbackShare(url, title);
+                    }
+                });
+            });
         });
+
+        function fallbackShare(url, title) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(url).then(function() {
+                    if (typeof window.showToast === "function") { window.showToast("{{ _('Link copied') }}"); }
+                    else { alert("{{ _('Link copied') }}"); }
+                }).catch(function() { window.open("mailto:?subject=" + encodeURIComponent(title) + "&body=" + encodeURIComponent(url), "_blank"); });
+            } else {
+                window.open("mailto:?subject=" + encodeURIComponent(title) + "&body=" + encodeURIComponent(url), "_blank");
+            }
+        }
     </script>
 
 {% endblock %}

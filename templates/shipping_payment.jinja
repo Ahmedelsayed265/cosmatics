@@ -10,18 +10,18 @@
 
 {% block main_content %}
 
-    <div class="container-parent">
+    <div class="container-fluid-parent">
         <div class="profile-pages-bg d-none d-lg-flex flex-grow-1">
             <div class="section-colored"></div>
         </div>
 
-        <div class="container">
+        <div class="container-fluid">
             {% include 'components/shipping-payment-tabs-mobile.jinja' %}
             <div class="d-flex">
                 {% include 'components/shipping-payment-vertical-menu.jinja' %}
                 <div class="flex-grow-1">
                     <div class="profile-title d-none d-lg-block theme-text-primary" style="background: #D9D9D9;">
-                        <div class="container py-4 page-breadcurmb">{{ _("Shipping Option") }}</div>
+                        <div class="container-fluid py-4 page-breadcurmb">{{ _("Shipping Option") }}</div>
                     </div>
                     <div class="account-content account-content-lg">
                         <div class="tab-content " id="v-pills-tabContent">
@@ -127,7 +127,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <button type="button" class="close" data-dismiss="modal" style="position: absolute"
-                                                                    aria-label="Close"><span
+                                                                    aria-label="{{ _('Close') }}"><span
                                                                         aria-hidden="true">&times;</span></button>
                                                             <h4 class="modal-title" id="myModalLabel">{{ _("Covered Cities") }}</h4>
                                                         </div>

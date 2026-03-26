@@ -1,7 +1,11 @@
+/* ========== القائمة الجانبية (Slide Menu) – مراجعة من أول لآخر ========== */
+
+/* ---- الأساسيات (مكتبة SlideMenu) ---- */
 .slide-menu {
     width: 70%;
 }
-.slide-menu, .slide-menu a {
+.slide-menu,
+.slide-menu a {
     font-size: 1.2rem;
     color: inherit;
 }
@@ -9,64 +13,73 @@
     padding: 15px;
     text-decoration: none;
 }
-
 .slide-menu .controls {
     display: flex;
     margin-bottom: 1rem;
 }
-
 .slide-menu ul {
-   padding-right: 0;
+    padding-right: 0;
 }
-
 .slide-menu-ul-li {
     border-top: 0.5px solid rgba(255, 255, 255, 0.08);
 }
-
-.slide-menu-ul-li:first-child, :not(.slide-menu-ul-li) + .slide-menu-ul-li {
-    border-top: 0px;
+.slide-menu-ul-li:first-child,
+:not(.slide-menu-ul-li) + .slide-menu-ul-li {
+    border-top: 0;
 }
-
-.slide-menu .slide-menu__backlink {
-    text-transform: uppercase;
-}
-
-.rtl .slide-menu ul ul{
+.rtl .slide-menu ul ul {
     left: unset;
     right: 100%;
 }
-
 .slide-menu__decorator {
     float: right;
 }
-
 .rtl .slide-menu__decorator {
     float: left;
 }
-
-.slide-menu-arrow {
-    font-size: 26px;
+.slide-menu-arrow,
+.slide-menu-arrow-back {
+    font-size: 22px;
+    color: #484848;
 }
-
 .slide-menu-arrow-back {
     position: relative;
-    top: 3px;
+    top: 2px;
     right: 5px;
-    font-size: 26px;
 }
-
 .rtl .slide-menu-arrow-back {
     right: unset;
     left: 5px;
 }
 
-#test-menu-left p {
-    font-size: 110%;
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
+/* ---- زر الرجوع (يضيفه SlideMenu داخل القوائم الفرعية) ---- */
+.slide-menu .slide-menu__backlink {
+    text-transform: uppercase;
+}
+.slide-menu--drawer .slide-menu__backlink {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 18px !important;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0, 0, 0, .1);
+    background: #e5e5e5;
+}
+.slide-menu--drawer .slide-menu__backlink:hover {
+    background: #d8d8d8;
+}
+.rtl .slide-menu--drawer .slide-menu__backlink {
+    flex-direction: row-reverse;
+}
+.slide-menu--drawer .slide-menu__backlink .slide-menu-arrow,
+.slide-menu--drawer .slide-menu__backlink .slide-menu-arrow-back {
+    flex-shrink: 0;
 }
 
-
+/* ---- الـ Overlay ---- */
 #sidenav-overlay {
     position: fixed;
     top: 0;
@@ -77,6 +90,394 @@
     cursor: pointer;
     z-index: 100;
 }
+.sidenav-open #sidenav-overlay {
+    width: 100%;
+}
 
-.sidenav-open .sidenav { width: 250px; }
-.sidenav-open #sidenav-overlay { width: 100%; }
+/* ========== تصميم الـ Drawer (الشكل المطلوب: خلفية فاتحة، RTL) ========== */
+.slide-menu--drawer {
+    width: 85%;
+    max-width: 380px;
+    background: #f0f0f0 !important;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    color: #333;
+    overflow: hidden;
+}
+.slide-menu--drawer a {
+    color: #333;
+    padding: 0;
+}
+
+/* ---- الـ Slider (القائمة بالكولابس بدون شاشة منزلقة) ---- */
+.slide-menu--drawer .slide-menu__slider {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+    height: calc(100vh - 205px);
+}
+.slide-menu--drawer .slide-menu__slider > ul {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: visible;
+    width: 100%;
+}
+
+/* ---- الهيدر (أيقونات + لوجو + إغلاق) ---- */
+.slide-menu--drawer .slide-menu-drawer-header {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 10px;
+    background: #f0f0f0;
+    border-bottom: 1px solid rgba(0, 0, 0, .06);
+    direction: ltr;
+}
+.slide-menu-drawer-header-icons {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.slide-menu-drawer-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    color: #484848;
+}
+.slide-menu-drawer-icon svg {
+    width: 24px;
+    height: 24px;
+}
+.slide-menu-drawer-header-logo {
+    flex: 1;
+    display: flex;
+    justify-content: end;
+    padding: 0 8px;
+}
+.slide-menu-drawer-header-logo a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.slide-menu-drawer-header-logo img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    border-radius: 50%;
+}
+.slide-menu-drawer-close {
+    all: unset;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: #484848;
+    background: transparent;
+}
+.slide-menu-drawer-close:hover {
+    background: rgba(0, 0, 0, .06);
+}
+.slide-menu-drawer-close svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* ---- شريط البحث ---- */
+.slide-menu-drawer-search {
+    flex-shrink: 0;
+    padding: 10px;
+    background: #f0f0f0;
+}
+.slide-menu-drawer-search-inner {
+    position: relative;
+    background: #e0e0e0;
+    border-radius: 10px;
+    padding: 12px 16px 12px 44px;
+}
+.slide-menu-drawer-search-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 14px;
+    color: #606060;
+    pointer-events: none;
+}
+.slide-menu-drawer-search-icon svg {
+    width: 20px;
+    height: 20px;
+}
+.slide-menu-drawer-search-input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+}
+.slide-menu-drawer-search-input::placeholder {
+    color: #767676;
+}
+.slide-menu-drawer-search .autocomplete-items {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    margin-top: 4px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
+    z-index: 10;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+/* ---- قائمة التصنيفات الرئيسية ---- */
+.slide-menu--drawer .slide-menu-drawer-ul {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+    padding: 8px 0 0;
+    margin: 0;
+    list-style: none;
+    border: none;
+}
+
+.slide-menu--drawer .slide-menu-ul-li:first-child,
+.slide-menu--drawer :not(.slide-menu-ul-li) + .slide-menu-ul-li {
+    border-top: 0;
+}
+.slide-menu-drawer-li {
+    display: flex;
+    align-items: center;
+}
+.slide-menu-drawer-li > a {
+    display: flex !important;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    color: #333;
+    gap: 12px;
+    text-align: start;
+    flex-direction: row;
+}
+
+/* أيقونة التصنيف (دائرية) */
+.slide-menu-drawer-link-icon {
+    flex-shrink: 0;
+}
+.slide-menu-cat-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.slide-menu-cat-icon--0 { background: #9e9e9e; }
+.slide-menu-cat-icon--1 { background: #e57373; }
+.slide-menu-cat-icon--2 { background: #90caf9; }
+.slide-menu-cat-icon--3 { background: #a1887f; }
+.slide-menu-cat-icon--4 { background: #ce93d8; }
+.slide-menu-cat-icon--5 { background: #80cbc4; }
+.slide-menu-cat-icon--6 { background: #f48fb1; }
+.slide-menu-cat-icon--7 { background: #ffb74d; }
+.slide-menu-cat-icon--8 { background: #9575cd; }
+.slide-menu-cat-icon--9 { background: #4dd0e1; }
+.slide-menu-drawer-link-text {
+    flex: 1;
+}
+
+/* ---- كولابس التصنيفات (تفصيل/طي في المكان) ---- */
+.slide-menu-drawer-collapse {
+    display: block;
+    border: none;
+    width: 100%;
+}
+.slide-menu-drawer-collapse summary {
+    list-style: none;
+    cursor: pointer;
+}
+.slide-menu-drawer-collapse summary::-webkit-details-marker {
+    display: none;
+}
+.slide-menu-drawer-collapse-summary {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    gap: 12px;
+    text-align: right;
+    font-size: 14px;
+    font-weight: 400;
+    color: #333;
+    box-sizing: border-box;
+}
+.rtl .slide-menu-drawer-collapse-summary {
+    flex-direction: row;
+    text-align: start;
+}
+.slide-menu-drawer-collapse-summary:hover {
+    background: rgba(0, 0, 0, .04);
+}
+/* دوران السهم عند فتح الكولابس */
+.slide-menu-drawer-sub-arrow {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    transition: transform 0.2s ease;
+}
+.slide-menu-drawer-collapse[open] .slide-menu-drawer-sub-arrow {
+    transform: rotate(-90deg);
+}
+.rtl .slide-menu-drawer-collapse[open] .slide-menu-drawer-sub-arrow {
+    transform: rotate(90deg);
+}
+.slide-menu-drawer-sub-arrow svg {
+    width: 20px;
+    height: 20px;
+}
+.slide-menu-drawer-sub-arrow--small svg {
+    width: 16px;
+    height: 16px;
+}
+.rtl .slide-menu-drawer-sub-arrow {
+    margin-right: auto;
+    margin-left: 0;
+}
+.slide-menu-drawer-collapse-summary--sub {
+    padding: 12px 18px 12px 14px;
+    font-size: 0.95rem;
+}
+.slide-menu-drawer-collapse--l2 .slide-menu-drawer-sub {
+    padding-inline-start: 24px;
+}
+.slide-menu--drawer .slide-menu-arrow {
+    color: #484848;
+    font-size: 22px;
+    margin-inline-start: auto;
+}
+.rtl .slide-menu--drawer .slide-menu-arrow {
+    margin-inline-start: 0;
+    margin-inline-end: auto;
+}
+/* إخفاء سهم المكتبة لأننا نعرض السهم من القالب (slide-menu-drawer-sub-arrow) */
+.slide-menu--drawer .slide-menu__decorator {
+    display: none;
+}
+
+/* ماركات + تسجيل الدخول + تغيير اللغة (أيقونة outline) */
+.slide-menu-util-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    color: #484848;
+}
+.slide-menu-util-icon svg {
+    width: 20px;
+    height: 20px;
+}
+.slide-menu-drawer-spacer {
+    list-style: none;
+    height: 24px;
+    border: none;
+}
+.slide-menu-drawer-spacer::before {
+    display: none;
+}
+
+/* ---- الفوتر: أيقونات السوشيال (مثل الفوتر) ---- */
+.slide-menu-drawer-footer {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px;
+    background: inherit;
+    border-top: 1px solid rgba(0, 0, 0, .06);
+}
+.slide-menu-drawer-social {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    color: #484848;
+}
+.slide-menu-drawer-social .icon-tiktok,
+.slide-menu-drawer-social .icon-snapchat-ghost,
+.slide-menu-drawer-social .icon-instagram {
+    font-size: 22px;
+}
+
+/* ---- التصنيفات الفرعية (داخل الكولابس: عرض عادي بدون slide) ---- */
+.slide-menu--drawer .slide-menu-drawer-collapse .slide-menu-drawer-sub {
+    position: static;
+    left: auto;
+    right: auto;
+    display: block;
+    background: inherit;
+    padding-inline-start: 12px;
+    list-style: none;
+    margin: 0;
+    border-top: 1px solid rgba(0, 0, 0, .06);
+}
+.slide-menu--drawer .slide-menu-drawer-sub--l2 {
+    background: #e0e0e0;
+    padding-inline-start: 24px;
+}
+.slide-menu--drawer ul ul .slide-menu-drawer-link,
+.slide-menu--drawer ul ul .slide-menu-drawer-link-util {
+    padding: 12px 18px 12px 14px;
+    font-size: 0.95rem;
+    display: flex !important;
+    align-items: center;
+    justify-content: start;
+}
+.slide-menu--drawer .slide-menu-drawer-link--sub {
+    gap: 10px;
+}
+.slide-menu--drawer ul ul .slide-menu-drawer-link-icon,
+.slide-menu--drawer ul ul .slide-menu-drawer-link-img-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.slide-menu--drawer .slide-menu-drawer-cat-img {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.slide-menu--drawer .slide-menu-drawer-li--sub .slide-menu-drawer-cat-img {
+    width: 32px;
+    height: 32px;
+}
+.slide-menu--drawer .slide-menu-drawer-sub--l2 .slide-menu-drawer-cat-img {
+    width: 28px;
+    height: 28px;
+}
+.slide-menu--drawer ul ul .slide-menu-cat-icon {
+    width: 32px;
+    height: 32px;
+}
+.slide-menu--drawer .slide-menu-drawer-sub--l2 .slide-menu-cat-icon {
+    width: 28px;
+    height: 28px;
+}

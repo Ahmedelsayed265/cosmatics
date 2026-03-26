@@ -1,206 +1,356 @@
-<div class="footer-store-section store-section footer-theme-bg-primary footer-theme-text-for-primary-bg">
+<div class="footer-store-section store-section footer-theme-bg-primary footer-theme-text-for-primary-bg" dir="rtl">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-12 col-lg-5">
+        <div class="row footer-main-row align-items-start">
+            {# 1. About us (rightmost on web - RTL) #}
+            <div class="col-12 col-lg footer-footer-col footer-col-about">
                 <div class="footer-about-us-links-div footer-about-us-div">
-                    <h2 class="pb-2">{{ settings.about_us_title }}</h2>
+                    {% if settings.logoe_footer or settings.about_us_logoe_footer %}
+                    <div class="footer-logo-wrap">
+                        <img class="footer-logo"
+                            src="{{ image_url(settings.logoe_footer or settings.about_us_logoe_footer, h=120, q=90, f='auto') }}"
+                            alt="{{ store.name }}" loading="lazy" width="120" height="120">
+                    </div>
+                    {% endif %}
                     <p>{{ settings.about_us_des | safe }}</p>
+                    <div class="social-icons social-icons-mobile d-flex flex-wrap footer-social-block">
+
+                        {% if store.settings.contact.instagram %}
+                        <a href="https://www.instagram.com/{{ store.settings.contact.instagram }}" target="_blank">
+
+                            <svg width="44" height="44" viewBox="0 0 44 44" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M12.5 22C12.5 17.5217 12.5 15.2825 13.8912 13.8912C15.2825 12.5 17.5217 12.5 22 12.5C26.4783 12.5 28.7175 12.5 30.1088 13.8912C31.5 15.2825 31.5 17.5217 31.5 22C31.5 26.4783 31.5 28.7175 30.1088 30.1088C28.7175 31.5 26.4783 31.5 22 31.5C17.5217 31.5 15.2825 31.5 13.8912 30.1088C12.5 28.7175 12.5 26.4783 12.5 22Z"
+                                    stroke="#050505" stroke-width="1.5" stroke-linejoin="round" />
+                                <path
+                                    d="M26.5 22C26.5 24.4853 24.4853 26.5 22 26.5C19.5147 26.5 17.5 24.4853 17.5 22C17.5 19.5147 19.5147 17.5 22 17.5C24.4853 17.5 26.5 19.5147 26.5 22Z"
+                                    stroke="#050505" stroke-width="1.5" />
+                                <path d="M27.5078 16.5L27.4988 16.5" stroke="#050505" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+
+                        </a>
+                        {% endif %}
+
+                        {% if store.settings.contact.snapchat %}
+                        <a href="https://www.snapchat.com/add/{{ store.settings.contact.snapchat }}" target="_blank">
+
+                            <svg width="44" height="44" viewBox="0 0 44 44" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M16.5756 17.4244C16.5756 14.4286 19.0042 12 22 12C24.9958 12 27.4244 14.4286 27.4244 17.4244C27.4244 22.1722 27.6611 24.5456 32 26.4444C29.7778 27 29.2222 27.5556 28.6667 29.7778C24.7778 29.7778 24.2222 32 22 32C19.7778 32 19.2222 29.7778 15.3333 29.7778C14.7778 27.5556 14.2222 27 12 26.4444C16.3389 24.5456 16.5756 22.1722 16.5756 17.4244Z"
+                                    stroke="#050505" stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                                <path d="M12 26C15.8236 23.9171 15.8236 21.9503 12.9559 19" stroke="#050505"
+                                    stroke-width="1.5" stroke-linecap="round" />
+                                <path d="M32 26C28.1764 23.9171 28.1764 21.9503 31.0441 19" stroke="#050505"
+                                    stroke-width="1.5" stroke-linecap="round" />
+                            </svg>
+                        </a>
+                        {% endif %}
+                        {% if store.settings.contact.tiktok %}
+                        <a href="https://www.tiktok.com/@{{ store.settings.contact.tiktok }}" target="_blank">
+
+                            <svg width="44" height="44" viewBox="0 0 44 44" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M12.5 22C12.5 17.5217 12.5 15.2825 13.8912 13.8912C15.2825 12.5 17.5217 12.5 22 12.5C26.4783 12.5 28.7175 12.5 30.1088 13.8912C31.5 15.2825 31.5 17.5217 31.5 22C31.5 26.4783 31.5 28.7175 30.1088 30.1088C28.7175 31.5 26.4783 31.5 22 31.5C17.5217 31.5 15.2825 31.5 13.8912 30.1088C12.5 28.7175 12.5 26.4783 12.5 22Z"
+                                    stroke="#050505" stroke-width="1.5" stroke-linejoin="round" />
+                                <path
+                                    d="M20.3938 21.7779C20.8038 21.8365 21.1838 21.5517 21.2424 21.1416C21.3011 20.7316 21.0162 20.3517 20.6062 20.293L20.5 21.0354L20.3938 21.7779ZM27.5 20.25C27.9142 20.25 28.25 19.9142 28.25 19.5C28.25 19.0858 27.9142 18.75 27.5 18.75V19.5V20.25ZM24.25 16C24.25 15.5858 23.9142 15.25 23.5 15.25C23.0858 15.25 22.75 15.5858 22.75 16H23.5H24.25ZM23.5 24.5H22.75C22.75 26.0188 21.5188 27.25 20 27.25V28V28.75C22.3472 28.75 24.25 26.8472 24.25 24.5H23.5ZM20 28V27.25C18.4812 27.25 17.25 26.0188 17.25 24.5H16.5H15.75C15.75 26.8472 17.6528 28.75 20 28.75V28ZM16.5 24.5H17.25C17.25 22.9812 18.4812 21.75 20 21.75V21V20.25C17.6528 20.25 15.75 22.1528 15.75 24.5H16.5ZM20 21V21.75C20.1341 21.75 20.2656 21.7595 20.3938 21.7779L20.5 21.0354L20.6062 20.293C20.4078 20.2646 20.2054 20.25 20 20.25V21ZM27.5 19.5V18.75C26.7254 18.75 25.8924 18.4308 25.2559 17.8992C24.62 17.3682 24.25 16.6883 24.25 16H23.5H22.75C22.75 17.2446 23.4135 18.3148 24.2944 19.0505C25.1746 19.7857 26.3416 20.25 27.5 20.25V19.5ZM23.5 16H22.75V24.5H23.5H24.25V16H23.5Z"
+                                    fill="#050505" />
+                            </svg>
+                        </a>
+                        {% endif %}
+
+                    </div>
                 </div>
             </div>
-            <div class="col-12 col-lg-7">
-                <div class="row">
-                    <div class="col-12 col-lg-4">
-                        {% if not (settings.links_1_hide) %}
-                            <div class="footer-about-us-links-div">
-                            {# maybe do links_1 and links_2 with settings menus later #}
-                                <h2 class="pb-2">{{ settings.links_1_title }}</h2>
-                                {% for link in settings.links_1_links %}
-                                    <p><a href="{{ link.url }}">{{ link.title }}</a></p>
-                                {% endfor %}
-                            </div>
+            {# 2. Links 1 - Popular Categories #}
+            <div class="col-12 col-lg footer-footer-col footer-col-categories">
+                {% if not (settings.links_1_hide) %}
+                <div class="footer-about-us-links-div footer-links-collapse js-footer-links-collapse">
+                    <button class="footer-links-collapse-toggle js-footer-links-toggle" type="button">
+                        <span class="footer-links-collapse-title pb-2">{{ settings.links_1_title }}</span>
+                        <span class="footer-links-collapse-chevron">
+                            <span class="footer-links-icon-plus">+</span>
+                            <span class="footer-links-icon-minus">−</span>
+                        </span>
+                    </button>
+                    <div class="footer-links-collapse-body">
+                        {% for link in settings.links_1_links %}
+                        <p><a href="{{ link.url }}">{{ link.title }}</a></p>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {# 3. Links 2 - Important Links #}
+            <div class="col-12 col-lg footer-footer-col footer-col-links">
+                {% if not (settings.links_2_hide) %}
+                <div class="footer-about-us-links-div footer-links-collapse js-footer-links-collapse">
+                    <button class="footer-links-collapse-toggle js-footer-links-toggle" type="button">
+                        <span class="footer-links-collapse-title pb-2">{{ settings.links_2_title }}</span>
+                        <span class="footer-links-collapse-chevron">
+                            <span class="footer-links-icon-plus">+</span>
+                            <span class="footer-links-icon-minus">−</span>
+                        </span>
+                    </button>
+                    <div class="footer-links-collapse-body">
+                        {% for link in settings.links_2_links %}
+                        <p><a href="{{ link.url }}">{{ link.title }}</a></p>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {# 4. Contact us + Follow us (social) #}
+            <div class="col-12 col-lg footer-footer-col footer-col-contact">
+
+                <div
+                    class="footer-about-us-links-div footer-contact-social {% if store.settings.general.business_address.show_location %}mt-5{% endif %}">
+                    <h2 class="pb-2">{% if settings.social_media_title %}{{ settings.social_media_title }}{% else %}{{
+                        _("Contact us") }}{% endif %}</h2>
+                    <div class="footer-contact-details">
+                        {# رقم الهاتف من إعدادات الفوتر (footer.schema.json: phone) #}
+                        {% if settings.social_media_phone %}
+                        <p class="footer-contact-phone">
+                            <a href="tel:{{ settings.social_media_phone }}">{{ settings.social_media_phone }}</a>
+                        </p>
+                        {% elif store.settings.contact.phone %}
+                        <p class="footer-contact-phone">
+                            <a href="tel:{{ store.settings.contact.phone }}">{{ store.settings.contact.phone }}</a>
+                        </p>
+                        {% endif %}
+
+                        {# البريد الإلكتروني من إعدادات الفوتر (footer.schema.json: email) #}
+                        {% if settings.social_media_email %}
+                        <p class="footer-contact-email">
+                            <a href="mailto:{{ settings.social_media_email }}">
+
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2 6L8.91302 9.91697C11.4616 11.361 12.5384 11.361 15.087 9.91697L22 6"
+                                        stroke="#050505" stroke-width="1.5" stroke-linejoin="round" />
+                                    <path
+                                        d="M2.01577 13.4756C2.08114 16.5411 2.11383 18.0739 3.24496 19.2093C4.37608 20.3448 5.95033 20.3843 9.09883 20.4634C11.0393 20.5122 12.9607 20.5122 14.9012 20.4634C18.0497 20.3843 19.6239 20.3448 20.7551 19.2093C21.8862 18.0739 21.9189 16.5411 21.9842 13.4756C22.0053 12.4899 22.0053 11.51 21.9842 10.5244C21.9189 7.45883 21.8862 5.92606 20.7551 4.79063C19.6239 3.6552 18.0497 3.61565 14.9012 3.53654C12.9607 3.48778 11.0393 3.48778 9.09882 3.53653C5.95033 3.61563 4.37608 3.65518 3.24495 4.79062C2.11382 5.92605 2.08114 7.45882 2.01576 10.5243C1.99474 11.51 1.99475 12.4899 2.01577 13.4756Z"
+                                        stroke="#050505" stroke-width="1.5" stroke-linejoin="round" />
+                                </svg>
+
+                                {{ settings.social_media_email }}
+                            </a>
+                        </p>
+                        {% elif store.settings.contact.email %}
+                        <p class="footer-contact-email">
+                            <a href="mailto:{{ store.settings.contact.email }}">
+
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2 6L8.91302 9.91697C11.4616 11.361 12.5384 11.361 15.087 9.91697L22 6"
+                                        stroke="#050505" stroke-width="1.5" stroke-linejoin="round" />
+                                    <path
+                                        d="M2.01577 13.4756C2.08114 16.5411 2.11383 18.0739 3.24496 19.2093C4.37608 20.3448 5.95033 20.3843 9.09883 20.4634C11.0393 20.5122 12.9607 20.5122 14.9012 20.4634C18.0497 20.3843 19.6239 20.3448 20.7551 19.2093C21.8862 18.0739 21.9189 16.5411 21.9842 13.4756C22.0053 12.4899 22.0053 11.51 21.9842 10.5244C21.9189 7.45883 21.8862 5.92606 20.7551 4.79063C19.6239 3.6552 18.0497 3.61565 14.9012 3.53654C12.9607 3.48778 11.0393 3.48778 9.09882 3.53653C5.95033 3.61563 4.37608 3.65518 3.24495 4.79062C2.11382 5.92605 2.08114 7.45882 2.01576 10.5243C1.99474 11.51 1.99475 12.4899 2.01577 13.4756Z"
+                                        stroke="#050505" stroke-width="1.5" stroke-linejoin="round" />
+                                </svg>
+
+                                {{ store.settings.contact.email }}
+                            </a>
+                        </p>
                         {% endif %}
                     </div>
-                    <div class="col-12 col-lg-4">
-                        {% if not (settings.links_2_hide) %}
-                            <div class="footer-about-us-links-div">
-                                <h2 class="pb-2">{{ settings.links_2_title }}</h2>
-                                {% for link in settings.links_2_links %}
-                                    <p><a href="{{ link.url }}">{{ link.title }}</a></p>
-                                {% endfor %}
-                            </div>
+                    <h3 class="footer-follow-title pb-2 mt-5">{% if settings.follow_us_title %}{{ settings.follow_us_title
+                        }}{% else %}{{ _("Follow us") }}{% endif %}</h3>
+                    <div class="social-icons d-flex flex-wrap footer-social-block">
+
+                        {% if store.settings.contact.instagram %}
+                        <a href="https://www.instagram.com/{{ store.settings.contact.instagram }}" target="_blank">
+
+                            <svg width="44" height="44" viewBox="0 0 44 44" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M12.5 22C12.5 17.5217 12.5 15.2825 13.8912 13.8912C15.2825 12.5 17.5217 12.5 22 12.5C26.4783 12.5 28.7175 12.5 30.1088 13.8912C31.5 15.2825 31.5 17.5217 31.5 22C31.5 26.4783 31.5 28.7175 30.1088 30.1088C28.7175 31.5 26.4783 31.5 22 31.5C17.5217 31.5 15.2825 31.5 13.8912 30.1088C12.5 28.7175 12.5 26.4783 12.5 22Z"
+                                    stroke="#050505" stroke-width="1.5" stroke-linejoin="round" />
+                                <path
+                                    d="M26.5 22C26.5 24.4853 24.4853 26.5 22 26.5C19.5147 26.5 17.5 24.4853 17.5 22C17.5 19.5147 19.5147 17.5 22 17.5C24.4853 17.5 26.5 19.5147 26.5 22Z"
+                                    stroke="#050505" stroke-width="1.5" />
+                                <path d="M27.5078 16.5L27.4988 16.5" stroke="#050505" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+
+                        </a>
                         {% endif %}
+
+                        {% if store.settings.contact.snapchat %}
+                        <a href="https://www.snapchat.com/add/{{ store.settings.contact.snapchat }}" target="_blank">
+
+                            <svg width="44" height="44" viewBox="0 0 44 44" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M16.5756 17.4244C16.5756 14.4286 19.0042 12 22 12C24.9958 12 27.4244 14.4286 27.4244 17.4244C27.4244 22.1722 27.6611 24.5456 32 26.4444C29.7778 27 29.2222 27.5556 28.6667 29.7778C24.7778 29.7778 24.2222 32 22 32C19.7778 32 19.2222 29.7778 15.3333 29.7778C14.7778 27.5556 14.2222 27 12 26.4444C16.3389 24.5456 16.5756 22.1722 16.5756 17.4244Z"
+                                    stroke="#050505" stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                                <path d="M12 26C15.8236 23.9171 15.8236 21.9503 12.9559 19" stroke="#050505"
+                                    stroke-width="1.5" stroke-linecap="round" />
+                                <path d="M32 26C28.1764 23.9171 28.1764 21.9503 31.0441 19" stroke="#050505"
+                                    stroke-width="1.5" stroke-linecap="round" />
+                            </svg>
+                        </a>
+                        {% endif %}
+                        {% if store.settings.contact.tiktok %}
+                        <a href="https://www.tiktok.com/@{{ store.settings.contact.tiktok }}" target="_blank">
+
+                            <svg width="44" height="44" viewBox="0 0 44 44" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M12.5 22C12.5 17.5217 12.5 15.2825 13.8912 13.8912C15.2825 12.5 17.5217 12.5 22 12.5C26.4783 12.5 28.7175 12.5 30.1088 13.8912C31.5 15.2825 31.5 17.5217 31.5 22C31.5 26.4783 31.5 28.7175 30.1088 30.1088C28.7175 31.5 26.4783 31.5 22 31.5C17.5217 31.5 15.2825 31.5 13.8912 30.1088C12.5 28.7175 12.5 26.4783 12.5 22Z"
+                                    stroke="#050505" stroke-width="1.5" stroke-linejoin="round" />
+                                <path
+                                    d="M20.3938 21.7779C20.8038 21.8365 21.1838 21.5517 21.2424 21.1416C21.3011 20.7316 21.0162 20.3517 20.6062 20.293L20.5 21.0354L20.3938 21.7779ZM27.5 20.25C27.9142 20.25 28.25 19.9142 28.25 19.5C28.25 19.0858 27.9142 18.75 27.5 18.75V19.5V20.25ZM24.25 16C24.25 15.5858 23.9142 15.25 23.5 15.25C23.0858 15.25 22.75 15.5858 22.75 16H23.5H24.25ZM23.5 24.5H22.75C22.75 26.0188 21.5188 27.25 20 27.25V28V28.75C22.3472 28.75 24.25 26.8472 24.25 24.5H23.5ZM20 28V27.25C18.4812 27.25 17.25 26.0188 17.25 24.5H16.5H15.75C15.75 26.8472 17.6528 28.75 20 28.75V28ZM16.5 24.5H17.25C17.25 22.9812 18.4812 21.75 20 21.75V21V20.25C17.6528 20.25 15.75 22.1528 15.75 24.5H16.5ZM20 21V21.75C20.1341 21.75 20.2656 21.7595 20.3938 21.7779L20.5 21.0354L20.6062 20.293C20.4078 20.2646 20.2054 20.25 20 20.25V21ZM27.5 19.5V18.75C26.7254 18.75 25.8924 18.4308 25.2559 17.8992C24.62 17.3682 24.25 16.6883 24.25 16H23.5H22.75C22.75 17.2446 23.4135 18.3148 24.2944 19.0505C25.1746 19.7857 26.3416 20.25 27.5 20.25V19.5ZM23.5 16H22.75V24.5H23.5H24.25V16H23.5Z"
+                                    fill="#050505" />
+                            </svg>
+                        </a>
+                        {% endif %}
+
                     </div>
-                    <div class="col-12 col-lg-4">
-                        {% if store.settings.general.business_address.show_location %}
-                        <div class="footer-about-us-links-div">
-                            <h2 class="pb-2">{% if settings.business_location_title %}{{ settings.business_location_title }}{% else %}{{ _("Our place") }}{% endif %}</h2>
-                            <p>
-                                <a {% if store.settings.general.business_address.latitude %} target="_blank" href="https://maps.google.com/?q={{ store.settings.general.business_address.latitude }},{{ store.settings.general.business_address.longitude }}" {% endif %}>
-                                    {{ store.settings.general.business_address.street }}<br/>
-                                    <i class="icon-map-marker-alt"></i> {{ store.settings.general.business_address.city.country.name }}, {{ store.settings.general.business_address.city.name }}, {{ store.settings.general.business_address.district }}, {{ store.settings.general.business_address.street }}
+                </div>
+            </div>
+            {# 5. App download (leftmost on web - RTL) #}
+            <div class="col-12 col-lg footer-footer-col footer-col-app">
+                <div class="footer-about-us-links-div footer-app-download">
+                    <h2 class="pb-2">{{ _("Download the App") }}</h2>
+                    <div class="icons social-apps-icons d-flex flex-column flex-lg-column align-items-start">
+                        <div class="google-app-stores apps-social-icons d-flex flex-column align-items-start">
+                            <a href="https://play.google.com/store/apps/details?id={{ store.settings.general.one_signal.android_package_name }}"
+                                target="_blank" class="mb-2">
+                                <img src="{{ 'google-play.svg' | asset_url }}" loading="lazy" alt="" width="115"
+                                    height="35">
+                            </a>
+                            <a href="https://apps.apple.com/app/id{{ store.settings.general.one_signal.ios_app_id }}"
+                                target="_blank">
+                                <img src="{{ 'app-store.svg' | asset_url }}" loading="lazy" alt="" width="115"
+                                    height="35">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    (function () {
+        function initFooterLinksCollapse() {
+            var collapses = document.querySelectorAll('.js-footer-links-collapse');
+            if (!collapses.length) return;
+
+            var isMobile = window.matchMedia('(max-width: 991px)').matches;
+
+            collapses.forEach(function (wrap, index) {
+                var toggle = wrap.querySelector('.js-footer-links-toggle');
+                var body = wrap.querySelector('.footer-links-collapse-body');
+                if (!toggle || !body) return;
+
+                // Desktop: always open, no JS behavior needed
+                if (!isMobile) {
+                    wrap.classList.add('is-open');
+                    return;
+                }
+
+                // Mobile: first section open by default, others closed
+                if (index === 0) {
+                    wrap.classList.add('is-open');
+                } else {
+                    wrap.classList.remove('is-open');
+                }
+
+                toggle.addEventListener('click', function () {
+                    // Toggle current collapse only
+                    wrap.classList.toggle('is-open');
+                });
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initFooterLinksCollapse);
+        } else {
+            initFooterLinksCollapse();
+        }
+
+        // Re-run on resize to adapt when switching between mobile/desktop
+        window.addEventListener('resize', function () {
+            initFooterLinksCollapse();
+        });
+    })();
+</script>
+
+<div class="footer-companies mt-5">
+    <div class="container-fluid">
+        <div class="copyrights_icons">
+            <div class="footer-icons">
+                <div
+                    class="d-flex flex-row justify-content-between align-items-center flex-wrap icons-wrapper footer-store-section-bars">
+                    <div class="icons footer-payment-logos">
+                        <div class="logistics-pay-icons d-flex flex-wrap justify-content-center justify-content-lg-end" style="gap: 8px;">
+                            {% for shipping_method in store.settings.checkout.shipping_methods %}
+                            <a href="/shipping-and-payment">
+                                <img src="{{ image_url(shipping_method.icon, h=80, q=100) }}" loading="lazy" alt=""
+                                    height="21">
+                            </a>
+                            {% endfor %}
+                            {% for payment_method in store.settings.checkout.payment_methods %}
+                            <a href="/shipping-and-payment">
+                                <img src="{{ image_url(payment_method.icon, h=80, q=100) }}" loading="lazy" alt=""
+                                    height="21">
+                            </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-copyrights-vat-certificate">
+                <div class="container-fluid">
+                    <div class="d-flex flex-column-reverse flex-lg-row flex-wrap align-items-center justify-content-between footer-store-section-bars footer-legal-row"
+                        style="border-bottom: 0px;">
+                        <div
+                            class="vat-crn-sections py-4 d-flex flex-row flex-wrap justify-content-end align-items-center">
+                            {% if store.settings.general.tax_settings.is_certificate_visible %}
+                            <div class="vat-icon">
+                                <a {% if store.settings.general.tax_settings.tax_registration_certificate
+                                    %}href="{{ store.settings.general.tax_settings.tax_registration_certificate }}"
+                                    target="_blank" {% endif %}>
+                                    <img src="{{ 'vat-certificate.png' | asset_url }}" loading="lazy" alt=""
+                                        width="auto" height="40">
                                 </a>
-                            </p>
-                        </div>
-                        {% endif %}
-                        <div  class="footer-about-us-links-div {% if store.settings.general.business_address.show_location %}mt-5{% endif %}">
-                            <h2 class="pb-2">{% if settings.social_media_title %}{{ settings.social_media_title }}{% else %}{{ _("Contact us") }}{% endif %}</h2>
-                            <div class="social-icons d-flex flex-wrap">
-
-                                {% if store.settings.contact.facebook %}
-                                    <a href="https://www.facebook.com/{{ store.settings.contact.facebook }}" target="_blank">
-                                        <span class="icon-facebook-f d-flex align-items-center justify-content-center"></span>
-                                    </a>
-                                {% endif %}
-
-                                {% if store.settings.contact.instagram %}
-                                    <a href="https://www.instagram.com/{{ store.settings.contact.instagram }}" target="_blank">
-                                        <span class="icon-instagram d-flex align-items-center justify-content-center"></span>
-                                    </a>
-                                {% endif %}
-
-                                {% if store.settings.contact.twitter %}
-                                    <a href="https://twitter.com/{{ store.settings.contact.twitter }}"
-                                       target="_blank">
-                                        <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
-                                             width="512.000000pt" height="512.000000pt"
-                                             viewBox="0 0 512.000000 512.000000"
-                                             class="x-icon-twitter d-flex align-items-center justify-content-center"
-                                             preserveAspectRatio="xMidYMid meet">
-
-                                            <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)">
-                                                <path d="M75 5093 c10 -16 448 -653 973 -1418 525 -765 955 -1395 955 -1400 0
-                                                -6 -431 -512 -959 -1126 -527 -613 -965 -1123 -973 -1132 -13 -16 1 -17 206
-                                                -17 l220 0 849 987 c467 542 854 988 859 989 6 2 316 -442 689 -986 l679 -990
-                                                744 0 c705 0 743 1 734 18 -5 9 -460 672 -1010 1472 -550 800 -1001 1457
-                                                -1001 1460 0 4 418 492 929 1085 l928 1080 -215 3 c-177 2 -218 0 -231 -12 -9
-                                                -8 -374 -431 -811 -939 -437 -509 -798 -923 -802 -921 -4 3 -296 425 -649 939
-                                                l-642 935 -745 0 -744 0 17 -27z m2815 -2529 c855 -1224 1557 -2229 1558
-                                                -2235 3 -6 -118 -8 -334 -7 l-338 3 -1558 2228 c-857 1226 -1558 2231 -1558
-                                                2233 0 2 152 4 338 4 l337 -1 1555 -2225z"/>
-                                            </g>
-                                        </svg>
-                                    </a>
-                                {% endif %}
-
-                                {% if store.settings.contact.snapchat %}
-                                    <a href="https://www.snapchat.com/add/{{ store.settings.contact.snapchat }}" target="_blank">
-                                        <span class="icon-snapchat-ghost d-flex align-items-center justify-content-center"></span>
-                                    </a>
-                                {% endif %}
-
-                                {% if store.settings.contact.tiktok %}
-                                    <a href="https://www.tiktok.com/@{{ store.settings.contact.tiktok }}" target="_blank">
-                                        <span class="icon-tiktok d-flex align-items-center justify-content-center"></span>
-                                    </a>
-                                {% endif %}
-
-                                {% if store.settings.contact.phone %}
-                                    <a href="tel:{{ store.settings.contact.phone }}" target="_blank">
-                                        <span class="icon-call d-flex align-items-center justify-content-center"></span>
-                                    </a>
-                                {% endif %}
-
-                                {% if store.settings.contact.email %}
-                                    <a href="mailto:{{ store.settings.contact.email }}" target="_blank">
-                                        <span class="icon-envelope-secondary d-flex align-items-center justify-content-center"></span>
-                                    </a>
-                                {% endif %}
-
-                                {% if store.settings.contact.website %}
-                                    <a href="{{ store.settings.contact.website }}" target="_blank">
-                                        <span class="icon-globe-secondary d-flex align-items-center justify-content-center"></span>
-                                    </a>
-                                {% endif %}
                             </div>
+                            {% endif %}
+                            {% if store.settings.contact.business_center %}
+                            <div class="maroof-icon" style="text-align: center;">
+                                <a href="https://eauthenticate.saudibusiness.gov.sa/certificate-details/{{ store.settings.contact.business_center }}"
+                                    target="_blank">
+                                    <img src="{{ 'business_center.png' | asset_url }}" loading="lazy" alt=""
+                                        width="auto" height="30">
+                                    <div class="footer-theme-text-for-primary-bg">{{
+                                        store.settings.contact.business_center }}</div>
+                                </a>
+                            </div>
+                            {% endif %}
+                            {% if store.settings.general.tax_settings.tax_number %}
+                            <div class="vat-number">
+                                <span>{{ _("The VAT number:") }}</span>
+                                <span>{{ store.settings.general.tax_settings.tax_number }}</span>
+                            </div>
+                            {% endif %}
+                            {% if store.settings.general.commercial_registration_number %}
+                            <div class="maroof-icon">
+                                <span>{{ _("The commercial register number:") }}</span>
+                                <span>{{ store.settings.general.commercial_registration_number }}</span>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
-    </div>
-</div>
-
-<div class="footer-companies">
-    <div class="container">
-        <div class="footer-icons">
-
-            <div class="d-flex flex-row {% if store.settings.general.one_signal.ios_app_id or store.settings.general.one_signal.android_package_name%}justify-content-between{% else %}justify-content-center{% endif %} align-items-center flex-wrap icons-wrapper footer-store-section-bars">
-                {% if store.settings.general.one_signal.ios_app_id or store.settings.general.one_signal.android_package_name%}
-                <div class="icons social-apps-icons d-flex flex-wrap align-items-center">
-                    <div class="google-app-stores apps-social-icons d-flex justify-content-center">
-                        {% if store.settings.general.one_signal.ios_app_id %}
-                            <a href="https://apps.apple.com/app/id{{ store.settings.general.one_signal.ios_app_id }}" target="_blank">
-                                <img src="{{ 'app-store.svg' | asset_url }}" loading="lazy" alt="" width="115" height="35">
-                            </a>
-                        {% endif %}
-                        {% if store.settings.general.one_signal.android_package_name %}
-                            <a href="https://play.google.com/store/apps/details?id={{ store.settings.general.one_signal.android_package_name }}" target="_blank">
-                                <img src="{{ 'google-play.svg' | asset_url }}" loading="lazy" alt="" width="115" height="35">
-                            </a>
-                        {% endif %}
-                    </div>
-                </div>
-                {% endif %}
-                <div class="icons">
-                    <div class="logistics-pay-icons d-flex flex-wrap justify-content-center">
-                        {% for shipping_method in store.settings.checkout.shipping_methods %}
-                            <a href="/shipping-and-payment">
-                                <img src="{{ image_url(shipping_method.icon, h=80, q=100) }}" loading="lazy" alt="" height="21">
-                            </a>
-                        {% endfor %}
-
-
-                        {% for payment_method in store.settings.checkout.payment_methods %}
-                            <a href="/shipping-and-payment">
-                                <img src="{{ image_url(payment_method.icon, h=80, q=100) }}" loading="lazy" alt="" height="21">
-                            </a>
-                        {% endfor %}
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="footer-copyrights-vat-certificate">
-    <div class="container">
-        <div class="d-flex flex-column-reverse flex-lg-row flex-wrap align-items-center justify-content-between footer-store-section-bars" style="border-bottom: 0px;">
-            <div class="d-flex justify-content-center align-items-center">
-                <span class="text-center footer-copyrights">{{ store.settings.branding.copyrights | safe}}</span>
-            </div>
-            <div class="vat-crn-sections py-4 d-flex flex-row flex-wrap justify-content-end align-items-center">
-                {% if store.settings.general.tax_settings.is_certificate_visible %}
-                    <div class="vat-icon">
-                        <a {% if store.settings.general.tax_settings.tax_registration_certificate %}href="{{ store.settings.general.tax_settings.tax_registration_certificate }}"  target="_blank"{% endif %} >
-                            <img src="{{ 'vat-certificate.png' | asset_url }}" loading="lazy" alt="" width="auto" height="40">
-                        </a>
-                    </div>
-                {% endif %}
-
-                {% if store.settings.contact.business_center %}
-                    <div class="maroof-icon" style="text-align: center;">
-                        <a href="https://eauthenticate.saudibusiness.gov.sa/certificate-details/{{ store.settings.contact.business_center }}" target="_blank">
-                            <img src="{{ 'business_center.png' | asset_url }}" loading="lazy" alt="" width="auto" height="30">
-                            <div class="footer-theme-text-for-primary-bg">{{ store.settings.contact.business_center }}</div>
-                        </a>
-                    </div>
-                {% endif %}
-
-                {% if store.settings.general.tax_settings.tax_number %}
-                    <div class="vat-number">
-                        <span>{{ _("The VAT number:") }}</span>
-                        <span>{{ store.settings.general.tax_settings.tax_number }}</span>
-                    </div>
-                {% endif %}
-
-                {% if store.settings.general.commercial_registration_number %}
-                    <div class="maroof-icon">
-                        <span>{{ _("The commercial register number:") }}</span>
-                        <span>{{ store.settings.general.commercial_registration_number }}</span>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-
     </div>
 </div>

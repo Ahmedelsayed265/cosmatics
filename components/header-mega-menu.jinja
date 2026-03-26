@@ -6,16 +6,15 @@
 {% endif %}
 {% endfor %}
 {% set all_cat_menu = ns.all_cat_menu %}
-{# عناصر الدروب دون: إن كان لعنصر "جميع التصنيفات" items نستخدمها، وإلا نأخذ باقي عناصر القائمة الرئيسية (التصنيفات) #}
+{# 2. Get dropdown items: use "All categories" items if found, else fall back to main menu category links #}
 {% if all_cat_menu and all_cat_menu.items and all_cat_menu.items | length > 0 %}
-{% set ns.dropdown_items = all_cat_menu.items %}
-{% elif all_cat_menu %}
-{% for m in store.settings.menus.main_menu.items %}
-{% if m.url and safeget(m, "url") != '/c/' and safeget(m, "url") != '/categories/' and safeget(m, "url") != '/' and
-safeget(m, "url") != '/products/' %}
-{% set ns.dropdown_items = ns.dropdown_items + [m] %}
-{% endif %}
-{% endfor %}
+    {% set ns.dropdown_items = all_cat_menu.items %}
+{% else %}
+    {% for m in store.settings.menus.main_menu.items %}
+        {% if m.url and safeget(m, "url") != '/c/' and safeget(m, "url") != '/categories/' and safeget(m, "url") != '/' and safeget(m, "url") != '/products/' %}
+            {% set ns.dropdown_items = ns.dropdown_items + [m] %}
+        {% endif %}
+    {% endfor %}
 {% endif %}
 {% set all_cat_dropdown_items = ns.dropdown_items %}
 
@@ -109,7 +108,7 @@ safeget(m, "url") != '/products/' %}
 
                     </span>
                 </button>
-                {% if all_cat_menu and all_cat_dropdown_items %}
+                {% if all_cat_dropdown_items | length > 0 %}
                 <div class="header-all-cat-panel" id="header-all-cat-panel" role="menu">
                     <div class="header-all-cat-panel-inner">
                         {# منطقة التصنيفات الفرعية (يسار في RTL) - تظهر حسب التصنيف المرور عليه #}

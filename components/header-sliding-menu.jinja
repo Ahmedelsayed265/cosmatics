@@ -1,165 +1,286 @@
 <div id="sidenav-overlay" onclick="closeSlidingMenu()"></div>
-<nav class="slide-menu menu-header-theme-bg-primary menu-header-theme-bg-primary-brightness-100" id="sliding-menu">
-    <ul class="theme-text-for-primary-bg menu-header-theme-bg-primary menu-header-theme-bg-primary-brightness-100 menu-header-theme-text-for-primary-bg">
-        <li>
-            <div style="height: 50px"></div>
-        </li>
+<nav class="slide-menu slide-menu--drawer slide-menu-theme-menu-colors" id="sliding-menu">
+    {# Top bar: icons (bag, offers, account) | logo | close #}
+    <div class="slide-menu-drawer-header">
+        <div class="slide-menu-drawer-header-icons">
+            <a href="{{ url_for('cart_page') }}" class="slide-menu-drawer-icon a-shopping-cart" aria-label="{{ _('Cart') }}">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M3.87289 17.0194L2.66933 9.83981C2.48735 8.75428 2.39637 8.21152 2.68773 7.85576C2.9791 7.5 3.51461 7.5 4.58564 7.5H19.4144C20.4854 7.5 21.0209 7.5 21.3123 7.85576C21.6036 8.21152 21.5126 8.75428 21.3307 9.83981L20.1271 17.0194C19.7282 19.3991 19.5287 20.5889 18.7143 21.2945C17.9 22 16.726 22 14.3782 22H9.62182C7.27396 22 6.10003 22 5.28565 21.2945C4.47127 20.5889 4.27181 19.3991 3.87289 17.0194Z" stroke="#050505" stroke-width="1.5"/>
+<path d="M17.5 7.5C17.5 4.46243 15.0376 2 12 2C8.96243 2 6.5 4.46243 6.5 7.5" stroke="#050505" stroke-width="1.5"/>
+</svg>
+            </a>
+            <button type="button" class="slide-menu-drawer-icon" aria-label="{{ _('Offers') }}" data-open-offers-offcanvas style="background: none; border: none; padding: 0; cursor: pointer; color: inherit;">
+
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 22C16.4183 22 20 18.4183 20 14C20 8 12 2 12 2C11.6117 4.48692 11.2315 5.82158 10 8C8.79908 7.4449 8.5 7 8 5.75C6 8 4 11 4 14C4 18.4183 7.58172 22 12 22Z" stroke="#050505" stroke-width="1.5" stroke-linejoin="round"/>
+<path d="M10 17L14 13" stroke="#050505" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M10 13H10.009M13.991 17H14" stroke="#050505" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+            </button>
+            <a href="{{ url_for('login_page') }}" class="slide-menu-drawer-icon slide-menu-drawer-icon-account slide-menu-drawer-login-trigger" aria-label="{{ _('Account') }}">
+
+
+
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12.5 22H6.59087C5.04549 22 3.81631 21.248 2.71266 20.1966C0.453365 18.0441 4.1628 16.324 5.57757 15.4816C7.67837 14.2307 10.1368 13.7719 12.5 14.1052C13.3575 14.2261 14.1926 14.4514 15 14.7809" stroke="#050505" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16.5 6.5C16.5 8.98528 14.4853 11 12 11C9.51472 11 7.5 8.98528 7.5 6.5C7.5 4.01472 9.51472 2 12 2C14.4853 2 16.5 4.01472 16.5 6.5Z" stroke="#050505" stroke-width="1.5"/>
+<path d="M18.5 22L18.5 15M15 18.5H22" stroke="#050505" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
+            </a>
+        </div>
+        <div class="slide-menu-drawer-header-logo">
+            <a href="/">
+                {% if settings.header_logo_mobile %}
+                    {% set logoUrlMobile = settings.header_logo_mobile %}
+                {% elif store.settings.branding.mobile_app_logo %}
+                    {% set logoUrlMobile = store.settings.branding.mobile_app_logo %}
+                {% elif settings.header_logo %}
+                    {% set logoUrlMobile = settings.header_logo %}
+                {% else %}
+                    {% set logoUrlMobile = store.logo %}
+                {% endif %}
+                <img src="{{ image_url(logoUrlMobile, h=120, q=100) }}" alt="{{ store.name }}" decoding="async">
+            </a>
+        </div>
+        <button type="button" class="slide-menu-drawer-close" onclick="closeSlidingMenu()" aria-label="{{ _('Close') }}">
+
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M14.9994 15L9 9M9.00064 15L15 9" stroke="#404040" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12Z" stroke="#404040" stroke-width="1.5"/>
+</svg>
+        </button>
+    </div>
+
+    {# Search bar #}
+    {% set header_options_raw = safeget(settings, "header_options", []) %}
+    {% set header_options = header_options_raw if header_options_raw is iterable and header_options_raw is not boolean and header_options_raw is not string else [] %}
+    {% if not ('hide_search_bar' in header_options) %}
+    <div class="slide-menu-drawer-search">
+        <div class="slide-menu-drawer-search-inner">
+            <span class="slide-menu-drawer-search-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17.5 17.5L22 22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M20 11a9 9 0 10-18 0 9 9 0 0018 0z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            </span>
+            <input type="text"
+                   class="slide-menu-drawer-search-input search-input-input"
+                   data-cat-id="{{ category.id if category is defined else '' }}"
+                   placeholder="{% if settings.header_search_placeholder %}{{ settings.header_search_placeholder }}{% else %}{{ _('What are you looking for?') }}{% endif %}"
+                   autocomplete="off">
+            <div class="autocomplete-items"></div>
+        </div>
+    </div>
+    {% endif %}
+
+    {# 1. تصنيفات رئيسية: بدون فرعيات = رابط عادي، مع فرعيات = كولابس (تفصيل/طي) #}
+    <ul class="slide-menu-drawer-ul slide-menu-theme-text">
         {% for menu in store.settings.menus.main_menu.items %}
             {% if menu.url %}
-            <li class="slide-menu-ul-li {% if menu.slug == 'all_categories' %} all-categories {% endif %}"  onclick="scrollToSubMenu(this)">
-                <a href="{{ menu.url | localized_url if menu.resource_type != 'url' else menu.url }}" title="{{ menu.label }}" class="menu-link">
-                    <span class="px-1 clickable-span">{{ menu.label }}</span>
-                </a>
-                {% if menu.items | length > 0 %}
-                    <ul>
+            {% if menu.items | length > 0 %}
+            <li class="slide-menu-ul-li slide-menu-drawer-li slide-menu-drawer-li--has-sub {% if menu.slug == 'all_categories' %} all-categories {% endif %}">
+                <details class="slide-menu-drawer-collapse">
+                    <summary class="slide-menu-drawer-collapse-summary">
+                        <span class="slide-menu-drawer-link-icon slide-menu-drawer-link-img-wrap">
+                            {% if safeget(menu, 'image') %}
+                            <img src="{{ image_url(safeget(menu, 'image'), w=80, h=80, q=100, f='auto') }}" alt="" class="slide-menu-drawer-cat-img" width="36" height="36">
+                            {% else %}
+                            <span class="slide-menu-cat-icon slide-menu-cat-icon--{{ loop.index % 9 or 9 }}"></span>
+                            {% endif %}
+                        </span>
+                        <span class="slide-menu-drawer-link-text">{{ menu.label }}</span>
+                        <span class="slide-menu-drawer-sub-arrow" aria-hidden="true">
+
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M15 6C15 6 9.00001 10.4189 9 12C8.99999 13.5812 15 18 15 18" stroke="#050505" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+                        </span>
+                    </summary>
+                    <ul class="slide-menu-drawer-sub">
                         {% for menu_sub in menu.items %}
-                            <li class="slide-menu-ul-li">
-                                <a href="{{ menu_sub.url | localized_url if menu_sub.resource_type != 'url' else menu_sub.url  }}">{{ menu_sub.label }}</a>
+                            <li class="slide-menu-ul-li slide-menu-drawer-li slide-menu-drawer-li--sub">
                                 {% if menu_sub.items | length > 0 %}
-                                    <ul>
+                                <details class="slide-menu-drawer-collapse slide-menu-drawer-collapse--l2">
+                                    <summary class="slide-menu-drawer-collapse-summary slide-menu-drawer-collapse-summary--sub">
+                                        <span class="slide-menu-drawer-link-icon slide-menu-drawer-link-img-wrap">
+                                            {% if safeget(menu_sub, 'image') %}
+                                            <img src="{{ image_url(safeget(menu_sub, 'image'), w=80, h=80, q=100, f='auto') }}" alt="" class="slide-menu-drawer-cat-img" width="32" height="32">
+                                            {% else %}
+                                            <span class="slide-menu-cat-icon slide-menu-cat-icon--{{ loop.index % 9 or 9 }}"></span>
+                                            {% endif %}
+                                        </span>
+                                        <span class="slide-menu-drawer-link-text">{{ menu_sub.label }}</span>
+                                        <span class="slide-menu-drawer-sub-arrow slide-menu-drawer-sub-arrow--small" aria-hidden="true">
+
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M15 6C15 6 9.00001 10.4189 9 12C8.99999 13.5812 15 18 15 18" stroke="#050505" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+                                        </span>
+                                    </summary>
+                                    <ul class="slide-menu-drawer-sub slide-menu-drawer-sub--l2">
                                         {% for menu_sub_sub in menu_sub.items %}
-                                            <li class="slide-menu-ul-li">
-                                                <a href="{{ menu_sub_sub.url | localized_url if menu_sub_sub.resource_type != 'url' else menu_sub_sub.url }}">
-                                                    {{ menu_sub_sub.label }}
+                                            <li class="slide-menu-ul-li slide-menu-drawer-li slide-menu-drawer-li--sub">
+                                                <a href="{{ menu_sub_sub.url | localized_url if menu_sub_sub.resource_type != 'url' else menu_sub_sub.url }}" class="slide-menu-drawer-link slide-menu-drawer-link--sub">
+                                                    <span class="slide-menu-drawer-link-icon slide-menu-drawer-link-img-wrap">
+                                                        {% if safeget(menu_sub_sub, 'image') %}
+                                                        <img src="{{ image_url(safeget(menu_sub_sub, 'image'), w=80, h=80, q=100, f='auto') }}" alt="" class="slide-menu-drawer-cat-img" width="28" height="28">
+                                                        {% else %}
+                                                        <span class="slide-menu-cat-icon slide-menu-cat-icon--{{ loop.index % 9 or 9 }}"></span>
+                                                        {% endif %}
+                                                    </span>
+                                                    <span class="slide-menu-drawer-link-text">{{ menu_sub_sub.label }}</span>
                                                 </a>
                                             </li>
                                         {% endfor %}
                                     </ul>
+                                </details>
+                                {% else %}
+                                <a href="{{ menu_sub.url | localized_url if menu_sub.resource_type != 'url' else menu_sub.url }}" class="slide-menu-drawer-link slide-menu-drawer-link--sub">
+                                    <span class="slide-menu-drawer-link-icon slide-menu-drawer-link-img-wrap">
+                                        {% if safeget(menu_sub, 'image') %}
+                                        <img src="{{ image_url(safeget(menu_sub, 'image'), w=80, h=80, q=100, f='auto') }}" alt="" class="slide-menu-drawer-cat-img" width="32" height="32">
+                                        {% else %}
+                                        <span class="slide-menu-cat-icon slide-menu-cat-icon--{{ loop.index % 9 or 9 }}"></span>
+                                        {% endif %}
+                                    </span>
+                                    <span class="slide-menu-drawer-link-text">{{ menu_sub.label }}</span>
+                                </a>
                                 {% endif %}
                             </li>
                         {% endfor %}
                     </ul>
-                {% endif %}
+                </details>
+            </li>
+            {% else %}
+            <li class="slide-menu-ul-li slide-menu-drawer-li {% if menu.slug == 'all_categories' %} all-categories {% endif %}">
+                <a href="{{ menu.url | localized_url if menu.resource_type != 'url' else menu.url }}" title="{{ menu.label }}" class="menu-link slide-menu-drawer-link">
+                    <span class="slide-menu-drawer-link-icon slide-menu-drawer-link-img-wrap">
+                        {% if safeget(menu, 'image') %}
+                        <img src="{{ image_url(safeget(menu, 'image'), w=80, h=80, q=100, f='auto') }}" alt="" class="slide-menu-drawer-cat-img" width="36" height="36">
+                        {% else %}
+                        <span class="slide-menu-cat-icon slide-menu-cat-icon--{{ loop.index % 9 or 9 }}"></span>
+                        {% endif %}
+                    </span>
+                    <span class="slide-menu-drawer-link-text clickable-span">{{ menu.label }}</span>
+                </a>
             </li>
             {% endif %}
+            {% endif %}
         {% endfor %}
-        <li class="slide-menu-ul-li">
-            <a href="/shipping-and-payment"><span>{{ _("Payment and delivery options") }}</span></a>
+        <li class="slide-menu-ul-li slide-menu-drawer-li">
+            <a href="{{ url_for('login_page') }}" class="slide-menu-drawer-link slide-menu-drawer-link-util slide-menu-drawer-login-trigger">
+                <span class="slide-menu-drawer-link-icon slide-menu-util-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/></svg>
+                </span>
+                <span>{{ _("Login") }}</span>
+            </a>
         </li>
-        <li>
-            <div class="slide-menu-static">
-                <div class="account-lang-currency upper-bar">
-                    <div class="container d-flex flex-wrap">
-                        <div class="account-area">
-                            <!-- Default Login button (shown initially) -->
-                            <button type="button" onclick="handleLoginAction()" class="btn btn-dark account-btn" id="login-btn-alt">
-                                <span class="icon-account_circle_black_24dp" style="position: relative; top: 1px"></span>
-                                <span style="position: relative; bottom: 2px">&nbsp;{{ _("Login") }}&nbsp;</span>
-                            </button>
-
-                            <!-- Placeholder for Hello, Customer (hidden initially) -->
-                            <button type="button" onclick="window.location.href='/account-profile'" class="btn btn-dark account-btn" id="hello-btn-alt" style="display: none;">
-                                <span class="icon-account_circle_black_24dp" style="position: relative; top: 1px"></span>
-                                <span id="customer-greeting-alt" style="position: relative; bottom: 2px">{{ _("Hello") }} ...</span>
-                            </button>
-                        </div>
-
-                        {% set multiple_languages = store.languages | length > 1 %}
-                        {% set header_options_raw = safeget(settings, "header_options", []) %}
-                        {% set header_options =
-                            header_options_raw
-                            if header_options_raw is iterable and header_options_raw is not boolean and header_options_raw is not string
-                            else []
-                        %}
-
-                        {% set show_country = 'hide_country' not in header_options %}
-                        {% set show_language = 'hide_language' not in header_options %}
-
-                        {% if show_country or (multiple_languages and show_language) %}
-                            <div class="language-currency language-currency-menu d-flex justify-content-between" onclick="zidOpenRegionSettingDialog()">
-
-                                {% if session.lang == 'en' %}
-                                    {% set change_to_lang = 'ar' %}
-                                    {% set change_to_lang_name = 'العربية' %}
-                                {% else %}
-                                    {% set change_to_lang = 'en' %}
-                                    {% set change_to_lang_name = 'English' %}
-                                {% endif %}
-
-
-
-                                {% if show_country %}
-                                    {% if session.shipping_destination %}
-                                        <div class="currency-button-area d-flex justify-content-center">
-                                            <button class="c-btn currency-btn currency-btn-menu">{{ session.shipping_destination.country.name }} - {{ session.shipping_destination.name }}</button>
-                                        </div>
-                                    {% else %}
-                                        <div class="currency-button-area d-flex justify-content-center">
-                                            <button class="c-btn currency-btn currency-btn-menu">{{ session.country.names[session.lang] }}</button>
-                                        </div>
-                                    {% endif %}
-                                {% endif %}
-                                
-                                {% if show_country and (multiple_languages and show_language) %}
-                                    <div class="vertical-line vertical-line-menu"></div>
-                                {% endif %}
-
-                                {% if multiple_languages and show_language %}
-                                    <div class="language-button-area d-flex justify-content-between">
-                                        <button type="submit" class='c-btn language-btn language-btn-menu d-flex justify-content-between align-items-center'>
-                                            <span class="px-2">{{ change_to_lang_name }}</span>&nbsp;
-                                            <span class="icon-language_white icon-language_white-menu"></span>
-                                        </button>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
+        {% set multiple_languages = store.languages | length > 1 %}
+        {% set show_language = 'hide_language' not in header_options %}
+        {% if multiple_languages and show_language %}
+        <li class="slide-menu-ul-li slide-menu-drawer-li">
+            <a href="#" class="slide-menu-drawer-link slide-menu-drawer-link-util" onclick="closeSlidingMenu(); zidOpenRegionSettingDialog(); return false;">
+                <span class="slide-menu-drawer-link-icon slide-menu-util-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z" stroke="currentColor" stroke-width="1.5"/></svg>
+                </span>
+                <span>{{ _("Change language") }}</span>
+            </a>
         </li>
-        <li>
-            <div style="height: 250px"></div>
-        </li>
+        {% endif %}
+        <li class="slide-menu-drawer-spacer"></li>
     </ul>
-</nav>
 
+    {# Footer: social icons #}
+    <div class="slide-menu-drawer-footer">
+        {% if store.settings.contact.tiktok %}
+        <a href="https://www.tiktok.com/@{{ store.settings.contact.tiktok }}" target="_blank" rel="noopener" class="slide-menu-drawer-social" aria-label="{{ _('TikTok') }}">
+
+<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12.5 22C12.5 17.5217 12.5 15.2825 13.8912 13.8912C15.2825 12.5 17.5217 12.5 22 12.5C26.4783 12.5 28.7175 12.5 30.1088 13.8912C31.5 15.2825 31.5 17.5217 31.5 22C31.5 26.4783 31.5 28.7175 30.1088 30.1088C28.7175 31.5 26.4783 31.5 22 31.5C17.5217 31.5 15.2825 31.5 13.8912 30.1088C12.5 28.7175 12.5 26.4783 12.5 22Z" stroke="#050505" stroke-width="1.5" stroke-linejoin="round"/>
+<path d="M20.3938 21.7779C20.8038 21.8365 21.1838 21.5517 21.2424 21.1416C21.3011 20.7316 21.0162 20.3517 20.6062 20.293L20.5 21.0354L20.3938 21.7779ZM27.5 20.25C27.9142 20.25 28.25 19.9142 28.25 19.5C28.25 19.0858 27.9142 18.75 27.5 18.75V19.5V20.25ZM24.25 16C24.25 15.5858 23.9142 15.25 23.5 15.25C23.0858 15.25 22.75 15.5858 22.75 16H23.5H24.25ZM23.5 24.5H22.75C22.75 26.0188 21.5188 27.25 20 27.25V28V28.75C22.3472 28.75 24.25 26.8472 24.25 24.5H23.5ZM20 28V27.25C18.4812 27.25 17.25 26.0188 17.25 24.5H16.5H15.75C15.75 26.8472 17.6528 28.75 20 28.75V28ZM16.5 24.5H17.25C17.25 22.9812 18.4812 21.75 20 21.75V21V20.25C17.6528 20.25 15.75 22.1528 15.75 24.5H16.5ZM20 21V21.75C20.1341 21.75 20.2656 21.7595 20.3938 21.7779L20.5 21.0354L20.6062 20.293C20.4078 20.2646 20.2054 20.25 20 20.25V21ZM27.5 19.5V18.75C26.7254 18.75 25.8924 18.4308 25.2559 17.8992C24.62 17.3682 24.25 16.6883 24.25 16H23.5H22.75C22.75 17.2446 23.4135 18.3148 24.2944 19.0505C25.1746 19.7857 26.3416 20.25 27.5 20.25V19.5ZM23.5 16H22.75V24.5H23.5H24.25V16H23.5Z" fill="#050505"/>
+</svg>
+        </a>
+        {% endif %}
+        {% if store.settings.contact.snapchat %}
+        <a href="https://www.snapchat.com/add/{{ store.settings.contact.snapchat }}" target="_blank" rel="noopener" class="slide-menu-drawer-social" aria-label="{{ _('Snapchat') }}">
+
+<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M16.5756 17.4244C16.5756 14.4286 19.0042 12 22 12C24.9958 12 27.4244 14.4286 27.4244 17.4244C27.4244 22.1722 27.6611 24.5456 32 26.4444C29.7778 27 29.2222 27.5556 28.6667 29.7778C24.7778 29.7778 24.2222 32 22 32C19.7778 32 19.2222 29.7778 15.3333 29.7778C14.7778 27.5556 14.2222 27 12 26.4444C16.3389 24.5456 16.5756 22.1722 16.5756 17.4244Z" stroke="#050505" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M12 26C15.8236 23.9171 15.8236 21.9503 12.9559 19" stroke="#050505" stroke-width="1.5" stroke-linecap="round"/>
+<path d="M32 26C28.1764 23.9171 28.1764 21.9503 31.0441 19" stroke="#050505" stroke-width="1.5" stroke-linecap="round"/>
+</svg>
+        </a>
+        {% endif %}
+        {% if store.settings.contact.instagram %}
+        <a href="https://www.instagram.com/{{ store.settings.contact.instagram }}" target="_blank" rel="noopener" class="slide-menu-drawer-social" aria-label="{{ _('Instagram') }}">
+
+<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12.5 22C12.5 17.5217 12.5 15.2825 13.8912 13.8912C15.2825 12.5 17.5217 12.5 22 12.5C26.4783 12.5 28.7175 12.5 30.1088 13.8912C31.5 15.2825 31.5 17.5217 31.5 22C31.5 26.4783 31.5 28.7175 30.1088 30.1088C28.7175 31.5 26.4783 31.5 22 31.5C17.5217 31.5 15.2825 31.5 13.8912 30.1088C12.5 28.7175 12.5 26.4783 12.5 22Z" stroke="#050505" stroke-width="1.5" stroke-linejoin="round"/>
+<path d="M26.5 22C26.5 24.4853 24.4853 26.5 22 26.5C19.5147 26.5 17.5 24.4853 17.5 22C17.5 19.5147 19.5147 17.5 22 17.5C24.4853 17.5 26.5 19.5147 26.5 22Z" stroke="#050505" stroke-width="1.5"/>
+<path d="M27.5078 16.5L27.4988 16.5" stroke="#050505" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+        </a>
+        {% endif %}
+    </div>
+</nav>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     function cleanUrl(url) {
-        if (url.startsWith("//")) {
-            url = "/" + url.slice(2);
-        }
+        if (url.startsWith("//")) url = "/" + url.slice(2);
         url = url.replace(/([^:]\/)\/+/g, "$1");
-        if (url !== '/' && url.endsWith('/')) {
-            url = url.slice(0, -1);
-        }
+        if (url !== '/' && url.endsWith('/')) url = url.slice(0, -1);
         return url;
     }
-    var menuLinks = document.querySelectorAll('.menu-link');
+    var menuLinks = document.querySelectorAll('#sliding-menu .menu-link');
     menuLinks.forEach(function(link) {
-        link.href = cleanUrl(link.getAttribute('href'));
+        var href = link.getAttribute('href');
+        if (href && href !== '#') link.href = cleanUrl(href);
         link.addEventListener('click', function(event) {
+            if (this.getAttribute('href') === '#') return;
             event.preventDefault();
         });
     });
-    var clickableSpans = document.querySelectorAll('.clickable-span');
+    var clickableSpans = document.querySelectorAll('#sliding-menu .clickable-span');
     clickableSpans.forEach(function(span) {
         span.addEventListener('click', function(event) {
             event.stopPropagation();
             var parentAnchor = span.closest('a');
-            if (parentAnchor) {
+            if (parentAnchor && parentAnchor.getAttribute('href') !== '#') {
                 window.location.href = parentAnchor.href;
             }
         });
     });
-});
-document.addEventListener('zid-customer-fetched', function (event) {
-    const customer = event.detail.customer;
-    if (customer && customer.name) {
-        // Update greeting text
-        const greeting = document.getElementById('customer-greeting-alt');
-        // Extract the "Hello" text from the existing greeting element (it contains translated text)
-        const greetingText = greeting.textContent.trim();
-        const helloWord = greetingText.split(' ')[0]; // Get "Hello" or translated equivalent (e.g., "مرحبا")
-        greeting.textContent = `${helloWord} ${customer.name}`;
 
-        // Show Hello button, hide Login button
-        document.getElementById('hello-btn-alt').style.display = 'inline-block';
-        document.getElementById('login-btn-alt').style.display = 'none';
+    /* تسجيل الدخول: إغلاق القائمة أولاً ثم تنفيذ الدخول بعد لحظة حتى لا يمنع الإغلاق التنفيذ */
+    var slidingMenu = document.getElementById('sliding-menu');
+    if (slidingMenu) {
+        slidingMenu.addEventListener('click', function(e) {
+            var trigger = e.target.closest('.slide-menu-drawer-login-trigger');
+            if (!trigger) return;
+            e.preventDefault();
+            e.stopPropagation();
+            var loginUrl = trigger.getAttribute('href') || '{{ url_for("login_page") }}';
+            if (typeof closeSlidingMenu === 'function') closeSlidingMenu();
+            setTimeout(function() {
+                if (typeof window.handleLoginAction === 'function') {
+                    window.handleLoginAction('', false);
+                } else {
+                    window.location.href = loginUrl;
+                }
+            }, 280);
+        }, true);
     }
 });
-
-
+document.addEventListener('zid-customer-fetched', function (event) {
+    var customer = event.detail.customer;
+    if (customer && customer.name) {
+        var greeting = document.getElementById('customer-greeting-alt');
+        if (greeting) {
+            var helloWord = greeting.textContent.trim().split(' ')[0];
+            greeting.textContent = helloWord + ' ' + customer.name;
+        }
+        var helloBtn = document.getElementById('hello-btn-alt');
+        var loginBtn = document.getElementById('login-btn-alt');
+        if (helloBtn) helloBtn.style.display = 'inline-block';
+        if (loginBtn) loginBtn.style.display = 'none';
+    }
+});
 </script>

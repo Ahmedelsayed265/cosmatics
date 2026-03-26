@@ -678,9 +678,14 @@ a.more-button {
   width: 70px;
 }
 
-.footer .icons a,
 .footer .logistics-pay-icons a {
-  padding: 5px 8px;
+  padding: 8px 10px;
+  width: 68px;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
 }
 
 .vat-crn-sections span {

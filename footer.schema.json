@@ -6,6 +6,32 @@
   },
   "groups": [
     {
+      "id": "about_us",
+      "icon": "font_awesome",
+      "name": {
+        "ar": "عن المتجر",
+        "en": "About us"
+      },
+      "settings": [
+        {
+          "id": "logoe_footer",
+          "type": "image",
+          "label": {
+            "ar": "شعار المتجر",
+            "en": "Store logo"
+          }
+        },
+        {
+          "id": "des",
+          "type": "textarea",
+          "label": {
+            "ar": "النص",
+            "en": "Description"
+          }
+        }
+      ]
+    },
+    {
       "id": "links_1",
       "icon": "font_awesome",
       "name": {
@@ -110,32 +136,6 @@
       ]
     },
     {
-      "id": "about_us",
-      "icon": "font_awesome",
-      "name": {
-        "ar": "عن المتجر",
-        "en": "About us"
-      },
-      "settings": [
-        {
-          "id": "des",
-          "type": "textarea",
-          "label": {
-            "ar": "النص",
-            "en": "Description"
-          }
-        },
-        {
-          "id": "title",
-          "type": "text",
-          "label": {
-            "ar": "العنوان",
-            "en": "Title"
-          }
-        }
-      ]
-    },
-    {
       "id": "social_media",
       "icon": "font_awesome",
       "name": {
@@ -150,23 +150,21 @@
             "ar": "العنوان",
             "en": "Title"
           }
-        }
-      ]
-    },
-    {
-      "id": "business_location",
-      "icon": "font_awesome",
-      "name": {
-        "ar": "الموقع الجغرافي",
-        "en": "Business location"
-      },
-      "settings": [
+        },
         {
-          "id": "title",
+          "id": "phone",
           "type": "text",
           "label": {
-            "ar": "العنوان",
-            "en": "Title"
+            "ar": "الهاتف",
+            "en": "Phone"
+          }
+        },
+        {
+          "id": "email",
+          "type": "text",
+          "label": {
+            "ar": "البريد الإلكتروني",
+            "en": "Email"
           }
         }
       ]

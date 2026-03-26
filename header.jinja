@@ -10,7 +10,7 @@
   {% set show_country = 'hide_country' not in header_options %}
   {% set show_language = 'hide_language' not in header_options %}
 
-  <div {% if settings.header_sticky %} id="fixed-header" {% endif %} style="z-index: 9999">
+  <div {% if settings.header_sticky %} id="fixed-header" {% endif %} style="z-index: 99">
     {% include 'components/header-search-header.jinja' %}
     {% include 'components/header-mega-menu.jinja' %}
     {% include 'components/header-account-lang-currency.jinja' %}

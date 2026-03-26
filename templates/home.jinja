@@ -15,8 +15,9 @@
 
 {% block footer_scripts %}
     <script>
-        $( window ).resize(function() {
-            $('.s-slider').slick('resize');
+        $(window).on('resize', function() {
+            var $initialized = $('.s-slider.slick-initialized');
+            if ($initialized.length) $initialized.slick('resize');
         });
     </script>
 {% endblock %}

@@ -11,11 +11,11 @@
 
 {% block main_content %}
   <section class="mt-5">
-    <div class="container pb-5 product">
+    <div class="container-fluid pb-5 product">
       <div class="row">
         {% if product.images and product.images[0].image.medium is defined %}
           <div class="col-md-3">
-            <img src="{{ product.main_image.image.medium if product.main_image else '' }}" alt="product-image" class="img-fluid" />
+            <img src="{{ product.main_image.image.medium if product.main_image else '' }}" alt="{{ _('Product image') }}" class="img-fluid" />
           </div>
         {% endif %}
         <div class="col-md-9 d-flex align-items-center">
@@ -57,7 +57,7 @@
             <ul class="pagination">
               <!-- Previous Page Link -->
               <li class="page-item {% if product.questions.page == 1 %}disabled{% endif %}">
-                <a class="page-link" href="{{ url_for('product_questions', slug=product.id, query_params={'page': product.questions.page - 1}) }}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+                <a class="page-link" href="{{ url_for('product_questions', slug=product.id, query_params={'page': product.questions.page - 1}) }}" aria-label="{{ _('Previous') }}"><span aria-hidden="true">&laquo;</span></a>
               </li>
 
               {% for page in product.questions.pages %}
@@ -68,7 +68,7 @@
 
               <!-- Next Page Link -->
               <li class="page-item {% if product.questions.page == product.questions.pages_count %}disabled{% endif %}">
-                <a class="page-link" href="{{ url_for('product_questions', slug=product.id, query_params={'page': product.questions.page + 1}) }}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+                <a class="page-link" href="{{ url_for('product_questions', slug=product.id, query_params={'page': product.questions.page + 1}) }}" aria-label="{{ _('Next') }}"><span aria-hidden="true">&raquo;</span></a>
               </li>
             </ul>
           </nav>
