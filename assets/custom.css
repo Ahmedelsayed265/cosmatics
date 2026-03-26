@@ -5688,3 +5688,39 @@ button {
     padding: 20px 15px;
   }
 }
+
+.offer-card {
+  height: 100%;
+}
+
+.offer-image {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.offer-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.offer-footer {
+  padding-top: 10px;
+  text-align: center;
+}
+
+.offer-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  color: #333;
+}
+
+/* Fix for swiper buttons appearing correctly */
+.offers-coupons-slider .swiper-button-prev,
+.offers-coupons-slider .swiper-button-next {
+  color: var(--primary-color) !important;
+}

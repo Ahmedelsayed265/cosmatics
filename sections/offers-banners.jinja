@@ -1,0 +1,100 @@
+{% set sectionId = section_id | default('offers-banners-' ~ loop.index0) %}
+
+<section class="offers-banners-section s_block" id="{{ sectionId }}" section-id="{{ sectionId }}">
+    <div class="container-fluid">
+        {% if settings.title %}
+        <div class="view-all-header">
+            <h2 class="section-title" style="text-align: center; width: 100%; margin-bottom: 16px;">{{ settings.title }}
+            </h2>
+        </div>
+        {% endif %}
+
+        <div class="swiper offers-coupons-slider"
+            data-autoplay="{{ (settings.slider_autoplay | default(false)) | lower }}"
+            data-delay="{{ settings.slider_autoplay_delay | default(3000) }}"
+            data-arrows="{{ (settings.slider_show_arrows | default(false)) | lower }}"
+            data-pagination="{{ (settings.slider_show_pagination | default(false)) | lower }}">
+            <div class="swiper-wrapper">
+                {% for item in safeget(settings, 'items', []) %}
+                <div class="swiper-slide">
+                    <div class="offer-card">
+                        <a href="{{ item.url | default('#') }}">
+                            <div class="offer-image">
+                                {% if item.image %}
+                                <img src="{{ image_url(item.image, w=600, f='auto') }}" alt="{{ item.title }}"
+                                    loading="lazy">
+                                {% else %}
+                                <img src="{{ image_url(('product-img.svg' | asset_url), w=600, f='auto') }}"
+                                    alt="Placeholder" loading="lazy">
+                                {% endif %}
+                            </div>
+                            {% if item.title %}
+                            <div class="offer-footer">
+                                <h4 class="offer-title">{{ item.title }}</h4>
+                            </div>
+                            {% endif %}
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if settings.slider_show_pagination | default(false) %}
+            <div class="swiper-pagination custom-swiper-pagination"></div>
+            {% endif %}
+
+            {% if settings.slider_show_arrows | default(false) %}
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<script>
+    (function () {
+        function initOffersCoupons() {
+            var section = document.querySelector('[section-id="{{ sectionId }}"]');
+            if (!section) return;
+
+            var sliderEl = section.querySelector('.offers-coupons-slider');
+            if (!sliderEl) return;
+
+            var isAutoplay = sliderEl.getAttribute('data-autoplay') === 'true';
+            var autoplayDelay = parseInt(sliderEl.getAttribute('data-delay')) || 3000;
+            var isArrows = sliderEl.getAttribute('data-arrows') === 'true';
+            var isPagination = sliderEl.getAttribute('data-pagination') === 'true';
+
+            if (window.Swiper) {
+                new Swiper(sliderEl, {
+                    slidesPerView: 1,
+                    spaceBetween: 15,
+                    rtl: document.documentElement.dir === 'rtl',
+                    autoplay: isAutoplay ? {
+                        delay: autoplayDelay,
+                        disableOnInteraction: false,
+                    } : false,
+                    pagination: isPagination ? {
+                        el: sliderEl.querySelector('.swiper-pagination'),
+                        clickable: true,
+                    } : false,
+                    navigation: isArrows ? {
+                        nextEl: sliderEl.querySelector('.swiper-button-next'),
+                        prevEl: sliderEl.querySelector('.swiper-button-prev'),
+                    } : false,
+                    breakpoints: {
+                        640: { slidesPerView: 2, spaceBetween: 20 },
+                        992: { slidesPerView: 3, spaceBetween: 30 },
+                        1200: { slidesPerView: 4, spaceBetween: 40 },
+                    }
+                });
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initOffersCoupons);
+        } else {
+            initOffersCoupons();
+        }
+    })();
+</script>
