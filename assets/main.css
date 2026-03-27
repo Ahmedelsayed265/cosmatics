@@ -452,9 +452,6 @@ a.more-button {
     display: flex !important;
   }
 }
-.footer-col-about p {
-  text-align: center !important;
-}
 
 /*
     search-header-twig (base styles moved to custom.css to avoid duplication)
@@ -632,7 +629,7 @@ a.more-button {
   font-size: 16px;
   font-weight: 400;
   line-height: normal;
-  margin: 0 !important;
+  margin-bottom: 4px !important;
 }
 
 .store-section a {
@@ -1373,7 +1370,7 @@ ul.main-nav > li ul.sub-menu-lists > li > a {
   padding-right: 0.5rem !important;
 }
 .breadcrumb-item + .breadcrumb-item::before {
-  color: rgb(207, 35, 131) !important;
+  color: var(--primary-color) !important;
 }
 /* breadCrumb-subTitle-detail-twig */
 .subTitle-detail {

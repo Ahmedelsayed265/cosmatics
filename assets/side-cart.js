@@ -204,7 +204,9 @@
           if (typeof $ !== 'undefined' && $.fn.slick && $(sliderEl).hasClass('slick-initialized')) {
             $(sliderEl).slick('unslick');
           }
-          sliderEl.innerHTML = '';
+          sliderEl.innerHTML = '<div class="swiper-wrapper"></div><div class="swiper-button-next"></div><div class="swiper-button-prev"></div>';
+          sliderEl.classList.add('swiper');
+          var swiperWrapper = sliderEl.querySelector('.swiper-wrapper');
           sliderEl.style.display = 'block';
 
           var addToCartLabel = rtlMode ? 'أضف للسلة' : 'Add to cart';
@@ -248,6 +250,9 @@
               addCartHtml = '<a href="/products/' + slugForUrl + '" class="btn btn-sm btn-primary">' + (rtlMode ? 'أخبرني عند التوفر' : 'Notify me') + '</a>';
             }
 
+            var slide = document.createElement('div');
+            slide.className = 'swiper-slide';
+
             var article = document.createElement('article');
             article.className = 'outlit-product-card product-item position-relative' + (outOfStock ? ' outlit-product-card--out-of-stock' : '');
             article.setAttribute('itemscope', '');
@@ -257,33 +262,33 @@
                 '<a href="/products/' + slugForUrl + '" class="outlit-product-card__img-link" aria-label="' + productName + '">' +
                   '<div class="outlit-product-card__img-inner">' +
                     '<img class="outlit-product-card__img" src="' + mainImg + '" loading="lazy" decoding="async" alt="' + productName + '">' +
-                  '</div></a></div>' +
-              '<div class="outlit-product-card__body">' +
+                  '</div>' +
+                '</a>' +
                 '<div class="outlit-product-card__row outlit-product-card__row--rating-cart">' + addCartHtml + '</div>' +
+              '</div>' +
+              '<div class="outlit-product-card__body">' +
                 '<h3 class="outlit-product-card__title"><a href="/products/' + slugForUrl + '">' + (product.name || '') + '</a></h3>' +
-                priceHtml + '</div>';
-            sliderEl.appendChild(article);
+                priceHtml + 
+              '</div>';
+
+            slide.appendChild(article);
+            swiperWrapper.appendChild(slide);
           });
 
-          if (typeof $ !== 'undefined' && $.fn.slick) {
-            var $slider = $(sliderEl);
-            if ($slider.hasClass('slick-initialized')) $slider.slick('unslick');
-            var isRtl = (window.appDirection === 'rtl');
-            var arrowNext = isRtl ? 'icon-keyboard_arrow_left' : 'icon-keyboard_arrow_right';
-            var arrowPrev = isRtl ? 'icon-keyboard_arrow_right' : 'icon-keyboard_arrow_left';
-            $slider.slick({
-              slidesToShow: 2,
-              slidesToScroll: 1,
-              infinite: products.length > 2,
-              autoplay: false,
-              arrows: true,
-              dots: false,
-              rtl: isRtl,
-              nextArrow: '<button class="slick-next slick-arrow" aria-label="Next" type="button"><span class="' + arrowNext + '"></span></button>',
-              prevArrow: '<button class="slick-prev slick-arrow" aria-label="Previous" type="button"><span class="' + arrowPrev + '"></span></button>',
-              responsive: [
-                { breakpoint: 576, settings: { slidesToShow: 1.5, slidesToScroll: 1 } }
-              ]
+          // Initialize Swiper
+          if (typeof Swiper !== 'undefined') {
+            new Swiper(sliderEl, {
+              slidesPerView: 2,
+              spaceBetween: 10,
+              loop: products.length > 2,
+              navigation: {
+                nextEl: sliderEl.querySelector('.swiper-button-next'),
+                prevEl: sliderEl.querySelector('.swiper-button-prev'),
+              },
+              breakpoints: {
+                576: { slidesPerView: 2, spaceBetween: 12 },
+                0: { slidesPerView: 1.5, spaceBetween: 10 }
+              }
             });
           }
         })

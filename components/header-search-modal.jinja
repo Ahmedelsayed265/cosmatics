@@ -329,10 +329,10 @@
 
           const ratingHtml = buildRatingHtml(product.rating || {});
 
-          const article = document.createElement('article');
-          article.className = 'prod-col outlit-product-card product-item position-relative' + (outOfStock ? ' outlit-product-card--out-of-stock' : '');
-          article.setAttribute('itemscope', '');
-          article.setAttribute('itemtype', 'https://schema.org/Product');
+          const pSearchItem = document.createElement('article');
+          pSearchItem.className = 'prod-col outlit-product-card product-item position-relative' + (outOfStock ? ' outlit-product-card--out-of-stock' : '');
+          pSearchItem.setAttribute('itemscope', '');
+          pSearchItem.setAttribute('itemtype', 'https://schema.org/Product');
 
           let wishlistHtml = '';
           if (wishlistEnabled) {
@@ -418,7 +418,7 @@
               '</div>';
           }
 
-          article.innerHTML =
+          pSearchItem.innerHTML =
             '<div class="outlit-product-card__img-wrap" style="height: var(--outlit-card-img-height, 280px);">' +
               '<a href="/products/' + productSlug + '" class="outlit-product-card__img-link" aria-label="' + productName.replace(/"/g, '&quot;') + '">' +
                 '<div class="outlit-product-card__img-inner">' +
@@ -452,7 +452,7 @@
               priceHtml +
             '</div>';
 
-          productsSlider.appendChild(article);
+          productsSlider.appendChild(pSearchItem);
         });
         
         // Initialize bundle offers if available
