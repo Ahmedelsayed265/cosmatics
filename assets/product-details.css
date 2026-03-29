@@ -20,7 +20,7 @@
 }
 
 .product-breadcrumb-section .breadcrumb-item + .breadcrumb-item::before {
-  color: #e91e8c !important;
+  color: var(--primary-color) !important;
 }
 
 .products-details-page .carousel {
@@ -310,19 +310,16 @@
 .products-details-page .product-buttons .d-flex {
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px;
-}
-.select-quantity-div {
-  display: none !important;
 }
 
-.products-details-page .btn-add-to-cart {
+.btn-add-to-cart {
   flex: 1;
-  padding: 12px 1px;
-  font-size: 14px;
-  border-radius: 8px;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 80px;
   margin-bottom: 10px !important;
 }
+
 .select-quantity-div .form-group {
   margin-bottom: 0 !important;
 }
@@ -344,7 +341,7 @@
   justify-content: space-between;
   background: #fff;
   border: 1px solid #ddd;
-  border-radius: 6px;
+  border-radius: 60px;
   max-width: 140px;
   overflow: hidden;
   direction: ltr;
@@ -368,13 +365,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 45px;
+  height: 45px;
   padding: 0;
   border: none;
   background: transparent;
   color: #333;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 400;
   line-height: 1;
   cursor: pointer;
@@ -397,7 +394,7 @@
   flex: 1;
   min-width: 2.5em;
   text-align: center;
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: 500;
   color: #333;
   line-height: 1;
@@ -1068,7 +1065,7 @@ th {
 }
 
 .reviews-section-body .add-review-btn {
-  background-color: #c9b8d9;
+  background-color: var(--primary-color);
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -1457,10 +1454,7 @@ th {
 }
 
 .add-to-cart-icon {
-  width: 20px;
-  height: 20px;
-  background-color: var(--text-color-primary-bg);
-  mask-size: contain !important;
+  display: flex;
 }
 
 .buy-now-icon {
@@ -1477,8 +1471,8 @@ th {
   width: 100%;
   height: 100%;
   padding: 10px;
-  font-size: 20px;
-  border-radius: 8px;
+  font-size: 16px;
+  border-radius: 80px;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -1944,7 +1938,7 @@ th {
   }
 
   .products-details-page .slick-dots li {
-    margin: 0 4px;
+    margin: 0;
   }
 
   .products-details-page .slick-dots li button:before {

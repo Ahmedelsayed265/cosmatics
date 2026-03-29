@@ -163,8 +163,7 @@
                                             aria-label="{{ _('Add to wishlist') }}"></a>
                                         {% else %}
                                         <a class="product-icon-btn product-icon-favorite icon-heart-mask"
-                                            href="{{ url_for('login_page', query_params={" redirect_to": session.path} )
-                                            }}" aria-label="{{ _('Add to wishlist') }}"></a>
+                                            href="{{ url_for('login_page', query_params={" redirect_to": session.path} )}}" aria-label="{{ _('Add to wishlist') }}"></a>
                                         {% endif %}
                                         <img class="loader d-none" src="{{ 'spinner.gif' | asset_url }}" width="20"
                                             height="20" />
@@ -194,13 +193,34 @@
                                 {% if product.rating %}
                                 <div class="product-rating-block d-flex align-items-center">
                                     {% set rating=product.rating.average %}{% include 'components/rating-stars.jinja' %}
-                                    {% if product.rating.total_count > 0 %}<span class="product-card-rating-count">({{
-                                        product.rating.total_count }}){{ _("reviews")}} </span>{% endif %}
+                                    {% if product.rating.total_count > 0 %}<span class="product-card-rating-count">({{ product.rating.total_count }}){{ _("reviews")}} </span>{% endif %}
                                 </div>
                                 {% endif %}
                             </div>
 
                             <h1>{{ product.name | safe }}</h1>
+
+
+                            <div class="product-price-block">
+                                {% if product.selected_product.formatted_sale_price %}
+                                
+                                <div class="product-price-current-row d-flex align-items-center flex-wrap">
+                                    <span class="product-formatted-price-discount-badge">-{{ product.discount_percentage
+                                        }}%</span>
+                                    <p class="product-price-old-line mb-0"><del class="product-formatted-price-old">{{
+                                        product.selected_product.formatted_price }}</del></p>
+                                    <h2 class="product-formatted-price product-formatted-price-current mb-0">{{
+                                        product.selected_product.formatted_sale_price }}</h2>
+                                </div>
+                                {% else %}
+                                <div class="product-price-current-row">
+                                    <h2 class="product-formatted-price product-formatted-price-current mb-0">{{
+                                        product.selected_product.formatted_price }}</h2>
+                                </div>
+                                {% endif %}
+                            </div>
+
+
                             <p class="product-viewing-now d-flex align-items-center mb-0">
                                 <span class="product-viewing-now-icon" aria-hidden="true">
 
@@ -264,23 +284,7 @@
                                 }} <a id="product-description-a" href="#product-description-{{ product.id }}"
                                     class="text-color-primary">{{ _("more information") }}</a></p>
                             {% endif %}
-                            <div class="product-price-block">
-                                {% if product.selected_product.formatted_sale_price %}
-                                <p class="product-price-old-line mb-0"><del class="product-formatted-price-old">{{
-                                        product.selected_product.formatted_price }}</del></p>
-                                <div class="product-price-current-row d-flex align-items-center flex-wrap">
-                                    <span class="product-formatted-price-discount-badge">-{{ product.discount_percentage
-                                        }}%</span>
-                                    <h2 class="product-formatted-price product-formatted-price-current mb-0">{{
-                                        product.selected_product.formatted_sale_price }}</h2>
-                                </div>
-                                {% else %}
-                                <div class="product-price-current-row">
-                                    <h2 class="product-formatted-price product-formatted-price-current mb-0">{{
-                                        product.selected_product.formatted_price }}</h2>
-                                </div>
-                                {% endif %}
-                            </div>
+                            
 
                             <div>
                                 {% include 'vitrin:products/loyalty_points_widget.jinja' %}
@@ -312,7 +316,6 @@
                             <input id="product-id" type="hidden" value="{{ product.selected_product.id }}">
 
                             <div class="size-box">
-
                                 {% include 'vitrin:products/variants_list.jinja' %}
 
                                 <!-- new custom fields update -->
@@ -323,34 +326,10 @@
 
                             {% if product.selected_product.is_infinite or product.selected_product.quantity > 0 %}
                             <div class="product-no-return-notice">
-                                <span class="product-no-return-text">{{ _("This product is not returned or exchanged.")
-                                    }}</span>
+                                <span class="product-no-return-text">{{ _("This product is not returned or exchanged.") }}</span>
                             </div>
-                            <div class="select-quantity-div">
-                                <h4 class="product-title">{{ _("Quantity") }}</h4>
-                                <div class="form-group">
-                                    <div class="quantity-selector-wrap">
-                                        <button type="button" class="quantity-btn quantity-minus"
-                                            aria-label="{{ _('Decrease quantity') }}">−</button>
-                                        <span class="quantity-value" id="product-quantity-display">1</span>
-                                        <select id="product-quantity" name="quantity" class="select-quantity"
-                                            aria-hidden="true" tabindex="-1">
-                                            {% if product.selected_product.is_infinite or
-                                            product.selected_product.quantity > 100 %}
-                                            {% set maxQuantity = 100 %}
-                                            {% else %}
-                                            {% set maxQuantity = product.selected_product.quantity %}
-                                            {% endif %}
 
-                                            {% for n in range(1, maxQuantity + 1) %}
-                                            <option value="{{ n }}" {% if n==1 %}selected{% endif %}>{{ n }}</option>
-                                            {% endfor %}
-                                        </select>
-                                        <button type="button" class="quantity-btn quantity-plus"
-                                            aria-label="{{ _('Increase quantity') }}">+</button>
-                                    </div>
-                                </div>
-                            </div>
+                            
                             {% endif %}
 
                             <div
@@ -396,19 +375,48 @@
                         {% include 'vitrin:products/bundle-products.jinja' %}
                         {% endif %}
 
-                        <div
-                            class="product-buttons {% if not product.selected_product.in_stock %}d-none{% else %}d-block{% endif %}">
-                            <div class="d-flex align-center" style="gap: 10px;">
-                                <button class="btn btn-add-to-cart" type="button" onclick="productAddToCart()">
-                                    <div class="add-to-cart-icon fa fa-shopping-cart"
-                                        style="mask: url({{ 'shopping-cart.svg' | asset_url }}) no-repeat center;">
+                        <div class="product-buttons {% if not product.selected_product.in_stock %}d-none{% else %}d-block{% endif %}">
+                            <div class="d-flex align-center">
+                                <div class="d-flex align-center" style="gap: 10px; width: 100%;">
+                                    <div class="select-quantity-div">
+                                        <div class="form-group">
+                                            <div class="quantity-selector-wrap">
+                                                <button type="button" class="quantity-btn quantity-minus"
+                                                    aria-label="{{ _('Decrease quantity') }}">−</button>
+                                                <span class="quantity-value" id="product-quantity-display">1</span>
+                                                <select id="product-quantity" name="quantity" class="select-quantity"
+                                                    aria-hidden="true" tabindex="-1">
+                                                    {% if product.selected_product.is_infinite or
+                                                    product.selected_product.quantity > 100 %}
+                                                    {% set maxQuantity = 100 %}
+                                                    {% else %}
+                                                    {% set maxQuantity = product.selected_product.quantity %}
+                                                    {% endif %}
+
+                                                    {% for n in range(1, maxQuantity + 1) %}
+                                                    <option value="{{ n }}" {% if n==1 %}selected{% endif %}>{{ n }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <button type="button" class="quantity-btn quantity-plus"
+                                                    aria-label="{{ _('Increase quantity') }}">+</button>
+                                            </div>
+                                        </div>
                                     </div>
 
-                                    <img class="add-to-cart-progress d-none" src="{{ 'spinner.gif' | asset_url }}"
-                                        width="25" height="25" />
+                                    <button class="btn btn-add-to-cart" type="button" onclick="productAddToCart()">
+                                        <div class="add-to-cart-icon">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M3.87289 17.0194L2.66933 9.83981C2.48735 8.75428 2.39637 8.21152 2.68773 7.85576C2.9791 7.5 3.51461 7.5 4.58564 7.5H19.4144C20.4854 7.5 21.0209 7.5 21.3123 7.85576C21.6036 8.21152 21.5126 8.75428 21.3307 9.83981L20.1271 17.0194C19.7282 19.3991 19.5287 20.5889 18.7143 21.2945C17.9 22 16.726 22 14.3782 22H9.62182C7.27396 22 6.10003 22 5.28565 21.2945C4.47127 20.5889 4.27181 19.3991 3.87289 17.0194Z" stroke="#fff" stroke-width="1.5"></path>
+                                                <path d="M17.5 7.5C17.5 4.46243 15.0376 2 12 2C8.96243 2 6.5 4.46243 6.5 7.5" stroke="#fff" stroke-width="1.5"></path>
+                                            </svg>
+                                        </div>
 
-                                    <span>{{ _("add to cart") }}</span>
-                                </button>
+                                        <img class="add-to-cart-progress d-none" src="{{ 'spinner.gif' | asset_url }}"
+                                            width="25" height="25" />
+
+                                        <span>{{ _("add to cart") }}</span>
+                                    </button>
+                                </div>
 
                                 <!-- Checkout dialog -->
                                 {% include 'vitrin:checkout/checkout_dialog.jinja' %}
@@ -425,8 +433,6 @@
                                 </button>
                                 {% endif %}
                                 {% include 'vitrin:products/grouped-product.jinja' %}
-
-
                             </div>
 
                             <div>
@@ -477,7 +483,7 @@
                 <div class="bundle-offer-products">
                     <div class="row bundle-offer-details-products">
                         {% for product in product.bundle_offer.products.results[:5] %}
-                        <div class="prod-col prod-col-tb">
+                        <div class="prod-col-tb">
                             {% set product=product %}{% set index=loop.index0 %}{% include
                             'components/product-card.jinja' %}
                         </div>
@@ -502,86 +508,42 @@
         </script>
         {% endif %}
 
-        {% set _product_first_tab = namespace(active=true) %}
-        <div class="product-tabs-wrapper">
-            <ul class="nav nav-tabs product-tabs-nav" id="productTabs-{{ product.id }}" role="tablist">
-                {% if product.metafields or product.description %}
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link product-tab-link {% if _product_first_tab.active %}active{% endif %}"
-                        id="product-description-tab-{{ product.id }}" data-bs-toggle="tab" data-toggle="tab"
-                        href="#product-description-{{ product.id }}" role="tab"
-                        aria-controls="product-description-{{ product.id }}"
-                        aria-selected="{% if _product_first_tab.active %}true{% else %}false{% endif %}">{{ _("product
-                        description") }}</a>
-                </li>
-                {% if _product_first_tab.active %}{% set _product_first_tab.active = false %}{% endif %}
-                {% endif %}
-                {% if product.has_variants %}
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link product-tab-link {% if _product_first_tab.active %}active{% endif %}"
-                        id="product-specs-tab-{{ product.id }}" data-bs-toggle="tab" data-toggle="tab"
-                        href="#product-specs-{{ product.id }}" role="tab" aria-controls="product-specs-{{ product.id }}"
-                        aria-selected="{% if _product_first_tab.active %}true{% else %}false{% endif %}">{{
-                        _("Specifications") }}</a>
-                </li>
-                {% if _product_first_tab.active %}{% set _product_first_tab.active = false %}{% endif %}
-                {% endif %}
-                {% if store.settings.products.reviews_enabled %}
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link product-tab-link {% if _product_first_tab.active %}active{% endif %}"
-                        id="product-reviews-tab-{{ product.id }}" data-bs-toggle="tab" data-toggle="tab"
-                        href="#product-reviews-{{ product.id }}" role="tab"
-                        aria-controls="product-reviews-{{ product.id }}"
-                        aria-selected="{% if _product_first_tab.active %}true{% else %}false{% endif %}">{{ _("Reviews")
-                        }}</a>
-                </li>
-                {% if _product_first_tab.active %}{% set _product_first_tab.active = false %}{% endif %}
-                {% endif %}
-                {% if store.settings.products.questions_enabled %}
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link product-tab-link {% if _product_first_tab.active %}active{% endif %}"
-                        id="product-questions-tab-{{ product.id }}" data-bs-toggle="tab" data-toggle="tab"
-                        href="#product-questions-{{ product.id }}" role="tab"
-                        aria-controls="product-questions-{{ product.id }}"
-                        aria-selected="{% if _product_first_tab.active %}true{% else %}false{% endif %}">{{
-                        _("Questions") }}</a>
-                </li>
-                {% if _product_first_tab.active %}{% set _product_first_tab.active = false %}{% endif %}
-                {% endif %}
-            </ul>
-            {% set _product_first_pane = namespace(active=true) %}
-            <div class="tab-content product-tabs-content" id="productTabsContent-{{ product.id }}">
-
-                {% if product.metafields or product.description %}
-                <div class="tab-pane fade {% if _product_first_pane.active %}show active{% endif %}"
-                    id="product-description-{{ product.id }}" role="tabpanel"
-                    aria-labelledby="product-description-tab-{{ product.id }}">
-                    {% if _product_first_pane.active %}{% set _product_first_pane.active = false %}{% endif %}
-                    <section class="product-tab-section ">
+        <div class="product-accordion-wrapper">
+            {# --- Item: Description --- #}
+            {% if product.metafields or product.description %}
+            <div class="product-accordion-item">
+                <button class="product-accordion-header" type="button" data-target="#product-description-{{ product.id }}" aria-expanded="true">
+                    <span class="accordion-title">{{ _("product description") }}</span>
+                    <span class="accordion-icon-wrap"></span>
+                </button>
+                <div id="product-description-{{ product.id }}" class="collapse show product-accordion-content">
+                    <div class="product-tab-section">
                         {% if product.metafields %}
-
                         <div class="description-paragrah text-justify description-text-clear">
                             {% set entity = product %}
                             {% include 'vitrin:shared/metafields.jinja' %}
                         </div>
                         {% endif %}
                         {% if product.description %}
-
                         {% autoescape false %}
                         <div class="description-paragrah text-justify description-text-clear">
                             {{ product.description }}
                         </div>
                         {% endautoescape %}
                         {% endif %}
-                    </section>
+                    </div>
                 </div>
-                {% endif %}
+            </div>
+            {% endif %}
 
-                {% if product.has_variants %}
-                <div class="tab-pane fade {% if _product_first_pane.active %}show active{% endif %}"
-                    id="product-specs-{{ product.id }}" role="tabpanel"
-                    aria-labelledby="product-specs-tab-{{ product.id }}">
-                    {% if _product_first_pane.active %}{% set _product_first_pane.active = false %}{% endif %}
+            {# --- Item: Specifications --- #}
+            {% if product.has_variants %}
+            <div class="product-accordion-item">
+                <button class="product-accordion-header collapsed" type="button" data-target="#product-specs-{{ product.id }}" aria-expanded="false">
+                    <span class="accordion-title">{{ _("Specifications") }}</span>
+                    <span class="accordion-icon-wrap"></span>
+                </button>
+                <div id="product-specs-{{ product.id }}" class="collapse product-accordion-content">
                     <section class="product-selection product-tab-section">
                         <div class="product-specs-table-wrap">
                             <div class="card-table d-none d-lg-block product-specs-header-row">
@@ -665,13 +627,17 @@
                         </div>
                     </section>
                 </div>
-                {% endif %}
+            </div>
+            {% endif %}
 
-                {% if store.settings.products.reviews_enabled %}
-                <div class="tab-pane fade {% if _product_first_pane.active %}show active{% endif %}"
-                    id="product-reviews-{{ product.id }}" role="tabpanel"
-                    aria-labelledby="product-reviews-tab-{{ product.id }}">
-                    {% if _product_first_pane.active %}{% set _product_first_pane.active = false %}{% endif %}
+            {# --- Item: Reviews --- #}
+            {% if store.settings.products.reviews_enabled %}
+            <div class="product-accordion-item">
+                <button class="product-accordion-header collapsed" type="button" data-target="#product-reviews-{{ product.id }}" aria-expanded="false">
+                    <span class="accordion-title">{{ _("Reviews") }}</span>
+                    <span class="accordion-icon-wrap"></span>
+                </button>
+                <div id="product-reviews-{{ product.id }}" class="collapse product-accordion-content">
                     <section class="review-details product-tab-section">
                         <div class="product-tab-section-body reviews-section-body">
                             <div class="reviews-section-grid">
@@ -796,12 +762,17 @@
                         </div>
                     </section>
                 </div>
-                {% endif %}
-                {% if store.settings.products.questions_enabled %}
-                <div class="tab-pane fade {% if _product_first_pane.active %}show active{% endif %}"
-                    id="product-questions-{{ product.id }}" role="tabpanel"
-                    aria-labelledby="product-questions-tab-{{ product.id }}">
-                    {% if _product_first_pane.active %}{% set _product_first_pane.active = false %}{% endif %}
+            </div>
+            {% endif %}
+
+            {# --- Item: Questions --- #}
+            {% if store.settings.products.questions_enabled %}
+            <div class="product-accordion-item">
+                <button class="product-accordion-header collapsed" type="button" data-target="#product-questions-{{ product.id }}" aria-expanded="false">
+                    <span class="accordion-title">{{ _("Questions") }}</span>
+                    <span class="accordion-icon-wrap"></span>
+                </button>
+                <div id="product-questions-{{ product.id }}" class="collapse product-accordion-content">
                     <section class="review-details product-tab-section">
                         <div class="product-tab-section-body">
                             <div class="d-flex flex-wrap align-items-center product-tab-section-header"
@@ -818,14 +789,13 @@
                         {% set product=product %}{% include 'components/product-question-add.jinja' %}
                     </section>
                 </div>
-                {% endif %}
-
             </div>
+            {% endif %}
         </div>
 
         {% if (product.related_products | length) > 0 %}
         <section class="mt-5 mb-5">
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center mb-3">
                 <div class="section-title">
                     <div class="">{{ _("You may also like") }}</div>
                 </div>
@@ -842,8 +812,6 @@
                                 </div>
                                 {% endfor %}
                             </div>
-                            <div class="swiper-button-next"></div>
-                            <div class="swiper-button-prev"></div>
                         </div>
                     </div>
                 </div>
@@ -859,6 +827,266 @@
         </script>
         {% endif %}
 
+
+        {% if settings.product_details_category_products_list and settings.product_details_category_products_list.id %}
+            <div id="cart-custom-category-products" class="category-products mt-5"
+                style="margin-top: 10px; margin-bottom: 10px;">
+                <div class="mb-1">
+                    <div class="titles">
+                        <h2 class="section-title" style="margin-bottom: 10px; text-align: start;">{{settings.product_details_name or _("recommended products")}}</h2>
+                    </div>
+                    <div class="products-slider-wrapper" style="position: relative;">
+                        <div class="loading-spinner" style="text-align: center; padding: 10px;">{{ _("Loading...") }}</div>
+                        <div class="swiper cart-category-products-slider" style="display: none;">
+                            <div class="swiper-wrapper"></div>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+
+            {% set _cart_svg_options_icon = '<svg width="24" height="20" viewBox="0 0 24 20" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_1128_113)">
+                    <g clip-path="url(#clip1_1128_113)">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                            d="M5.06467 1.72682C5.06467 1.40194 4.8013 1.13858 4.47643 1.13858C4.15156 1.13858 3.88819 1.40194 3.88819 1.72682V3.8837H1.73131C1.40643 3.8837 1.14307 4.14706 1.14307 4.47193C1.14307 4.79681 1.40643 5.06017 1.73131 5.06017H3.88819V7.21703C3.88819 7.5419 4.15156 7.80525 4.47643 7.80525C4.8013 7.80525 5.06467 7.5419 5.06467 7.21703V5.06017H7.22151C7.54638 5.06017 7.80974 4.79681 7.80974 4.47193C7.80974 4.14706 7.54638 3.8837 7.22151 3.8837H5.06467V1.72682Z"
+                            fill="#050505" />
+                        <path
+                            d="M3.88777 3.88371V4.16942H4.17348V3.88371H3.88777ZM3.88777 5.06018H4.17348V4.77446H3.88777V5.06018ZM5.06425 5.06018V4.77446H4.77853V5.06018H5.06425ZM5.06425 3.88371H4.77853V4.16942H5.06425V3.88371ZM4.47601 1.4243C4.64308 1.4243 4.77853 1.55974 4.77853 1.72683H5.34996C5.34996 1.24415 4.95868 0.852875 4.47601 0.852875V1.4243ZM4.17348 1.72683C4.17348 1.55974 4.30893 1.4243 4.47601 1.4243V0.852875C3.99333 0.852875 3.60205 1.24415 3.60205 1.72683H4.17348ZM4.17348 3.88371V1.72683H3.60205V3.88371H4.17348ZM1.73089 4.16942H3.88777V3.59799H1.73089V4.16942ZM1.42836 4.47194C1.42836 4.30486 1.5638 4.16942 1.73089 4.16942V3.59799C1.24821 3.59799 0.856934 3.98927 0.856934 4.47194H1.42836ZM1.73089 4.77446C1.5638 4.77446 1.42836 4.63902 1.42836 4.47194H0.856934C0.856934 4.95461 1.24821 5.34589 1.73089 5.34589V4.77446ZM3.88777 4.77446H1.73089V5.34589H3.88777V4.77446ZM4.17348 7.21703V5.06018H3.60205V7.21703H4.17348ZM4.47601 7.51955C4.30893 7.51955 4.17348 7.38411 4.17348 7.21703H3.60205C3.60205 7.6997 3.99333 8.09098 4.47601 8.09098V7.51955ZM4.77853 7.21703C4.77853 7.38411 4.64308 7.51955 4.47601 7.51955V8.09098C4.95868 8.09098 5.34996 7.6997 5.34996 7.21703H4.77853ZM4.77853 5.06018V7.21703H5.34996V5.06018H4.77853ZM7.22109 4.77446H5.06425V5.34589H7.22109V4.77446ZM7.52361 4.47194C7.52361 4.63902 7.38817 4.77446 7.22109 4.77446V5.34589C7.70376 5.34589 8.09504 4.95461 8.09504 4.47194H7.52361ZM7.22109 4.16942C7.38817 4.16942 7.52361 4.30486 7.52361 4.47194H8.09504C8.09504 3.98927 7.70376 3.59799 7.22109 3.59799V4.16942ZM5.06425 4.16942H7.22109V3.59799H5.06425V4.16942ZM4.77853 1.72683V3.88371H5.34996V1.72683H4.77853Z"
+                            fill="#050505" />
+                        <path
+                            d="M21.714 1.82431H12.5712C11.6875 1.82431 10.9712 2.54065 10.9712 3.42431V12.5672C10.9712 13.4508 11.6875 14.1672 12.5712 14.1672H21.714C22.5977 14.1672 23.314 13.4508 23.314 12.5672V3.42431C23.314 2.54065 22.5977 1.82431 21.714 1.82431Z"
+                            fill="#FFF4FA" stroke="#050505" stroke-width="1.37143" />
+                        <path
+                            d="M17.1427 6.39572H10.2855C9.40189 6.39572 8.68555 7.11207 8.68555 7.99572V14.8529C8.68555 15.7365 9.40189 16.4529 10.2855 16.4529H17.1427C18.0263 16.4529 18.7427 15.7365 18.7427 14.8529V7.99572C18.7427 7.11207 18.0263 6.39572 17.1427 6.39572Z"
+                            fill="#FFF4FA" stroke="#050505" stroke-width="1.37143" />
+                        <path
+                            d="M12.5713 10.9672H7.9999C7.11625 10.9672 6.3999 11.6835 6.3999 12.5672V17.1386C6.3999 18.0222 7.11625 18.7386 7.9999 18.7386H12.5713C13.455 18.7386 14.1713 18.0222 14.1713 17.1386V12.5672C14.1713 11.6835 13.455 10.9672 12.5713 10.9672Z"
+                            fill="#FFF4FA" stroke="#050505" stroke-width="1.37143" />
+                    </g>
+                </g>
+                <defs>
+                    <clipPath id="clip0_1128_113">
+                        <rect width="24" height="19.42" fill="white" />
+                    </clipPath>
+                    <clipPath id="clip1_1128_113">
+                        <rect width="24" height="19.4286" fill="white" transform="translate(0 -0.00427246)" />
+                    </clipPath>
+                </defs>
+            </svg>' %}
+            {% set _cart_svg_add_icon = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M13 18H21M17 22L17 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                <path d="M7 7.5V7C7 4.23858 9.23858 2 12 2C14.7614 2 17 4.23858 17 7V7.5" stroke="currentColor"
+                    stroke-width="1.5" />
+                <path
+                    d="M10 22C7.71999 21.9999 6.57085 21.9917 5.76809 21.2752C4.95603 20.5505 4.75097 19.3264 4.34085 16.8781L3.17786 9.93557C2.98869 8.8063 2.89411 8.24167 3.18537 7.87083C3.47662 7.5 4.01468 7.5 5.09079 7.5H18.9092C19.9853 7.5 20.5234 7.5 20.8146 7.87083C21.1059 8.24167 21.0113 8.8063 20.8221 9.93557L20.4763 12"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                <path d="M4.5 17.5H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>' %}
+
+            <script>
+                (function () {
+                    var CART_CATEGORY_SVG_OPTIONS = {{ _cart_svg_options_icon | tojson }};
+                    var CART_CATEGORY_SVG_ADD = {{ _cart_svg_add_icon | tojson }};
+
+                    const container = document.getElementById('cart-custom-category-products');
+                    const selectedCategoryId = {{ (settings.product_details_category_products_list.id if settings.product_details_category_products_list.id else settings.product_details_category_products_list) | tojson }};
+
+                    function waitForZid(maxWaitMs) {
+                        maxWaitMs = maxWaitMs || 8000;
+                        return new Promise(function (resolve) {
+                            if (typeof zid !== 'undefined' && zid.products && typeof zid.products.list === 'function') {
+                                resolve();
+                                return;
+                            }
+                            var start = Date.now();
+                            var t = setInterval(function () {
+                                if (typeof zid !== 'undefined' && zid.products && typeof zid.products.list === 'function') {
+                                    clearInterval(t);
+                                    resolve();
+                                } else if (Date.now() - start >= maxWaitMs) {
+                                    clearInterval(t);
+                                    resolve();
+                                }
+                            }, 250);
+                        });
+                    }
+
+                    async function loadCategoryProducts() {
+                        if (!container) return;
+                        const loader = container.querySelector('.loading-spinner');
+                        try {
+                            console.log('ProductDetails: loadCategoryProducts started. Category:', selectedCategoryId);
+                            if (!selectedCategoryId || selectedCategoryId === "" || selectedCategoryId === "None" || (typeof selectedCategoryId === 'object' && Object.keys(selectedCategoryId).length === 0)) {
+                                console.warn('ProductDetails: No valid category ID found.', selectedCategoryId);
+                                container.style.display = 'none';
+                                return;
+                            }
+                            if (loader) loader.textContent = "{{ _('Loading...') }}";
+
+                            // Wait for zid object
+                            let zidApi = null;
+                            for (let i = 0; i < 40; i++) {
+                                var z = window.zid || (typeof zid !== 'undefined' ? zid : null);
+                                if (z && z.products && typeof z.products.list === 'function') {
+                                    zidApi = z; break;
+                                }
+                                await new Promise(r => setTimeout(r, 200));
+                            }
+
+                            if (!zidApi) {
+                                console.error('ProductDetails: zid API not available.');
+                                if (loader) loader.textContent = "{{ _('Failed to load products') }}";
+                                return;
+                            }
+
+                            const fetchP = async (id) => {
+                                try {
+                                    return await zidApi.products.list({ categories: id, page_size: 20 }, { showErrorNotification: false });
+                                } catch (e) { return null; }
+                            };
+
+                            var categoryId = selectedCategoryId;
+                            if (categoryId && typeof categoryId === 'object' && categoryId.id) categoryId = categoryId.id;
+
+                            let response = await Promise.race([
+                                fetchP(categoryId),
+                                new Promise((_, r) => setTimeout(() => r(new Error('timeout')), 15000))
+                            ]).catch(() => null);
+
+                            if (!response) {
+                                if (loader) loader.textContent = "{{ _('Failed to load products') }}";
+                                return;
+                            }
+
+                            var products = [];
+                            if (response && response.status === 'success' && response.data) {
+                                var d = response.data;
+                                if (d.products) {
+                                    products = d.products.results || d.products.data || (Array.isArray(d.products) ? d.products : []);
+                                } else {
+                                    products = d.results || d.data || (Array.isArray(d) ? d : []);
+                                }
+                            } else if (response && Array.isArray(response.results)) {
+                                products = response.results;
+                            } else if (response && Array.isArray(response.products)) {
+                                products = response.products;
+                            } else if (Array.isArray(response)) {
+                                products = response;
+                            } else if (response && response.data) {
+                                if (Array.isArray(response.data.results)) products = response.data.results;
+                                else if (Array.isArray(response.data.products)) products = response.data.products;
+                                else if (Array.isArray(response.data)) products = response.data;
+                            }
+
+                            // Final fallback if still empty and we haven't tried array ID
+                            if ((!products || products.length === 0) && !Array.isArray(categoryId)) {
+                                console.log('ProductDetails: Products empty with string ID, trying array ID...');
+                                response = await fetchP([categoryId]);
+                                if (response && response.status === 'success' && response.data) {
+                                    var d = response.data;
+                                    products = (d.products ? (d.products.results || d.products.data || d.products) : (d.results || d.data || d)) || [];
+                                }
+                            }
+
+                            console.log('ProductDetails: Processed products count:', products ? (Array.isArray(products) ? products.length : 'NaN') : 0);
+                            if (!Array.isArray(products) || products.length === 0) {
+                                if (loader) loader.textContent = "{{ _('No products in this category') }}";
+                                return;
+                            }
+
+                            if (loader) loader.remove();
+
+                            let productsSlider = container.querySelector('.cart-category-products-slider');
+                            let swiperWrapper = productsSlider.querySelector('.swiper-wrapper');
+                            swiperWrapper.innerHTML = '';
+                            productsSlider.style.display = 'block';
+
+                            const defaultImage = {{ image_url(("product-img.svg" | asset_url), w = 235, q = 100, f = "auto") | tojson }};
+                            const spinnerUrl = {{ ("spinner.gif" | asset_url) | tojson }};
+                            const uBellUrl = {{ ("u_bell.svg" | asset_url) | tojson }};
+                            const wishlistEnabled = {{ 'true' if store.settings.products.wishlist_enabled else 'false' }};
+                            const reviewsEnabled = {{ 'true' if store.settings.products.reviews_enabled else 'false' }};
+                            const addToFavoritesLabel = {{ _("Add to favorites") | tojson }};
+                            const addToCartLabel = {{ _("Add to cart") | tojson }};
+                            const qtyLabel = {{ _("Quantity") | tojson }};
+                            const increaseQtyLabel = {{ _("Increase quantity") | tojson }};
+                            const decreaseQtyLabel = {{ _("Decrease quantity") | tojson }};
+                            const notifyWhenAvailableText = {{ _("Notify me when available") | tojson }};
+
+                            function buildRatingHtml(ratingObj) {
+                                if (!reviewsEnabled || !ratingObj) return '';
+                                const totalCount = ratingObj.total_count || 0;
+                                const avg = ratingObj.average || 0;
+                                if (!avg && !totalCount) return '';
+                                const ratingRounded = Math.ceil((avg * 2)) / 2;
+                                let stars = '';
+                                for (let n = 1; n <= 5; n++) {
+                                    if (n <= ratingRounded) stars += '<span class="icon-star1"></span>';
+                                    else if (n <= ratingRounded + 0.5) stars += '<span class="icon-half-star"></span>';
+                                    else stars += '<span class="icon-star1 deactive"></span>';
+                                }
+                                return '<div class="outlit-product-card__rating"><span class="product-card-rating-count">(' + totalCount + ')</span><div class="d-inline-flex product-card-rating" data-rating="' + avg + '">' + stars + '</div><span class="outlit-product-card__rating-value">' + (avg ? avg.toFixed(1) : '0.0') + '</span></div>';
+                            }
+
+                            products.forEach(product => {
+                                const productImages = Array.isArray(product.images) ? product.images : [];
+                                const mainImgObj = product.main_image && product.main_image.image ? product.main_image.image : null;
+                                const firstImgObj = productImages[0] && productImages[0].image ? productImages[0].image : null;
+                                const mainImg = (mainImgObj && (mainImgObj.small || mainImgObj.medium || mainImgObj.large)) || (firstImgObj && (firstImgObj.small || firstImgObj.medium || firstImgObj.large)) || defaultImage;
+                                
+                                const productName = product.name || '';
+                                const productSlug = (product.slug || '').replace(/'/g, "\\'").replace(/"/g, '\\"');
+                                const productId = String(product.id || '');
+                                const formattedPrice = product.formatted_sale_price || product.formatted_price || '';
+                                const discountPercentage = product.discount_percentage || '';
+                                const outOfStock = !product.is_infinite && product.quantity <= 0;
+
+                                let priceHtml = '';
+                                if (product.formatted_sale_price) {
+                                    priceHtml = '<div class="outlit-product-card__price-wrap"><div class="outlit-product-card__price-row">' +
+                                        (discountPercentage ? '<span class="outlit-product-card__discount">-' + discountPercentage + '%</span>' : '') +
+                                        '<span class="outlit-product-card__price outlit-product-card__price--old">' + (product.formatted_price || '') + '</span>' +
+                                        '<span class="outlit-product-card__price outlit-product-card__price--current ">' + formattedPrice + '</span>' +
+                                        '</div></div>';
+                                } else {
+                                    priceHtml = '<div class="outlit-product-card__price-wrap"><span class="outlit-product-card__price outlit-product-card__price--current ">' + formattedPrice + '</span></div>';
+                                }
+
+                                const slide = document.createElement('div');
+                                slide.className = 'swiper-slide';
+                                slide.innerHTML = '<article class="outlit-product-card product-item position-relative' + (outOfStock ? ' outlit-product-card--out-of-stock' : '') + '">' +
+                                    '<div class="outlit-product-card__img-wrap" style="height: var(--outlit-card-img-height, 280px);">' +
+                                    '<a href="/products/' + productSlug + '" class="outlit-product-card__img-link"><div class="outlit-product-card__img-inner"><img src="' + mainImg + '" class="outlit-product-card__img"></div></a>' +
+                                    '<div class="outlit-product-card__row outlit-product-card__row--rating-cart">' + buildRatingHtml(product.rating) + 
+                                    '<a href="/products/' + productSlug + '" class="outlit-product-card__add-cart-btn">' + CART_CATEGORY_SVG_ADD + '</a></div>' +
+                                    '</div>' +
+                                    '<div class="outlit-product-card__body"><h3 class="outlit-product-card__title"><a href="/products/' + productSlug + '">' + productName + '</a></h3>' + priceHtml + '</div></article>';
+                                swiperWrapper.appendChild(slide);
+                            });
+
+                            if (typeof Swiper !== 'undefined') {
+                                new Swiper(productsSlider, {
+                                    slidesPerView: 2.2,
+                                    spaceBetween: 10,
+                                    loop: false,
+                                    rtl: document.documentElement.dir === 'rtl',
+                                    breakpoints: {
+                                        380: { slidesPerView: 1.5, spaceBetween: 10 },
+                                        576: { slidesPerView: 1.5, spaceBetween: 12 },
+                                        768: { slidesPerView: 3.5, spaceBetween: 15 },
+                                        992: { slidesPerView: 4.5, spaceBetween: 20 },
+                                        1200: { slidesPerView: 5.5, spaceBetween: 20 }
+                                    }
+                                });
+                            }
+                        } catch (err) { console.error(err); }
+                    }
+                    loadCategoryProducts();
+                })();
+            </script>
+        {% endif %}
     </div>
 
     {% if product.bundle_offer and product.bundle_offer.products.results | length > 5 %}
@@ -875,7 +1103,7 @@
                     <div class="bundle-offer-products">
                         <div class="row bundle-offer-details-products-all">
                             {% for product in product.bundle_offer.products.results %}
-                            <div class="prod-col prod-col-tb">
+                            <div class="prod-col-tb">
                                 {% set product=product %}{% set index=loop.index0 %}{% include
                                 'components/product-card.jinja' %}
                             </div>
@@ -990,49 +1218,6 @@
         renderVariantPricesOnOptions();
     });
 
-    function initProductTabs() {
-        var wrapper = document.querySelector('.product-tabs-wrapper');
-        if (!wrapper) return;
-        var content = wrapper.querySelector('.tab-content, .product-tabs-content');
-        var links = wrapper.querySelectorAll('.product-tab-link[href^="#"]');
-        var panes = content ? content.querySelectorAll('.tab-pane') : [];
-        function showTab(paneId) {
-            var id = paneId && paneId.indexOf('#') === 0 ? paneId.slice(1) : paneId;
-            links.forEach(function (link) {
-                var href = link.getAttribute('href') || '';
-                if (href.replace('#', '') === id) {
-                    link.classList.add('active');
-                    link.setAttribute('aria-selected', 'true');
-                } else {
-                    link.classList.remove('active');
-                    link.setAttribute('aria-selected', 'false');
-                }
-            });
-            panes.forEach(function (pane) {
-                if (pane.id === id) {
-                    pane.classList.add('active');
-                    pane.classList.add('show');
-                } else {
-                    pane.classList.remove('active');
-                    pane.classList.remove('show');
-                }
-            });
-        }
-        links.forEach(function (link) {
-            link.addEventListener('click', function (e) {
-                e.preventDefault();
-                var href = this.getAttribute('href');
-                if (href && href.indexOf('#') === 0) showTab(href);
-            });
-        });
-        var activePane = content && content.querySelector('.tab-pane.active');
-        if (activePane) {
-            showTab('#' + activePane.id);
-        } else if (panes.length) {
-            showTab(panes[0].id);
-        }
-    }
-    document.addEventListener('DOMContentLoaded', initProductTabs);
 
     $(window).on('load', function () {
         if (window.checkout_dialog) {
@@ -1276,8 +1461,7 @@
                 }
 
                 {% if store.settings.products.low_stock_label_enabled %}
-                var store_low_stock_limit = {{ store.settings.products.low_stock_quantity_threshold }
-            };
+                var store_low_stock_limit = {{ store.settings.products.low_stock_quantity_threshold }};
             var low_stock_message = '{{ _("Remaining %s only") }}';
 
             if (!selected_product.is_infinite && selected_product.quantity < store_low_stock_limit) {
@@ -1425,9 +1609,9 @@
     $('#product-description-a').click(function (event) {
         event.preventDefault();
         var href = $(this).attr('href');
-        var tabTrigger = document.querySelector('#product-description-tab-{{ product.id }}');
-        if (href && href.indexOf('#') === 0 && tabTrigger) {
-            tabTrigger.click();
+        var targetCollapse = document.querySelector(href);
+        if (targetCollapse && typeof $ !== 'undefined' && $.fn.collapse) {
+            $(targetCollapse).collapse('show');
         }
         var scrollOffset = window.matchMedia('(max-width: 768px)').matches ? 15 : 150;
         var targetElement = $(href);
@@ -1588,10 +1772,6 @@
                 slidesPerView: 2.2,
                 spaceBetween: 10,
                 loop: false,
-                navigation: {
-                    nextEl: sliderEl.querySelector('.swiper-button-next'),
-                    prevEl: sliderEl.querySelector('.swiper-button-prev'),
-                },
                 breakpoints: {
                     380: { slidesPerView: 2.3, spaceBetween: 10 },
                     576: { slidesPerView: 2.8, spaceBetween: 12 },
@@ -1725,6 +1905,31 @@
             window.open("mailto:?subject=" + encodeURIComponent(title) + "&body=" + encodeURIComponent(url), "_blank");
         }
     }
+
+    jQuery(document).ready(function($) {
+        $(document).on('click', '.product-accordion-header', function(e) {
+            e.preventDefault();
+            var $btn = $(this);
+            var target = $btn.attr('data-target');
+            var $targetPanel = $(target);
+            
+            if (!$targetPanel.length) return;
+
+            var isAlreadyShow = $targetPanel.hasClass('show');
+
+            if (isAlreadyShow) {
+                $targetPanel.removeClass('show').slideUp(250);
+                $btn.attr('aria-expanded', 'false');
+            } else {
+                // True accordion behavior: hide others
+                $('.product-accordion-content.show').removeClass('show').slideUp(250);
+                $('.product-accordion-header[aria-expanded="true"]').attr('aria-expanded', 'false');
+
+                $targetPanel.addClass('show').slideDown(250);
+                $btn.attr('aria-expanded', 'true');
+            }
+        });
+    });
 </script>
 
 {% endblock %}

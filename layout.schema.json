@@ -507,6 +507,32 @@
       ]
     },
     {
+      "id": "product_details",
+      "icon": "fa fa-shopping-bag",
+      "name": {
+        "ar": "منتجات صفحة تفاصيل المنتج",
+        "en": "product details page"
+      },
+      "settings": [
+        {
+          "id": "name",
+          "type": "text",
+          "label": {
+            "ar": "عنوان المنتجات بصفحة تفاصيل المنتج",
+            "en": "product details page products title"
+          }
+        },
+        {
+          "id": "category_products_list",
+          "type": "category_products",
+          "label": {
+            "ar": "اختر التصنيف",
+            "en": "Select category"
+          }
+        }
+      ]
+    },
+    {
       "id": "side_cart",
       "icon": "font_awesome",
       "name": {

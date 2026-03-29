@@ -232,10 +232,9 @@
                                                         stroke-linejoin="round" />
                                                 </svg>
 
-                                                <input class="form-control send-coupon" type="text" placeholder="{{ _("
-                                                    Add discount coupon") }}" />
+                                                <input class="form-control send-coupon" type="text" placeholder="{{ _("Add discount coupon") }}" />
                                                 <button type="button" class="btn coupon-activate-btn" data-apply-coupon
-                                                    aria-label="{{ _(" Apply discount coupon") }}">
+                                                    aria-label="{{ _("Apply discount coupon") }}">
                                                     <img class="send-coupon-progress d-none"
                                                         src="{{ 'spinner.gif' | asset_url }}" width="15" height="15"
                                                         loading="lazy" decoding="async" />
@@ -371,15 +370,12 @@
     style="margin-top: 10px; margin-bottom: 10px;">
     <div class="mb-1">
         <div class="titles">
-            <h2 class="section-title" style="margin-bottom: 10px; text-align: start;">{{settings.cart_name or
-                _("recommended products")}}</h2>
+            <h2 class="section-title" style="margin-bottom: 10px; text-align: start;">{{settings.cart_name or _("recommended products")}}</h2>
         </div>
         <div class="products-slider-wrapper" style="position: relative;">
             <div class="loading-spinner" style="text-align: center; padding: 10px;">{{ _("Loading...") }}</div>
             <div class="swiper cart-category-products-slider" style="display: none;">
                 <div class="swiper-wrapper"></div>
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
             </div>
         </div>
     </div>
@@ -774,8 +770,8 @@
             spaceBetween: 10,
             loop: false,
             breakpoints: {
-                380: { slidesPerView: 2.3, spaceBetween: 10 },
-                576: { slidesPerView: 2.8, spaceBetween: 12 },
+                380: { slidesPerView: 1.5, spaceBetween: 10 },
+                576: { slidesPerView: 1.5, spaceBetween: 12 },
                 768: { slidesPerView: 3.5, spaceBetween: 15 },
                 992: { slidesPerView: 4.5, spaceBetween: 20 },
                 1200: { slidesPerView: 5.5, spaceBetween: 20 }
@@ -1323,69 +1319,66 @@
                 var slug = productUrl ? (productUrl.split('/products/')[1] || productUrl).split('?')[0].split('#')[0] : '';
                 if (parts.length > 0 && slug && typeof zid !== 'undefined' && zid.products && zid.products.get) {
                     var pid = productId;
-                    var sizeLabel = {{ _("Size") | tojson
+                    var sizeLabel = {{ _("Size") | tojson }};
+                    var colorLabel = {{ _("Color") | tojson }};
+                    var sizeLabels = ['xxl', 'xxxl', 'xl', 'l', 'm', 's', 'xs'];
+                    var currentLang = {{ (session.locale.language.code if session.locale else 'ar') | tojson }};
+                    zid.products.get(slug).then(function (data) {
+                        var pd = data.product || data.data || data;
+                        var valueToLabel = {};
+                        if (pd && pd.options && pd.options.length) {
+                            pd.options.forEach(function (opt) {
+                                var optName = opt.name ? (typeof opt.name === 'object' ? (opt.name[currentLang] || opt.name.ar || opt.name.en || '') : opt.name) : '';
+                                var choices = opt.choices || opt.values || [];
+                                choices.forEach(function (c) {
+                                    var vals = [];
+                                    if (typeof c === 'object') {
+                                        if (c.ar) vals.push(String(c.ar).trim());
+                                        if (c.en) vals.push(String(c.en).trim());
+                                        if (c.value) vals.push(String(c.value).trim());
+                                        if (vals.length === 0) vals.push(String(c[currentLang] || c.name || '').trim());
+                                    } else {
+                                        vals.push(String(c).trim());
+                                    }
+                                    vals.filter(Boolean).forEach(function (v) { valueToLabel[v] = optName; });
+                                });
+                            });
+                        }
+                        var $r = $('.template_for_cart_products_list .cart-product-row-wrapper[data-cart-product-id="' + pid + '"]');
+                        var $det = $r.find('.cart-product-col-details');
+                        if ($det.find('.cart-product-options-wrapper').length > 0) return;
+                        var $wr = $('<div class="cart-product-options-wrapper"></div>');
+                        var $pr = $det.find('.cart-product-prices').first();
+                        var customValues = {};
+                        var $customSum = $det.find('.custom-options-summary');
+                        if ($customSum.length && $customSum.find('.custom-field-row').length) {
+                            $customSum.find('.custom-field-row').each(function () {
+                                var $row = $(this);
+                                var name = $row.find('.custom-field-name').text().replace(/\s*\*\s*$/, '').trim();
+                                var val = $row.find('.custom-field-value').text().trim();
+                                if (name) {
+                                    customValues[val] = true;
+                                    $wr.append('<div class="cart-product-option-row"><span class="cart-product-option-label">' + escapeHtml(name) + ' :</span><span class="cart-product-option-value"><span class="cart-product-size-badge">' + escapeHtml(val || '-') + '</span></span></div>');
+                                }
+                            });
+                            $customSum.addClass('d-none');
+                        }
+                        parts.forEach(function (p) {
+                            if (customValues[p]) return;
+                            var lbl = valueToLabel[p] || (sizeLabels.some(function (s) { return p.toLowerCase() === s; }) || /^\d+$/.test(p) ? sizeLabel : (getHexForColorName(p) ? colorLabel : CATEGORY_FILTER_LABEL));
+                            if (lbl === CATEGORY_FILTER_LABEL) return;
+                            var hex = getHexForColorName(p);
+                            var valHtml = hex ? '<span class="cart-product-color-swatch" style="background-color:' + escapeHtml(hex) + '" title="' + escapeHtml(p) + '" aria-hidden="true"></span>' : '<span class="cart-product-size-badge">' + escapeHtml(p) + '</span>';
+                            $wr.append('<div class="cart-product-option-row"><span class="cart-product-option-label">' + escapeHtml(lbl) + ' :</span><span class="cart-product-option-value">' + valHtml + '</span></div>');
+                        });
+                        if ($wr.children().length) {
+                            if ($pr.length) $pr.after($wr); else $det.append($wr);
+                        }
+                    }).catch(function () {
+                        renderOptionsFallback($productRow, productId, parts, $details);
+                    });
+                    return;
                 }
-            };
-            var colorLabel = {{ _("Color") | tojson
-        }};
-    var sizeLabels = ['xxl', 'xxxl', 'xl', 'l', 'm', 's', 'xs'];
-    var currentLang = {{ (session.locale.language.code if session.locale else 'ar') | tojson }};
-    zid.products.get(slug).then(function (data) {
-        var pd = data.product || data.data || data;
-        var valueToLabel = {};
-        if (pd && pd.options && pd.options.length) {
-            pd.options.forEach(function (opt) {
-                var optName = opt.name ? (typeof opt.name === 'object' ? (opt.name[currentLang] || opt.name.ar || opt.name.en || '') : opt.name) : '';
-                var choices = opt.choices || opt.values || [];
-                choices.forEach(function (c) {
-                    var vals = [];
-                    if (typeof c === 'object') {
-                        if (c.ar) vals.push(String(c.ar).trim());
-                        if (c.en) vals.push(String(c.en).trim());
-                        if (c.value) vals.push(String(c.value).trim());
-                        if (vals.length === 0) vals.push(String(c[currentLang] || c.name || '').trim());
-                    } else {
-                        vals.push(String(c).trim());
-                    }
-                    vals.filter(Boolean).forEach(function (v) { valueToLabel[v] = optName; });
-                });
-            });
-        }
-        var $r = $('.template_for_cart_products_list .cart-product-row-wrapper[data-cart-product-id="' + pid + '"]');
-        var $det = $r.find('.cart-product-col-details');
-        if ($det.find('.cart-product-options-wrapper').length > 0) return;
-        var $wr = $('<div class="cart-product-options-wrapper"></div>');
-        var $pr = $det.find('.cart-product-prices').first();
-        var customValues = {};
-        var $customSum = $det.find('.custom-options-summary');
-        if ($customSum.length && $customSum.find('.custom-field-row').length) {
-            $customSum.find('.custom-field-row').each(function () {
-                var $row = $(this);
-                var name = $row.find('.custom-field-name').text().replace(/\s*\*\s*$/, '').trim();
-                var val = $row.find('.custom-field-value').text().trim();
-                if (name) {
-                    customValues[val] = true;
-                    $wr.append('<div class="cart-product-option-row"><span class="cart-product-option-label">' + escapeHtml(name) + ' :</span><span class="cart-product-option-value"><span class="cart-product-size-badge">' + escapeHtml(val || '-') + '</span></span></div>');
-                }
-            });
-            $customSum.addClass('d-none');
-        }
-        parts.forEach(function (p) {
-            if (customValues[p]) return;
-            var lbl = valueToLabel[p] || (sizeLabels.some(function (s) { return p.toLowerCase() === s; }) || /^\d+$/.test(p) ? sizeLabel : (getHexForColorName(p) ? colorLabel : CATEGORY_FILTER_LABEL));
-            if (lbl === CATEGORY_FILTER_LABEL) return;
-            var hex = getHexForColorName(p);
-            var valHtml = hex ? '<span class="cart-product-color-swatch" style="background-color:' + escapeHtml(hex) + '" title="' + escapeHtml(p) + '" aria-hidden="true"></span>' : '<span class="cart-product-size-badge">' + escapeHtml(p) + '</span>';
-            $wr.append('<div class="cart-product-option-row"><span class="cart-product-option-label">' + escapeHtml(lbl) + ' :</span><span class="cart-product-option-value">' + valHtml + '</span></div>');
-        });
-        if ($wr.children().length) {
-            if ($pr.length) $pr.after($wr); else $det.append($wr);
-        }
-    }).catch(function () {
-        renderOptionsFallback($productRow, productId, parts, $details);
-    });
-    return;
-                    }
     if (parts.length > 0) {
         renderOptionsFallback($productRow, productId, parts, $details);
         return;
