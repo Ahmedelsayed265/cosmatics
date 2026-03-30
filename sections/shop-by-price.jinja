@@ -71,7 +71,7 @@
 
             if (window.Swiper) {
                 new Swiper(sliderEl, {
-                    slidesPerView: 2,
+                    slidesPerView: 2.5,
                     spaceBetween: 10,
                     rtl: document.documentElement.dir === 'rtl',
                     autoplay: isAutoplay ? {
@@ -87,7 +87,7 @@
                         prevEl: sliderEl.querySelector('.swiper-button-prev')
                     } : false,
                     breakpoints: {
-                        480: { slidesPerView: 3, spaceBetween: 10 },
+                        480: { slidesPerView: 2.5, spaceBetween: 10 },
                         768: { slidesPerView: 4, spaceBetween: 15 },
                         1024: { slidesPerView: 5, spaceBetween: 15 },
                         1400: { slidesPerView: 7, spaceBetween: 15 }

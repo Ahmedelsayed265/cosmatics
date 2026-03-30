@@ -53,8 +53,10 @@
       {% set _rating_avg = _rating_obj.average or 0 %}
       <div class="outlit-product-card__rating">
         <span class="product-card-rating-count">({{ _rating_count }})</span>
-        {% set rating = _rating_avg %}
-        {% include 'components/rating-stars.jinja' %}
+        {% if _rating_count > 0 %}
+            {% set rating = _rating_avg %}
+            {% include 'components/rating-stars.jinja' %}
+        {% endif %}
         <span class="outlit-product-card__rating-value">{{ '%.1f'|format(_rating_avg) }}</span>
       </div>
       {% endif %}

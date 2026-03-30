@@ -207,6 +207,37 @@
           sliderEl.innerHTML = '<div class="swiper-wrapper"></div><div class="swiper-button-next"></div><div class="swiper-button-prev"></div>';
           sliderEl.classList.add('swiper');
           var swiperWrapper = sliderEl.querySelector('.swiper-wrapper');
+          var reviewsEnabled = $('aside#side-cart').data('reviews-enabled') !== false;
+
+          function buildRatingHtml(ratingObj) {
+            if (!reviewsEnabled) return '';
+            ratingObj = ratingObj || {};
+            const totalCount = ratingObj.total_count || 0;
+            const avg = ratingObj.average || 0;
+            const ratingRounded = Math.ceil((avg * 2)) / 2;
+            let stars = '';
+            if (totalCount > 0) {
+              for (let n = 1; n <= 5; n++) {
+                if (n <= ratingRounded) {
+                  stars += '<span class="icon-star1"></span>';
+                } else if (n <= ratingRounded + 0.5) {
+                  stars += '<span class="icon-half-star"></span>';
+                } else {
+                  stars += '<span class="icon-star1 deactive"></span>';
+                }
+              }
+            }
+            return '' +
+              '<div class="outlit-product-card__rating">' +
+                '<span class="product-card-rating-count">(' + totalCount + ')</span>' +
+                (totalCount > 0 ? 
+                '<div class="d-inline-flex product-card-rating" data-rating="' + avg + '">' +
+                  stars +
+                '</div>' : '') +
+                '<span class="outlit-product-card__rating-value">' + (avg ? avg.toFixed(1) : '0.0') + '</span>' +
+              '</div>';
+          }
+
           sliderEl.style.display = 'block';
 
           var addToCartLabel = rtlMode ? 'أضف للسلة' : 'Add to cart';
@@ -228,14 +259,28 @@
 
             var priceHtml = '<div class="outlit-product-card__price-wrap">';
             if (hasSalePrice) {
-              priceHtml += '<span class="outlit-product-card__price outlit-product-card__price--old">' + (product.formatted_price || '') + '</span>';
               priceHtml += '<div class="outlit-product-card__price-row">';
               if (product.discount_percentage) priceHtml += '<span class="outlit-product-card__discount">-' + (product.discount_percentage || '') + '%</span>';
+              priceHtml += '<span class="outlit-product-card__price outlit-product-card__price--old">' + (product.formatted_price || '') + '</span>';
               priceHtml += '<span class="outlit-product-card__price outlit-product-card__price--current">' + formattedPrice + '</span></div>';
             } else {
               priceHtml += '<span class="outlit-product-card__price outlit-product-card__price--current">' + formattedPrice + '</span>';
             }
             priceHtml += '</div>';
+
+            var categoryHtml = '';
+            if (Array.isArray(product.categories) && product.categories.length > 0) {
+              const lastCat = product.categories[product.categories.length - 1];
+              const catName = (lastCat && lastCat.name) ? (typeof lastCat.name === 'string' ? lastCat.name : (lastCat.name.ar || lastCat.name.en || '')) : '';
+              if (catName && lastCat.id && lastCat.slug) {
+                categoryHtml =
+                  '<p class="outlit-product-card__category">' +
+                    '<a href="/categories/' + lastCat.id + '/' + (lastCat.slug || '') + '">' + catName + '</a>' +
+                  '</p>';
+              }
+            } else if (product.category && product.category.name) {
+              categoryHtml = '<p class="outlit-product-card__category">' + product.category.name + '</p>';
+            }
 
             var addCartHtml = '';
             if (product.is_infinite || product.quantity > 0) {
@@ -264,9 +309,13 @@
                     '<img class="outlit-product-card__img" src="' + mainImg + '" loading="lazy" decoding="async" alt="' + productName + '">' +
                   '</div>' +
                 '</a>' +
-                '<div class="outlit-product-card__row outlit-product-card__row--rating-cart">' + addCartHtml + '</div>' +
+                '<div class="outlit-product-card__row outlit-product-card__row--rating-cart">' +
+                  buildRatingHtml(product.rating) +
+                  addCartHtml +
+                '</div>' +
               '</div>' +
               '<div class="outlit-product-card__body">' +
+                categoryHtml +
                 '<h3 class="outlit-product-card__title"><a href="/products/' + slugForUrl + '">' + (product.name || '') + '</a></h3>' +
                 priceHtml + 
               '</div>';

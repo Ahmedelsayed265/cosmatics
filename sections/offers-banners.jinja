@@ -67,7 +67,7 @@
 
             if (window.Swiper) {
                 new Swiper(sliderEl, {
-                    slidesPerView: 1,
+                    slidesPerView: 2.5,
                     spaceBetween: 15,
                     rtl: document.documentElement.dir === 'rtl',
                     autoplay: isAutoplay ? {
@@ -83,9 +83,9 @@
                         prevEl: sliderEl.querySelector('.swiper-button-prev'),
                     } : false,
                     breakpoints: {
-                        640: { slidesPerView: 2, spaceBetween: 20 },
-                        992: { slidesPerView: 3, spaceBetween: 30 },
-                        1200: { slidesPerView: 4, spaceBetween: 40 },
+                        640: { slidesPerView: 2.5, spaceBetween: 16 },
+                        992: { slidesPerView: 3, spaceBetween: 16 },
+                        1200: { slidesPerView: 4, spaceBetween: 16 },
                     }
                 });
             }

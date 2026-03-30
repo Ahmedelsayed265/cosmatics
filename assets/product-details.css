@@ -67,7 +67,7 @@
 }
 #product-variants-options .form-group > div {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 10px;
   margin-bottom: 10px;
 
@@ -262,12 +262,17 @@
 }
 
 .div-product-sku,
-.div-product-weight,
-.select-quantity-div {
+.div-product-weight {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-bottom: 10px;
+}
+
+.select-quantity-div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .products-details-page .product-formatted-price {
@@ -317,7 +322,6 @@
   padding: 10px;
   font-size: 16px;
   border-radius: 80px;
-  margin-bottom: 10px !important;
 }
 
 .select-quantity-div .form-group {
@@ -1697,6 +1701,7 @@ th {
   margin-left: 15px;
   width: 100px;
   height: 40px;
+  color: #fff;
 }
 
 .rtl .btn-send-notify {
@@ -1955,15 +1960,6 @@ th {
     margin-bottom: 10px;
   }
 
-  .products-details-page .btn-add-to-cart {
-    min-width: 100%;
-  }
-
-  .products-details-page .product-buttons .d-flex {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
   .products-details-page .add-to-wishlist {
     align-self: center;
   }
@@ -1983,11 +1979,11 @@ th {
 }
 
 .size-box #product-variants-options ul li {
-  min-width: 90px;
+  min-width: 80px;
   padding: 8px 12px;
   cursor: pointer;
   border: 1px solid #e8e8e8;
-  border-radius: 8px;
+  border-radius: 80px;
   text-align: center;
   background-color: transparent;
   display: flex;
@@ -2022,9 +2018,9 @@ th {
 }
 
 .size-box #product-variants-options ul li.active {
-  border-color: #997adb;
-  background-color: #ebe4f8;
-  color: #000;
+  border-color: var(--primary-color);
+  background-color: var(--primary-color);
+  color: #fff;
 }
 
 .size-box #product-variants-options ul li span {
@@ -2035,6 +2031,7 @@ th {
   font-size: 0.9rem;
   font-weight: 600;
   color: #000;
+  display: none;
 }
 
 .tabby-product-widget .tabby-promo-snippet {
@@ -2249,13 +2246,6 @@ th {
   }
   .product-specs-table-wrap .options-table .col {
     flex-basis: auto;
-  }
-  .quantity-selector-wrap {
-    max-width: 100px;
-  }
-  .quantity-selector-wrap .quantity-btn {
-    width: 35px;
-    height: 35px;
   }
   .quantity-selector-wrap .quantity-value {
     min-width: 2rem;

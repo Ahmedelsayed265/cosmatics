@@ -1,17 +1,76 @@
-<section class="shop-by-category-section" id="{{ sectionId }}" section-id="{{ sectionId }}">
-    <div class="container-fluid">
-        <h3 class="section-title">{{ settings.title }}</h3>
+<style>
+    @media (min-width: 768px) {
+        .shop-by-category-wrapper.swiper .swiper-wrapper {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            justify-content: center !important;
+            gap: 20px;
+            transform: none !important;
+            width: 100% !important;
+            margin: 0 auto;
+        }
 
-        <div class="shop-by-category-wrapper">
-            {% for category in safeget(settings, 'categories', []) %}
-            <a href="{{ category.url }}" class="shop-by-category-item">
-                <div class="shop-by-category-image">
-                    <img src="{{ image_url(category.image, w=1920, q=100, f='auto') }}" alt="{{ category.title }}">
+        .shop-by-category-wrapper.swiper .swiper-slide {
+            width: auto !important;
+            margin: 0 !important;
+            height: auto !important;
+        }
+    }
+</style>
+
+<section class="shop-by-category-section" style="overflow-x: hidden;" id="{{ sectionId }}" section-id="{{ sectionId }}">
+    <div class="container-fluid">
+        {% if settings.title %}
+        <h3 class="section-title">{{ settings.title }}</h3>
+        {% endif %}
+
+        <div class="shop-by-category-wrapper swiper">
+            <div class="swiper-wrapper">
+                {% for category in safeget(settings, 'categories', []) %}
+                <div class="swiper-slide">
+                    <a href="{{ category.url }}" class="shop-by-category-item">
+                        <div class="shop-by-category-image">
+                            <img src="{{ image_url(category.image, w=400, q=100, f='auto') }}"
+                                alt="{{ category.title }}" loading="lazy">
+                        </div>
+
+                        <h6>{{ category.title }}</h6>
+                    </a>
                 </div>
-                
-                <h6>{{ category.title }}</h6>
-            </a>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
     </div>
 </section>
+
+<script>
+    (function () {
+        function initShopByCategorySwiper() {
+            var section = document.querySelector('[section-id="{{ sectionId }}"]');
+            if (!section) return;
+
+            var sliderEl = section.querySelector('.shop-by-category-wrapper');
+            if (!sliderEl) return;
+
+            if (window.Swiper) {
+                new Swiper(sliderEl, {
+                    slidesPerView: 'auto',
+                    spaceBetween: 20,
+                    freeMode: true,
+                    rtl: document.documentElement.dir === 'rtl',
+                    breakpoints: {
+                        768: {
+                            enabled: false,
+                        }
+                    }
+                });
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initShopByCategorySwiper);
+        } else {
+            initShopByCategorySwiper();
+        }
+    })();
+</script>

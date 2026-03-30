@@ -31,7 +31,6 @@
   height: 100vh;
   background: var(--side-cart-bg);
   color: var(--side-cart-text);
-  font-family: var(--side-cart-font);
   box-shadow: unset !important;
   padding: 0 !important;
   border: none;

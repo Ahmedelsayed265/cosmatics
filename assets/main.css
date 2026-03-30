@@ -2054,11 +2054,11 @@ body[data-template="product_details"] {
   }
 }
 .rtl .product-card-rating span {
-  margin-right: 0px;
+  margin-right: -6px;
   margin-left: 0;
   letter-spacing: 0;
   position: absolute;
-  top: 0;
+  top: -9px;
 }
 
 .product-card-rating .icon-star1.deactive:before {

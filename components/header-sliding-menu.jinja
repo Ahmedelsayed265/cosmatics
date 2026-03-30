@@ -167,7 +167,10 @@
         <li class="slide-menu-ul-li slide-menu-drawer-li">
             <a href="{{ url_for('login_page') }}" class="slide-menu-drawer-link slide-menu-drawer-link-util slide-menu-drawer-login-trigger">
                 <span class="slide-menu-drawer-link-icon slide-menu-util-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" color="#000000" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 8.5C17 5.73858 14.7614 3.5 12 3.5C9.23858 3.5 7 5.73858 7 8.5C7 11.2614 9.23858 13.5 12 13.5C14.7614 13.5 17 11.2614 17 8.5Z" />
+                    <path d="M19 20.5C19 16.634 15.866 13.5 12 13.5C8.13401 13.5 5 16.634 5 20.5" />
+                  </svg>
                 </span>
                 <span>{{ _("Login") }}</span>
             </a>
@@ -178,7 +181,17 @@
         <li class="slide-menu-ul-li slide-menu-drawer-li">
             <a href="#" class="slide-menu-drawer-link slide-menu-drawer-link-util" onclick="closeSlidingMenu(); zidOpenRegionSettingDialog(); return false;">
                 <span class="slide-menu-drawer-link-icon slide-menu-util-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z" stroke="currentColor" stroke-width="1.5"/></svg>
+                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_414_4921)">
+                        <path d="M12 0.5C18.3409 0.5 23.5 5.65914 23.5 12C23.5 18.3409 18.3409 23.5 12 23.5C5.65914 23.5 0.5 18.3409 0.5 12C0.5 5.65914 5.65914 0.5 12 0.5ZM13.5 6.39453C13.5 7.56626 12.9174 8.65532 11.9414 9.30664L10.9453 9.9707C10.6662 10.1565 10.5001 10.4679 10.5 10.8027V11.5C10.5 12.6027 9.60199 13.5 8.5 13.5H7C5.62214 13.5 4.5 12.3779 4.5 11V10.2422C4.5 9.58397 4.2341 8.93988 3.7666 8.47363L2.58789 7.29492L2.30176 7.98535C1.78727 9.22328 1.5 10.5781 1.5 12C1.5 17.7901 6.20986 22.5 12 22.5H12.5V16.5C12.5 14.8461 13.8461 13.5 15.5 13.5H16.5C17.6029 13.5 18.5 14.3971 18.5 15.5V15.9297C18.5 16.4315 18.7496 16.8988 19.168 17.1777L20.5479 18.0977L20.8232 17.6709C21.8788 16.035 22.5 14.0906 22.5 12C22.5 6.92925 18.8865 2.68734 14.0996 1.71191L13.5 1.58984V6.39453ZM15.5 14.5C14.3969 14.5 13.5 15.3969 13.5 16.5V22.4102L14.0996 22.2881C16.2017 21.8603 18.0716 20.799 19.5127 19.3213L19.9336 18.8896L19.4326 18.5557L18.6133 18.0098C17.9155 17.5445 17.5 16.7675 17.5 15.9297V15.5C17.5 14.9489 17.0511 14.5 16.5 14.5H15.5ZM12 1.5C8.41172 1.5 5.24242 3.31167 3.34863 6.0625L3.1123 6.40527L4.47461 7.76758C5.12563 8.41773 5.5 9.32082 5.5 10.2422V11C5.5 11.8285 6.17318 12.5 7 12.5H8.5C9.05279 12.5 9.5 12.0505 9.5 11.5V10.8027C9.50009 10.1321 9.83262 9.51094 10.3906 9.13867L11.3867 8.47461C12.0834 8.00992 12.5 7.23168 12.5 6.39453V1.5H12Z" fill="#050505" stroke="#050505"/>
+                        </g>
+                        <defs>
+                        <clipPath id="clip0_414_4921">
+                        <rect width="24" height="24" fill="white"/>
+                        </clipPath>
+                        </defs>
+                    </svg>
+
                 </span>
                 <span>{{ _("Change language") }}</span>
             </a>

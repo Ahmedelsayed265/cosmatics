@@ -200,9 +200,10 @@
 }
 .slide-menu-drawer-search-inner {
     position: relative;
-    background: #e0e0e0;
-    border-radius: 10px;
+    background: #ffffff;
+    border-radius: 60px;
     padding: 12px 16px 12px 44px;
+    border: 1px solid #e0e0e0;
 }
 .slide-menu-drawer-search-icon {
     position: absolute;

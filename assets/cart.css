@@ -104,7 +104,7 @@
   width: 28px;
   height: 28px;
   background: #fff;
-  border: 2px solid #aa8894;
+  border: 2px solid var(--primary-color);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -820,7 +820,7 @@
 
 .icon-star:before {
   content: "\2605";
-  color: #aa8894;
+  color: var(--primary-color);
 }
 
 .rtl .cart-product-prices {
@@ -1157,7 +1157,7 @@
   }
 
   .cart-checkout-btn {
-    padding: 7px 15px;
+    padding: 10px 15px;
     font-weight: 500;
     font-size: 14px;
   }
