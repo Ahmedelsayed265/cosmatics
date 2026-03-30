@@ -557,6 +557,60 @@
           }
         }
       ]
+    },
+    {
+      "id": "frequently_bought_together",
+      "icon": "font_awesome",
+      "name": {
+        "ar": "غالبا ما يتم شراؤها معاً",
+        "en": "Frequently bought together"
+      },
+      "settings": [
+        {
+          "id": "name",
+          "type": "text",
+          "label": {
+            "ar": "عنوان غالبا ما يتم شراؤها معاً",
+            "en": "Frequently bought together title"
+          }
+        },
+        {
+          "id": "bundles",
+          "type": "list",
+          "label": {
+            "ar": "قائمة المنتجات المترابطة",
+            "en": "Related Bundles List"
+          },
+          "settings": [
+            {
+              "id": "target_product",
+              "type": "product",
+              "label": {
+                "ar": "المنتج المستهدف",
+                "en": "Target Product"
+              }
+            },
+            {
+              "id": "bundle_source",
+              "type": "list",
+              "label": {
+                "ar": "المنتجات المقترحة (تصنيف أو منتجات)",
+                "en": "Suggested Products (Category or products)"
+              },
+              "settings": [
+                {
+                  "id": "products_list",
+                  "type": "product",
+                  "label": {
+                    "ar": "اختر المنتج",
+                    "en": "Select product"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }

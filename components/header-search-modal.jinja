@@ -9,6 +9,26 @@
 {% set categories_list = safeget(settings, 'search_modal_most_searched_categories', []) or safeget(settings, 'header_search_modal_most_searched_categories', []) or [] %}
 {% set brands_list = safeget(settings, 'search_modal_brands', []) or safeget(settings, 'header_search_modal_brands', []) or [] %}
 
+<style>
+  .search-modal-brands-slider {
+    padding: 10px 0;
+  }
+  .search-modal-brands-slider .swiper-slide {
+    width: auto;
+  }
+  .search-modal-brands-slider .search-modal-brand-item {
+    background: #ffffff;
+    border: 1px solid #f2f2f2;
+    border-radius: 12px;
+    padding: 10px 15px;
+    min-width: 110px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
+
 {% set _lang = safeget(session, 'lang') or 'ar' %}
 {% set logoUrl = settings.header_logo or store.logo %}
 
@@ -116,20 +136,24 @@
       {% if brands_list | length > 0 %}
       <section class="search-modal-section search-modal-brands" aria-label="{{ _('Brands') }}">
         <h3 class="section-title">{{ _('You can search through brands') }}</h3>
-        <div class="search-modal-brands-grid">
+        <div class="search-modal-brands-slider swiper">
+          <div class="swiper-wrapper">
           {% for brand in brands_list %}
             {% set logo = brand.logo if brand.logo is string else (safeget(brand, 'logo.url') or safeget(brand, 'logo.image') or '') %}
             {% set link_url = safeget(brand, 'link') | default('#') %}
             {% set alt_text = safeget(brand, 'alt') | default('') %}
             
-            <a href="{{ link_url }}" class="search-modal-brand-item" {% if alt_text %}aria-label="{{ alt_text }}"{% endif %}>
-              {% if logo %}
-              <img src="{{ image_url(logo, w=120, h=60, q=85) }}" 
-                   alt="{{ alt_text or (store.name ~ ' - ' ~ loop.index) }}" 
-                   loading="lazy">
-              {% endif %}
-            </a>
+            <div class="swiper-slide">
+              <a href="{{ link_url }}" class="search-modal-brand-item" {% if alt_text %}aria-label="{{ alt_text }}"{% endif %}>
+                {% if logo %}
+                <img src="{{ image_url(logo, w=120, h=60, q=85) }}" 
+                     alt="{{ alt_text or (store.name ~ ' - ' ~ loop.index) }}" 
+                     loading="lazy">
+                {% endif %}
+              </a>
+            </div>
           {% endfor %}
+          </div>
         </div>
       </section>
       {% endif %}
@@ -596,6 +620,22 @@
     })();
 
     loadCategoryProducts();
+
+    // Initialize Brands Swiper
+    if (typeof Swiper !== 'undefined') {
+      new Swiper('.search-modal-brands-slider', {
+        slidesPerView: 'auto',
+        spaceBetween: 12,
+        freeMode: true,
+        watchSlidesProgress: true,
+        rtl: document.documentElement.dir === 'rtl',
+        breakpoints: {
+          320: { spaceBetween: 8 },
+          768: { spaceBetween: 15 },
+          1024: { spaceBetween: 20 }
+        }
+      });
+    }
   });
 })();
 </script>
