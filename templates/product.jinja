@@ -445,46 +445,47 @@
                         </div>
 
                         <!-- Frequently Bought Together -->
-                        {% set fbt_config = settings.frequently_bought_together %}
-                        {% set current_id = (product.selected_product.id or product.id) | string %}
-                        {% set current_uuid = (product.selected_product.uuid or product.uuid) | string %}
+                        {# Theme settings are flattened as groupId_settingId (see layout.schema.json) #}
+                        {% set fbt_title = safeget(settings, 'frequently_bought_together_name') %}
+                        {% set fbt_bundles = safeget(settings, 'frequently_bought_together_bundles') %}
+                        {# IMPORTANT: settings.target_product points to the main product, not the selected variant #}
+                        {% set current_id = (product.id) | string %}
+                        {# UUID is not reliably available in this theme data; match by ID only #}
+
+                        <script>
+                            (function() {
+                                const currentId = "{{ current_id }}";
+                                const totalBundlesFlat = {{ (fbt_bundles | length) if fbt_bundles else 0 }};
+                                const fbtConfigObj = {{ (safeget(settings, 'frequently_bought_together') or {}) | tojson }};
+                                
+                                console.log('FBT Debug - Current Product:', { id: currentId });
+                                console.log('FBT Debug - Total Bundles (flat settings):', totalBundlesFlat);
+                                console.log('FBT Debug - Raw settings.frequently_bought_together (object):', fbtConfigObj);
+                                
+                                const bundlesMetaFlat = {{ (fbt_bundles or []) | tojson }};
+                                console.log('FBT Debug - Flat Bundles Data:', bundlesMetaFlat);
+                            })();
+                        </script>
+
                         
                         {% set active_bundle = none %}
-                        {% if fbt_config and fbt_config.bundles %}
-                            {% for bdl in fbt_config.bundles %}
+                        {% if fbt_bundles %}
+                            {% for bdl in fbt_bundles %}
                                 {% set t_prod = bdl.target_product %}
-                                {% set t_id = (t_prod.id if t_prod.id else t_prod) | string %}
-                                {% set t_uuid = (t_prod.uuid if t_prod.uuid else "") | string %}
+                                {# target_product may be a plain dict (from schema), read id via safeget only #}
+                                {% set t_id = (safeget(t_prod, 'id') or t_prod) | string %}
                                 
-                                {% if t_id == current_id or (t_uuid and t_uuid == current_uuid) %}
+                                {% if active_bundle is none and (t_id == current_id) %}
                                     {% set active_bundle = bdl %}
                                 {% endif %}
                             {% endfor %}
                         {% endif %}
 
-                        <!-- Frequently Bought Together Debug -->
-                        <div style="background: #222; color: #00ff00; padding: 8px; font-family: monospace; font-size: 11px; position: fixed; bottom: 0; right: 0; z-index: 99999; border: 1px solid #00ff00; opacity: 0.8;">
-                            FBT Debug: ID {{ current_id }} | UUID {{ current_uuid | truncate(8) }} | Bundles: {{ (fbt_config.bundles | length) if fbt_config.bundles else 0 }}
-                        </div>
-
-                        <script>
-                            (function() {
-                                const currentId = "{{ current_id }}";
-                                const currentUuid = "{{ current_uuid }}";
-                                const totalBundles = {{ (fbt_config.bundles | length) if fbt_config.bundles else 0 }};
-                                console.log('FBT Debug - Current Product:', { id: currentId, uuid: currentUuid });
-                                console.log('FBT Debug - Total Bundles in Settings:', totalBundles);
-                                
-                                {% if fbt_config.bundles %}
-                                const bundlesMeta = {{ fbt_config.bundles | tojson }};
-                                console.log('FBT Debug - Full Bundles Data:', bundlesMeta);
-                                {% endif %}
-                            })();
-                        </script>
-
                         {% if active_bundle %}
                         <div id="frequently-bought-together-section" class="fbt-section" style="display: none;">
-                            <input type="hidden" id="fbt-bundle-data" value='{{ active_bundle.bundle_source | tojson }}'>
+                            <script type="application/json" id="fbt-bundle-data">
+                                {{- (active_bundle.bundle_source | tojson) | replace('</script>', '<\\/script>') -}}
+                            </script>
 
                                 <style>
                                     .fbt-section { margin-top: 25px; border-top: 1px solid #eee; padding-top: 20px; }
@@ -506,7 +507,7 @@
                                     .btn-fbt-add-all:hover { background: #e9e7f2; }
                                     .btn-fbt-add-all:disabled { opacity: 0.5; cursor: not-allowed; }
                                 </style>
-                                <h4 class="fbt-title">{{ fbt_config.name or _("Suitable very much with") }}</h4>
+                                <h4 class="fbt-title">{{ fbt_title or _("Suitable very much with") }}</h4>
                                 <div class="fbt-container">
                                     <div id="fbt-items-list" class="fbt-items-row">
                                         <!-- JS will inject items -->
@@ -2096,18 +2097,13 @@
         if (!wrap || !section || !bundleDataEl) return;
 
         let bundleSource = null;
-        try { bundleSource = JSON.parse(bundleDataEl.value); } catch(e) {}
+        try { bundleSource = JSON.parse((bundleDataEl.textContent || '').trim()); } catch(e) {}
         if (!bundleSource) return;
 
         try {
+            // We can render directly when bundleSource contains product refs/details.
+            // Only require zid.products.list when bundleSource points to a category.
             let zidApi = null;
-            for (let i = 0; i < 40; i++) {
-                var z = window.zid || (typeof zid !== 'undefined' ? zid : null);
-                if (z && z.products && typeof z.products.list === 'function') { zidApi = z; break; }
-                await new Promise(r => setTimeout(r, 200));
-            }
-            if (!zidApi) return;
-
             let products = [];
             if (Array.isArray(bundleSource)) {
                 // Handle nested list structure: list of objects with 'products_list' field
@@ -2117,6 +2113,16 @@
                     products = bundleSource;
                 }
             } else if (bundleSource.id || typeof bundleSource === 'string') {
+                // Category mode (id or object with id)
+                for (let i = 0; i < 40; i++) {
+                    var z = window.zid || (typeof zid !== 'undefined' ? zid : null);
+                    if (z && z.products && typeof z.products.list === 'function') { zidApi = z; break; }
+                    await new Promise(r => setTimeout(r, 200));
+                }
+                if (!zidApi) {
+                    console.warn('FBT: zid.products.list not available for category source.');
+                    return;
+                }
                 const catId = bundleSource.id || bundleSource;
                 const res = await zidApi.products.list({ categories: catId, page_size: 4 });
                 if (res && res.status === 'success' && res.data) {
@@ -2125,11 +2131,40 @@
                 }
             }
 
+            // If we only got lightweight refs (id/uuid) without details, fetch product details by id
+            const looksLikeFullProduct = (p) => !!(p && (p.slug || p.name || (p.main_image && p.main_image.image) || (p.images && p.images.length)));
+            const needsFetch = (p) => !!p && (p.id || p.uuid) && !looksLikeFullProduct(p);
+            const baseUrl = "{{ store.permalink }}";
+            async function fetchProductById(id) {
+                if (!id) return null;
+                const url = baseUrl + 'api/v1/products/' + encodeURIComponent(String(id));
+                try {
+                    const res = await fetch(url, { method: 'GET', headers: { 'Accept': 'application/json' } });
+                    if (!res.ok) return null;
+                    const data = await res.json().catch(() => null);
+                    const d = data && (data.data || data);
+                    return (d && (d.product || d.products || d)) || null;
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            if (Array.isArray(products) && products.length) {
+                const fetched = await Promise.all(products.map(async (p) => {
+                    if (!needsFetch(p)) return p;
+                    const id = p.id || p.product_id || p.uuid;
+                    const full = await fetchProductById(id);
+                    return full || p;
+                }));
+                products = fetched.filter(Boolean);
+            }
+
             if (!products || products.length === 0) {
                 console.log('FBT: No products found in source.');
                 return;
             }
 
+            // Show section once we know we have items
             section.style.display = 'block';
             wrap.innerHTML = '';
 
@@ -2178,9 +2213,10 @@
 
     // Final FBT Debug Log
     console.log('--- FBT TOTAL DEBUG ---');
-    console.log('FBT Config:', {{ settings.frequently_bought_together | tojson }});
-    console.log('Current Product ID:', "{{ product.id }}");
-    console.log('Current Product UUID:', "{{ product.uuid }}");
+    console.log('FBT Flat Title:', {{ (safeget(settings, 'frequently_bought_together_name') or '') | tojson }});
+    console.log('FBT Flat Bundles:', {{ (safeget(settings, 'frequently_bought_together_bundles') or []) | tojson }});
+    console.log('Current Product (main) ID:', "{{ product.id }}");
+    console.log('Current Product (main) UUID:', '(disabled)');
     {% if active_bundle %}
     console.log('Active Bundle found:', {{ active_bundle | tojson }});
     {% else %}

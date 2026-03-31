@@ -147,9 +147,9 @@
   {# --- Part 2: Text --- #}
   <div class="outlit-product-card__body">
 
-
-    {% if product.categories and product.categories|length > 0 %}
-    {% set last_cat = product.categories[-1] %}
+    {% set _cats = product.categories or [] %}
+    {% if _cats|length > 0 %}
+    {% set last_cat = _cats[-1] %}
     {% set cat_name = last_cat.name if last_cat.name is string else (safeget(last_cat.name, session.lang) or
     safeget(last_cat.name, 'ar') or safeget(last_cat.name, 'en') or '') %}
     {% if cat_name %}

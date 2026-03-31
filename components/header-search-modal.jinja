@@ -10,22 +10,56 @@
 {% set brands_list = safeget(settings, 'search_modal_brands', []) or safeget(settings, 'header_search_modal_brands', []) or [] %}
 
 <style>
-  .search-modal-brands-slider {
+  .search-modal-brands-slider,
+  .search-modal-categories-slider {
     padding: 10px 0;
   }
-  .search-modal-brands-slider .swiper-slide {
+  .search-modal-brands-slider .swiper-slide,
+  .search-modal-categories-slider .swiper-slide {
     width: auto;
   }
   .search-modal-brands-slider .search-modal-brand-item {
     background: #ffffff;
-    border: 1px solid #f2f2f2;
     border-radius: 12px;
-    padding: 10px 15px;
     min-width: 110px;
     height: 64px;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .search-modal-categories-slider .search-modal-category-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: inherit;
+    min-width: 80px;
+  }
+  .search-modal-categories-slider .search-modal-category-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #f9f9f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+  .search-modal-categories-slider .search-modal-category-item:hover .search-modal-category-icon {
+    transform: translateY(-4px);
+  }
+  .search-modal-categories-slider .search-modal-category-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .search-modal-categories-slider .search-modal-category-label {
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
   }
 </style>
 
@@ -114,21 +148,25 @@
       {% if categories_list | length > 0 %}
       <section class="search-modal-section search-modal-categories" aria-label="{{ _('Most searched categories') }}">
         <h3 class="section-title">{{ _('Most searched categories') }}</h3>
-        <div class="search-modal-categories-slider">
+        <div class="search-modal-categories-slider swiper">
+          <div class="swiper-wrapper">
           {% for cat in categories_list %}
             {% set img = cat.image if cat.image is string else (safeget(cat, 'image.url') or safeget(cat, 'image.image') or '') %}
             {% set lbl = safeget(cat, 'label') | default('') %}
             {% set u = safeget(cat, 'url') | default('#') %}
             
-            <a href="{{ u }}" class="search-modal-category-item">
-              {% if img %}
-              <span class="search-modal-category-icon">
-                <img src="{{ image_url(img, w=80, h=80, q=85) }}" alt="{{ lbl }}" loading="lazy">
-              </span>
-              {% endif %}
-              <span class="search-modal-category-label">{{ lbl }}</span>
-            </a>
+            <div class="swiper-slide">
+              <a href="{{ u }}" class="search-modal-category-item">
+                {% if img %}
+                <span class="search-modal-category-icon">
+                  <img src="{{ image_url(img, w=80, h=80, q=85) }}" alt="{{ lbl }}" loading="lazy">
+                </span>
+                {% endif %}
+                <span class="search-modal-category-label">{{ lbl }}</span>
+              </a>
+            </div>
           {% endfor %}
+          </div>
         </div>
       </section>
       {% endif %}
@@ -633,6 +671,19 @@
           320: { spaceBetween: 8 },
           768: { spaceBetween: 15 },
           1024: { spaceBetween: 20 }
+        }
+      });
+      
+      new Swiper('.search-modal-categories-slider', {
+        slidesPerView: 'auto',
+        spaceBetween: 15,
+        freeMode: true,
+        watchSlidesProgress: true,
+        rtl: document.documentElement.dir === 'rtl',
+        breakpoints: {
+          320: { spaceBetween: 10 },
+          768: { spaceBetween: 20 },
+          1024: { spaceBetween: 25 }
         }
       });
     }

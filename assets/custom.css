@@ -170,6 +170,7 @@
 .search-header-bar {
   height: 64px;
   width: 100%;
+  position: relative;
   justify-content: space-between;
   gap: 54px;
 }
@@ -5987,5 +5988,9 @@ body:not(:has(.tp-home)) .header-nav .tp-menu-list {
 }
 
 .product-rating-share-row .product-card-rating span {
+  margin-right: 2.5px !important;
+}
+
+.review-details .product-card-rating span {
   margin-right: 2.5px !important;
 }
