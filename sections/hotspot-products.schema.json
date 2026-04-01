@@ -1,0 +1,161 @@
+{
+  "section_id": "uuid",
+  "template": "sections/hotspot-products.jinja",
+  "icon": "fal fa-bullseye",
+  "name": {
+    "ar": "منتجات النقاط التفاعلية",
+    "en": "Interactive Hotspot Products"
+  },
+  "settings": [
+    {
+      "id": "background_image",
+      "type": "image",
+      "label": {
+        "ar": "صورة الخلفية - الويب",
+        "en": "Background image - Web"
+      }
+    },
+    {
+      "id": "background_image_mobile",
+      "type": "image",
+      "label": {
+        "ar": "صورة الخلفية - الموبايل",
+        "en": "Background image - Mobile"
+      }
+    },
+   
+    {
+      "id": "hotspots",
+      "type": "list",
+      "label": {
+        "ar": "النقاط التفاعلية",
+        "en": "Hotspots"
+      },
+      "max_items": 12,
+      "settings": [
+        {
+          "id": "x",
+          "type": "number",
+          "label": {
+            "ar": "موضع أفقي - ويب (%)",
+            "en": "Horizontal position - Web (%)"
+          },
+          "default": 50
+        },
+        {
+          "id": "y",
+          "type": "number",
+          "label": {
+            "ar": "موضع عمودي - ويب (%)",
+            "en": "Vertical position - Web (%)"
+          },
+          "default": 50
+        },
+        {
+          "id": "x_mobile",
+          "type": "number",
+          "label": {
+            "ar": "موضع أفقي - موبايل (%)",
+            "en": "Horizontal position - Mobile (%)"
+          },
+          "default": 50
+        },
+        {
+          "id": "y_mobile",
+          "type": "number",
+          "label": {
+            "ar": "موضع عمودي - موبايل (%)",
+            "en": "Vertical position - Mobile (%)"
+          },
+          "default": 50
+        },
+        {
+          "id": "product",
+          "type": "product",
+          "label": {
+            "ar": "المنتج (واحد فقط لهذه النقطة)",
+            "en": "Product (one per hotspot)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "primary_color",
+      "type": "color",
+      "label": {
+        "ar": "اللون الأساسي",
+        "en": "Primary color"
+      }
+    },
+    {
+      "id": "hotspot_color",
+      "type": "color",
+      "label": {
+        "ar": "لون النقطة",
+        "en": "Hotspot color"
+      }
+    },
+    {
+      "id": "hotspot_size",
+      "type": "text",
+      "label": {
+        "ar": "حجم النقطة (px)",
+        "en": "Hotspot size (px)"
+      },
+      "default": "12"
+    },
+ 
+    {
+      "id": "card_title_color",
+      "type": "color",
+      "label": {
+        "ar": "لون اسم المنتج",
+        "en": "Product title color"
+      }
+    },
+    {
+      "id": "card_price_color",
+      "type": "color",
+      "label": {
+        "ar": "لون السعر",
+        "en": "Price color"
+      }
+    },
+    {
+      "id": "card_old_price_color",
+      "type": "color",
+      "label": {
+        "ar": "لون السعر قبل الخصم",
+        "en": "Old price color"
+      }
+    },
+    {
+      "id": "card_border_radius",
+      "type": "text",
+      "label": {
+        "ar": "زوايا الكارت (px)",
+        "en": "Card border radius (px)"
+      },
+      "default": "12"
+    },
+    {
+      "id": "trigger_type",
+      "type": "select",
+      "label": {
+        "ar": "طريقة عرض البطاقة",
+        "en": "Card trigger type"
+      },
+      "options": [
+        {
+          "value": "click",
+          "label": { "ar": "عند الضغط", "en": "On click" }
+        },
+        {
+          "value": "hover",
+          "label": { "ar": "عند الوقوف (Hover)", "en": "On hover" }
+        }
+      ],
+      "default": "click"
+    }
+  ]
+}

@@ -444,99 +444,82 @@
 
                         </div>
 
-                        <!-- Frequently Bought Together -->
-                        {# Theme settings are flattened as groupId_settingId (see layout.schema.json) #}
                         {% set fbt_title = safeget(settings, 'frequently_bought_together_name') %}
                         {% set fbt_bundles = safeget(settings, 'frequently_bought_together_bundles') %}
-                        {# IMPORTANT: settings.target_product points to the main product, not the selected variant #}
                         {% set current_id = (product.id) | string %}
-                        {# UUID is not reliably available in this theme data; match by ID only #}
-
-                        <script>
-                            (function() {
-                                const currentId = "{{ current_id }}";
-                                const totalBundlesFlat = {{ (fbt_bundles | length) if fbt_bundles else 0 }};
-                                const fbtConfigObj = {{ (safeget(settings, 'frequently_bought_together') or {}) | tojson }};
-                                
-                                console.log('FBT Debug - Current Product:', { id: currentId });
-                                console.log('FBT Debug - Total Bundles (flat settings):', totalBundlesFlat);
-                                console.log('FBT Debug - Raw settings.frequently_bought_together (object):', fbtConfigObj);
-                                
-                                const bundlesMetaFlat = {{ (fbt_bundles or []) | tojson }};
-                                console.log('FBT Debug - Flat Bundles Data:', bundlesMetaFlat);
-                            })();
-                        </script>
-
                         
-                        {% set active_bundle = none %}
+                        {% set fbt_ns = namespace(products=[], steps=[], matched=false, matched_target_id='') %}
+
                         {% if fbt_bundles %}
                             {% for bdl in fbt_bundles %}
-                                {% set t_prod = bdl.target_product %}
-                                {# target_product may be a plain dict (from schema), read id via safeget only #}
-                                {% set t_id = (safeget(t_prod, 'id') or t_prod) | string %}
-                                
-                                {% if active_bundle is none and (t_id == current_id) %}
-                                    {% set active_bundle = bdl %}
+                    
+                                {% set t_prod = safeget(bdl, 'target_product') %}
+                                {% set t_id = (safeget(bdl, 'target_product.id') or safeget(t_prod, 'id') or t_prod) | string %}
+
+                                {% set fbt_ns.steps = fbt_ns.steps + ['check bundle[' ~ loop.index0 ~ ']: t_id=' ~ t_id ~ ' vs current_id=' ~ current_id ~ ' => ' ~ ('MATCH' if t_id == current_id else 'NO_MATCH')] %}
+
+                                {% if (not fbt_ns.matched) and (t_id == current_id) %}
+                                    {% set fbt_ns.products = safeget(bdl, 'bundle_source') or [] %}
+                                    {% set fbt_ns.matched = true %}
+                                    {% set fbt_ns.matched_target_id = t_id %}
                                 {% endif %}
                             {% endfor %}
+                        {% else %}
+                            {% set fbt_ns.steps = fbt_ns.steps + ['no bundles found in settings'] %}
                         {% endif %}
 
-                        {% if active_bundle %}
+                        {% set active_bundle_products = fbt_ns.products %}
+
+                        {% if active_bundle_products %}
                         <div id="frequently-bought-together-section" class="fbt-section" style="display: none;">
                             <script type="application/json" id="fbt-bundle-data">
-                                {{- (active_bundle.bundle_source | tojson) | replace('</script>', '<\\/script>') -}}
+                                {{- (active_bundle_products | tojson) | replace('</script>', '<\\/script>') -}}
                             </script>
 
-                                <style>
-                                    .fbt-section { margin-top: 25px; border-top: 1px solid #eee; padding-top: 20px; }
-                                    .fbt-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; text-align: start; }
-                                    .fbt-items-row { display: flex; align-items: flex-start; gap: 10px; overflow-x: auto; padding-bottom: 10px; }
-                                    .fbt-item { flex: 0 0 120px; display: flex; flex-direction: column; gap: 8px; position: relative; }
-                                    .fbt-checkbox-wrap { position: absolute; top: 0; left: 0; z-index: 10; padding: 5px; }
-                                    .fbt-checkbox { width: 18px; height: 18px; cursor: pointer; }
-                                    .fbt-img-wrap { width: 120px; height: 120px; background: #fff; border-radius: 8px; border: 1px solid #eee; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-                                    .fbt-img-wrap img { width: 90%; height: 90%; object-fit: contain; }
-                                    .fbt-info { display: flex; flex-direction: column; gap: 2px; text-align: start; }
-                                    .fbt-name { font-size: 13px; font-weight: 500; color: #333; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-                                    .fbt-price-row { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
-                                    .fbt-price { font-size: 14px; font-weight: 600; color: #000; }
-                                    .fbt-price-old { font-size: 12px; color: #999; text-decoration: line-through; }
-                                    .fbt-discount { font-size: 11px; color: #e11d48; background: #fce7eb; padding: 1px 4px; border-radius: 4px; }
-                                    .fbt-plus { align-self: center; font-size: 20px; color: #ccc; margin-top: -30px; }
-                                    .btn-fbt-add-all { width: 100%; height: 48px; border-radius: 12px; background: #f1f0f7; color: #6c558e; border: none; font-weight: 500; display: flex; align-items: center; justify-content: center; margin-top: 15px; transition: 0.2s; }
-                                    .btn-fbt-add-all:hover { background: #e9e7f2; }
-                                    .btn-fbt-add-all:disabled { opacity: 0.5; cursor: not-allowed; }
-                                </style>
-                                <h4 class="fbt-title">{{ fbt_title or _("Suitable very much with") }}</h4>
-                                <div class="fbt-container">
-                                    <div id="fbt-items-list" class="fbt-items-row">
-                                        <!-- JS will inject items -->
-                                    </div>
-                                    <div class="fbt-action-row">
-                                        <button class="btn btn-fbt-add-all" id="btn-fbt-add-all" onclick="addFbtToCart()">
-                                            <span class="fbt-btn-text"></span>
-                                            <img class="fbt-progress d-none" src="{{ 'spinner.gif' | asset_url }}" width="20" height="20" />
-                                        </button>
+                            <style>
+                               
+                            </style>
+
+                            <h4 class="fbt-title">{{ fbt_title or _("Suitable very much with") }}</h4>
+
+                            <div class="fbt-container">
+                                <div class="fbt-products-wrapper">
+                                    <div class="fbt-loading">{{ _("Loading...") }}</div>
+                                    <div class="swiper fbt-products-slider">
+                                        <div id="fbt-items-list" class="swiper-wrapper"></div>
                                     </div>
                                 </div>
-                            </div>
-                            {% endif %}
 
+                                <div class="fbt-total-row" aria-live="polite">
+                                    <span class="fbt-total-label">{{ _("Total") }}</span>
+                                    <div class="fbt-total-price-group">
+                                        <span class="fbt-total-price" id="fbt-total-price"></span>
+                                        <span class="fbt-total-price-old" id="fbt-total-price-old"></span>
+                                    </div>
+                                </div>
+
+                                <div class="fbt-action-row">
+                                    <button class="btn btn-fbt-add-all" id="btn-fbt-add-all" onclick="addFbtToCart()">
+                                        <span class="fbt-btn-text"></span>
+                                        <img class="fbt-progress d-none" src="{{ 'spinner.gif' | asset_url }}" width="20" height="20" />
+                                    </button>
+                                 </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    
                         <div>
                             <span id="product-view-add-to-cart"></span>
                         </div>
+
                         <div class="border-product">
                             <h4 class="product-title">{{ _("share product") }}</h4>
                             <div class="product-icon">
                                 <div class="product-social d-flex">
-                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ product.html_url }}"
-                                        target="_blank"><i class="icon-facebook-f"></i></a>
-                                    <a href="https://www.pinterest.com/pin/create/button/?url={{ product.html_url }}"
-                                        target="_blank"><i class="icon-pinterest"></i></a>
-                                    <a href="https://twitter.com/intent/tweet?text={{ product.name }}: {{ product.html_url }}"
-                                        target="_blank"><i class="icon-twitter"></i></a>
-                                    <a href="https://api.whatsapp.com/send?text={{ _(" Check Out this Product") }} : {{ product.name }} {{ product.html_url }}" target="_blank">
-                                        <i class="icon-whatsapp"></i>
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{ product.html_url }}" target="_blank"><i class="icon-facebook-f"></i></a>
+                                    <a href="https://www.pinterest.com/pin/create/button/?url={{ product.html_url }}" target="_blank"><i class="icon-pinterest"></i></a>
+                                    <a href="https://twitter.com/intent/tweet?text={{ product.name }}: {{ product.html_url }}" target="_blank"><i class="icon-twitter"></i></a>
+                                    <a href="https://api.whatsapp.com/send?text={{ _(" Check Out this Product") }} : {{ product.name }} {{ product.html_url }}" target="_blank"><i class="icon-whatsapp"></i>
                                     </a>
                                 </div>
                             </div>
@@ -2039,10 +2022,35 @@
     });
 
     window.updateFbtButton = function() {
-        const count = document.querySelectorAll('.fbt-checkbox:checked').length;
+        const checked = Array.from(document.querySelectorAll('.fbt-checkbox:checked'));
+        const count = checked.length;
         const btnText = document.querySelector('.fbt-btn-text');
         const btn = document.getElementById('btn-fbt-add-all');
+        const totalEl = document.getElementById('fbt-total-price');
         if (!btnText || !btn) return;
+
+        // Total price
+        let total = 0;
+        let oldTotal = 0;
+        checked.forEach(cb => {
+            const v = parseFloat(cb.getAttribute('data-price') || '0');
+            const ov = parseFloat(cb.getAttribute('data-old-price') || '0');
+            if (!Number.isNaN(v)) total += v;
+            if (!Number.isNaN(ov)) oldTotal += ov;
+        });
+        const currency = (localStorage && localStorage.getItem && localStorage.getItem('currency')) || '{{ product.currency }}' || 'ر.س';
+        const oldTotalEl = document.getElementById('fbt-total-price-old');
+        if (oldTotalEl) {
+            if (oldTotal > total) {
+                oldTotalEl.textContent = oldTotal.toFixed(2) + ' ' + currency;
+                oldTotalEl.style.display = 'inline-block';
+            } else {
+                oldTotalEl.style.display = 'none';
+            }
+        }
+        if (totalEl) {
+            totalEl.textContent = total > 0 ? (total.toFixed(2) + ' ' + currency) : '—';
+        }
         
         if (count === 0) {
             btnText.textContent = "{{ _('Select items to add') }}";
@@ -2091,10 +2099,13 @@
     };
 
     async function loadFbtItems() {
-        const wrap = document.getElementById('fbt-items-list');
         const section = document.getElementById('frequently-bought-together-section');
+        const wrap = document.getElementById('fbt-items-list');
         const bundleDataEl = document.getElementById('fbt-bundle-data');
         if (!wrap || !section || !bundleDataEl) return;
+
+        const loader = section.querySelector('.fbt-loading');
+        const sliderEl = section.querySelector('.fbt-products-slider');
 
         let bundleSource = null;
         try { bundleSource = JSON.parse((bundleDataEl.textContent || '').trim()); } catch(e) {}
@@ -2119,10 +2130,7 @@
                     if (z && z.products && typeof z.products.list === 'function') { zidApi = z; break; }
                     await new Promise(r => setTimeout(r, 200));
                 }
-                if (!zidApi) {
-                    console.warn('FBT: zid.products.list not available for category source.');
-                    return;
-                }
+                if (!zidApi) return;
                 const catId = bundleSource.id || bundleSource;
                 const res = await zidApi.products.list({ categories: catId, page_size: 4 });
                 if (res && res.status === 'success' && res.data) {
@@ -2132,24 +2140,48 @@
             }
 
             // If we only got lightweight refs (id/uuid) without details, fetch product details by id
-            const looksLikeFullProduct = (p) => !!(p && (p.slug || p.name || (p.main_image && p.main_image.image) || (p.images && p.images.length)));
-            const needsFetch = (p) => !!p && (p.id || p.uuid) && !looksLikeFullProduct(p);
-            const baseUrl = "{{ store.permalink }}";
+            // Improved strict check for what constitutes a "full" product with price and image
+            const looksLikeFullProduct = (p) => {
+                if (!p) return false;
+                // It must have a valid price and at least one image to be considered "full" for FBT
+                // Check if price is a valid string or number
+                const hasPrice = !!( (p.formatted_price && p.formatted_price.length > 2) || (p.price && parseFloat(p.price) > 0) || (p.sale_price && parseFloat(p.sale_price) > 0) );
+                // Check if it has a real image URL
+                const hasImage = !!( (p.main_image && (typeof p.main_image === 'string' || p.main_image.url || p.main_image.origin)) || (p.images && p.images.length > 0) );
+                return hasPrice && hasImage;
+            };
+            const needsFetch = (p) => {
+                const id = p.id || p.uuid || p.product_id;
+                const result = !!id && !looksLikeFullProduct(p);
+                if (window.console) console.log('loadFbtItems: needsFetch check for', id, '=>', result, ' (hasPrice:', !!(p.formatted_price || p.price), 'hasImage:', !!(p.main_image || (p.images && p.images.length)), ')');
+                return result;
+            };
+            
             async function fetchProductById(id) {
                 if (!id) return null;
-                const url = baseUrl + 'api/v1/products/' + encodeURIComponent(String(id));
+                // Use relative path to avoid CORS issues between dev and production domains
+                const fetchUrl = '/api/v1/products/' + encodeURIComponent(String(id));
+                
+                if (window.console) console.log('loadFbtItems: Fetching from', fetchUrl);
                 try {
-                    const res = await fetch(url, { method: 'GET', headers: { 'Accept': 'application/json' } });
-                    if (!res.ok) return null;
+                    const res = await fetch(fetchUrl, { method: 'GET', headers: { 'Accept': 'application/json' } });
+                    if (!res.ok) {
+                        console.warn('loadFbtItems: HTTP error for', id, res.status);
+                        return null;
+                    }
                     const data = await res.json().catch(() => null);
                     const d = data && (data.data || data);
-                    return (d && (d.product || d.products || d)) || null;
+                    const result = (d && (d.product || d.products || d)) || null;
+                    if (window.console) console.log('loadFbtItems: Fetch result for', id, result ? 'SUCCESS' : 'EMPTY');
+                    return result;
                 } catch (e) {
+                    console.error('loadFbtItems: Fetch Exception for', id, e);
                     return null;
                 }
             }
 
             if (Array.isArray(products) && products.length) {
+                if (window.console) console.log('loadFbtItems: Processing products list', products);
                 const fetched = await Promise.all(products.map(async (p) => {
                     if (!needsFetch(p)) return p;
                     const id = p.id || p.product_id || p.uuid;
@@ -2158,51 +2190,200 @@
                 }));
                 products = fetched.filter(Boolean);
             }
+            if (window.console) console.log('loadFbtItems: Final products list for render', products);
 
-            if (!products || products.length === 0) {
-                console.log('FBT: No products found in source.');
-                return;
-            }
+            if (!products || products.length === 0) return;
 
             // Show section once we know we have items
             section.style.display = 'block';
             wrap.innerHTML = '';
+            if (loader) loader.remove();
+            if (sliderEl) sliderEl.style.display = 'block';
 
-            products.forEach((p, idx) => {
-                const img = (p.main_image && p.main_image.image && (p.main_image.image.small || p.main_image.image.medium || p.main_image.image.thumbnail)) || 
-                            (p.images && p.images[0] && p.images[0].image && (p.images[0].image.small || p.images[0].image.medium || p.images[0].image.thumbnail)) || 
-                            '';
-                const name = p.name || '';
-                const priceMatch = (p.formatted_sale_price || p.formatted_price || '');
-                const oldPrice = p.formatted_sale_price ? p.formatted_price : '';
-                const discount = p.discount_percentage ? '-' + p.discount_percentage + '%' : '';
+            const defaultImage = {{ image_url(("product-img.svg" | asset_url), w = 235, q = 100, f = "auto") | tojson }};
+            const reviewsEnabled = {{ 'true' if store.settings.products.reviews_enabled else 'false' }};
+            const rawSvg = {{ _cart_svg_add_icon | tojson }};
+            const CART_CATEGORY_SVG_ADD = (typeof rawSvg === 'string') ? rawSvg : (rawSvg && rawSvg.value ? rawSvg.value : '');
 
-                const item = document.createElement('div');
-                item.className = 'fbt-item';
-                item.innerHTML = `
-                    <div class="fbt-checkbox-wrap">
-                        <input type="checkbox" class="fbt-checkbox" checked data-id="${p.id}" onchange="updateFbtButton()">
-                    </div>
-                    <div class="fbt-img-wrap">
-                        <a href="/products/${p.slug}"><img src="${img}" alt="${name}"></a>
-                    </div>
-                    <div class="fbt-info">
-                        <p class="fbt-name">${name}</p>
-                        <div class="fbt-price-row">
-                            <span class="fbt-price text-color-primary">${priceMatch}</span>
-                            ${oldPrice ? `<span class="fbt-price-old">${oldPrice}</span>` : ''}
-                            ${discount ? `<span class="fbt-discount">${discount}</span>` : ''}
-                        </div>
-                    </div>
-                `;
-                wrap.appendChild(item);
-                if (idx < products.length - 1) {
-                    const plus = document.createElement('div');
-                    plus.className = 'fbt-plus';
-                    plus.textContent = '+';
-                    wrap.appendChild(plus);
+            function buildRatingHtml(ratingObj) {
+                if (!reviewsEnabled) return '';
+                ratingObj = ratingObj || {};
+                const totalCount = ratingObj.total_count || 0;
+                const avg = ratingObj.average || 0;
+                const ratingRounded = Math.ceil((avg * 2)) / 2;
+                let stars = '';
+                if (totalCount > 0) {
+                    for (let n = 1; n <= 5; n++) {
+                        if (n <= ratingRounded) stars += '<span class="icon-star1"></span>';
+                        else if (n <= ratingRounded + 0.5) stars += '<span class="icon-half-star"></span>';
+                        else stars += '<span class="icon-star1 deactive"></span>';
+                    }
                 }
+                return '<div class="outlit-product-card__rating">' +
+                    '<span class="product-card-rating-count">(' + totalCount + ')</span>' +
+                    (totalCount > 0 ?
+                        '<div class="d-inline-flex product-card-rating" data-rating="' + avg + '">' + stars + '</div>' : '') +
+                    '<span class="outlit-product-card__rating-value">' + (avg ? avg.toFixed(1) : '0.0') + '</span>' +
+                    '</div>';
+            }
+
+            function getNumericPrice(p) {
+                if (!p) return 0;
+                // Exhaustive check for Zid price fields (sale price preferred)
+                const candidates = [
+                    p.sale_price, p.sale_price_value, p.final_price, p.final_price_value,
+                    (p.sale_price ? (p.sale_price.value || p.sale_price.amount) : null),
+                    p.price, p.price_value, 
+                    (p.price ? (p.price.value || p.price.amount) : null)
+                ];
+                for (let c of candidates) {
+                    if (typeof c === 'object' && c !== null) {
+                        const val = c.value || c.amount || c.price || c.net_amount;
+                        if (val !== undefined && val !== null) c = val;
+                    }
+                    const n = parseFloat(c);
+                    if (!Number.isNaN(n) && n > 0) return n;
+                }
+                const s = (p.formatted_sale_price || p.formatted_price || '').toString();
+                const m = s.replace(/[^\d.]/g, '').match(/(\d+(\.\d+)?)/);
+                return (m && m[1]) ? parseFloat(m[1]) : 0;
+            }
+
+            function getOriginalPrice(p) {
+                if (!p) return 0;
+                const candidates = [
+                    p.price, p.price_value, 
+                    (p.price ? (p.price.value || p.price.amount) : null)
+                ];
+                for (let c of candidates) {
+                    if (typeof c === 'object' && c !== null) {
+                        const val = c.value || c.amount || c.price;
+                        if (val !== undefined && val !== null) c = val;
+                    }
+                    const n = parseFloat(c);
+                    if (!Number.isNaN(n) && n > 0) return n;
+                }
+                const s = (p.formatted_price || '').toString();
+                const m = s.replace(/[^\d.]/g, '').match(/(\d+(\.\d+)?)/);
+                return (m && m[1]) ? parseFloat(m[1]) : 0;
+            }
+
+            if (window.console) console.log('loadFbtItems: Rendering products', products);
+
+            products.forEach((product, idx) => {
+                const productImages = Array.isArray(product.images) ? product.images : [];
+                const mainImgObj = (product.main_image && product.main_image.image) ? product.main_image.image : (product.main_image || {});
+                const firstImgObj = (productImages[0] && productImages[0].image) ? productImages[0].image : (productImages[0] || {});
+                
+                // Very robust image selection: check all common Zid image locations
+                let mainImg = defaultImage;
+                if (typeof product.main_image === 'string' && product.main_image.startsWith('http')) {
+                    mainImg = product.main_image;
+                } else {
+                    const imgSources = [mainImgObj, firstImgObj, product.main_image];
+                    for (let src of imgSources) {
+                        if (!src) continue;
+                        if (typeof src === 'string' && src.startsWith('http')) { mainImg = src; break; }
+                        const url = src.small || src.medium || src.large || src.thumbnail || src.url || src.origin || src.image;
+                        if (typeof url === 'string' && url.startsWith('http')) { mainImg = url; break; }
+                        if (src.image && typeof src.image === 'string' && src.image.startsWith('http')) { mainImg = src.image; break; }
+                    }
+                }
+
+                const lang = (document.documentElement && document.documentElement.lang) || 'ar';
+                const primLang = lang.split('-')[0];
+                function getVal(v) {
+                    if (!v) return '';
+                    if (typeof v === 'string') return v;
+                    if (typeof v === 'object') {
+                        const keys = [lang, primLang, 'ar', 'en', 'name', 'title'];
+                        for (let k of keys) {
+                            if (v[k] && typeof v[k] === 'string') return v[k];
+                        }
+                        // Fallback: if it's an object with no string keys, don't return [object Object]
+                        return '';
+                    }
+                    return String(v);
+                }
+
+                const productName = getVal(product.name);
+                const productSlugRaw = getVal(product.slug || product.handle || product.id);
+                const productSlug = (productSlugRaw || '').toString().replace(/'/g, "\\'").replace(/"/g, '\\"');
+                const formattedPrice = product.formatted_sale_price || product.formatted_price || '';
+                const discountPercentage = product.discount_percentage || '';
+                const outOfStock = !product.is_infinite && product.quantity <= 0;
+
+                let priceHtml = '';
+                if (product.formatted_sale_price) {
+                    priceHtml = '<div class="outlit-product-card__price-wrap"><div class="outlit-product-card__price-row">' +
+                        (discountPercentage ? '<span class="outlit-product-card__discount">-' + discountPercentage + '%</span>' : '') +
+                        '<span class="outlit-product-card__price outlit-product-card__price--old">' + (product.formatted_price || '') + '</span>' +
+                        '<span class="outlit-product-card__price outlit-product-card__price--current ">' + formattedPrice + '</span>' +
+                        '</div></div>';
+                } else {
+                    priceHtml = '<div class="outlit-product-card__price-wrap"><span class="outlit-product-card__price outlit-product-card__price--current ">' + formattedPrice + '</span></div>';
+                }
+
+                let categoryHtml = '';
+                if (Array.isArray(product.categories) && product.categories.length > 0) {
+                    const lastCat = product.categories[product.categories.length - 1];
+                    const catName = getVal(lastCat.name);
+                    if (catName && lastCat.id && lastCat.slug) {
+                        categoryHtml =
+                            '<p class="outlit-product-card__category">' +
+                                '<a href="/categories/' + lastCat.id + '/' + (getVal(lastCat.slug) || '') + '">' + catName + '</a>' +
+                            '</p>';
+                    }
+                } else if (product.category && product.category.name) {
+                    categoryHtml = '<p class="outlit-product-card__category">' + getVal(product.category.name) + '</p>';
+                }
+
+                const numericPrice = getNumericPrice(product);
+                const originalPrice = getOriginalPrice(product);
+                const isWishlisted = customerWishlistIds && customerWishlistIds.some(id => String(id) === String(product.id));
+                const isLast = (idx === products.length - 1);
+
+                const slide = document.createElement('div');
+                slide.className = 'swiper-slide';
+                slide.innerHTML =
+                    '<div class="fbt-checkbox-wrap">' +
+                        '<input type="checkbox" class="fbt-checkbox" checked data-id="' + (product.id || '') + '" data-price="' + numericPrice + '" data-old-price="' + originalPrice + '" onchange="updateFbtButton()">' +
+                    '</div>' +
+                    '<article class="outlit-product-card product-item position-relative' + (outOfStock ? ' outlit-product-card--out-of-stock' : '') + '">' +
+                        '<div class="outlit-product-card__img-wrap" style="height: var(--outlit-card-img-height, 280px);">' +
+                            '<a href="/products/' + productSlug + '" class="outlit-product-card__img-link"><div class="outlit-product-card__img-inner"><img src="' + mainImg + '" class="outlit-product-card__img"></div></a>' +
+                            '<div class="outlit-product-card__wishlist">' +
+                                '<button type="button" class="outlit-product-card__wishlist-btn icon-heart-mask' + (isWishlisted ? ' filled' : '') + '" onclick="addToWishlist(this, \'' + (product.id || '') + '\')"></button>' +
+                            '</div>' +
+                            '<div class="outlit-product-card__row outlit-product-card__row--rating-cart">' +
+                                buildRatingHtml(product.rating) +
+                                '<a href="/products/' + productSlug + '" class="outlit-product-card__add-cart-btn">' + CART_CATEGORY_SVG_ADD + '</a>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="outlit-product-card__body">' +
+                            categoryHtml +
+                            '<h3 class="outlit-product-card__title"><a href="/products/' + productSlug + '">' + productName + '</a></h3>' +
+                            priceHtml +
+                        '</div>' +
+                    '</article>' +
+                    (isLast ? '' : '<div class="fbt-plus-icon">+</div>');
+                wrap.appendChild(slide);
             });
+
+            if (typeof Swiper !== 'undefined' && sliderEl) {
+                new Swiper(sliderEl, {
+                    slidesPerView: 1.2,
+                    spaceBetween: 10,
+                    loop: false,
+                    rtl: document.documentElement.dir === 'rtl',
+                    breakpoints: {
+                        480: { slidesPerView: 1.5, spaceBetween: 15 },
+                        768: { slidesPerView: 2.2, spaceBetween: 20 },
+                        992: { slidesPerView: 2.8, spaceBetween: 30 },
+                        1200: { slidesPerView: 3, spaceBetween: 30 }
+                    }
+                });
+            }
             updateFbtButton();
         } catch (e) { console.error('FBT loading error', e); }
     }
@@ -2211,17 +2392,7 @@
         loadFbtItems();
     });
 
-    // Final FBT Debug Log
-    console.log('--- FBT TOTAL DEBUG ---');
-    console.log('FBT Flat Title:', {{ (safeget(settings, 'frequently_bought_together_name') or '') | tojson }});
-    console.log('FBT Flat Bundles:', {{ (safeget(settings, 'frequently_bought_together_bundles') or []) | tojson }});
-    console.log('Current Product (main) ID:', "{{ product.id }}");
-    console.log('Current Product (main) UUID:', '(disabled)');
-    {% if active_bundle %}
-    console.log('Active Bundle found:', {{ active_bundle | tojson }});
-    {% else %}
-    console.log('No Active Bundle matched in Jinja.');
-    {% endif %}
+    
 </script>
 
 {% endblock %}

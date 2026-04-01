@@ -1,0 +1,494 @@
+{% set hotspots_list = safeget(settings, 'hotspots', []) %}
+{% if hotspots_list is none %}{% set hotspots_list = [] %}{% endif %}
+{% set section_title = safeget(settings, 'title') or '' %}
+{% set bg_image = safeget(settings, 'background_image') %}
+{% set bg_url = (bg_image if bg_image is string else (safeget(bg_image, 'url') or safeget(bg_image, 'image') or '')) %}
+{% set bg_mobile = safeget(settings, 'background_image_mobile') %}
+{% set bg_url_mobile = (bg_mobile if bg_mobile is string else (safeget(bg_mobile, 'url') or safeget(bg_mobile, 'image') or '')) if bg_mobile else '' %}
+{# اعرض المحتوى طالما هناك نقاط تفاعلية، حتى لو لم يتم اختيار صورة خلفية بعد #}
+{% set is_editor = store.editing_mode %}
+{% set has_content = (hotspots_list | length > 0) or is_editor %}
+{% set _lang = safeget(session, 'lang') or 'ar' %}
+{% set _img_alt = section_title or _('Interactive store products image') %}
+
+<section id="{{ sectionId }}"
+         section-id="{{ sectionId }}"
+         class="hotspot-products-section mrg"
+         aria-labelledby="hotspot-products-heading-{{ sectionId }}"
+         data-alt-fallback="{{ section_title | e }}"
+         style="
+           {% if safeget(settings, 'primary_color') %}--primary-color: {{ safeget(settings, 'primary_color') }};{% endif %}
+           {% if safeget(settings, 'hotspot_color') %}--hotspot-color: {{ safeget(settings, 'hotspot_color') }};{% endif %}
+           {% if safeget(settings, 'hotspot_size') %}--hotspot-size: {{ safeget(settings, 'hotspot_size') | default(12) | string | replace('px','') }}px;{% endif %}
+           {% if safeget(settings, 'card_bg') %}--card-bg: {{ safeget(settings, 'card_bg') }};{% endif %}
+           {% if safeget(settings, 'card_title_color') %}--card-title-color: {{ safeget(settings, 'card_title_color') }};{% endif %}
+           {% if safeget(settings, 'card_price_color') %}--card-price-color: {{ safeget(settings, 'card_price_color') }};{% endif %}
+           {% if safeget(settings, 'card_old_price_color') %}--card-old-price-color: {{ safeget(settings, 'card_old_price_color') }};{% endif %}
+           {% if safeget(settings, 'card_border_radius') %}--card-radius: {{ safeget(settings, 'card_border_radius') | string | replace('px','') }}px;{% endif %}
+         ">
+  <div class="hotspot-products-container-fluid container-fluid">
+    {% if section_title %}
+      <h2 id="hotspot-products-heading-{{ sectionId }}" class="hotspot-products-title">{{ section_title }}</h2>
+    {% endif %}
+
+    {% if has_content %}
+      <div class="hotspot-products-image-wrap"
+           role="img"
+           aria-label="{{ _img_alt }}">
+        {% if bg_url or bg_url_mobile %}
+          <picture>
+            {% if bg_url_mobile %}
+              <source media="(max-width: 767px)" srcset="{{ image_url(bg_url_mobile, w=800, q=85, f='auto') }}">
+            {% endif %}
+            <img class="hotspot-products-bg hotspot-products-bg--web"
+                 src="{{ image_url(bg_url or bg_url_mobile, w=1600, q=85, f='auto') }}"
+                 alt="{{ _img_alt }}"
+                 width="1600"
+                 height="900"
+                 loading="lazy"
+                 decoding="async"
+                 fetchpriority="low">
+          </picture>
+        {% endif %}
+
+        <div class="hotspot-coord-tooltip"
+             style="display: none; position: absolute; z-index: 100; pointer-events: none; background: rgba(0,0,0,0.8); color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-family: sans-serif; white-space: nowrap;">
+        </div>
+
+        {% for hotspot in hotspots_list %}
+          {% set product = safeget(hotspot, 'product') %}
+          {# بعض المتاجر قد تُرجِع معرف المنتج فقط أو كائن بدون name، لذلك نخفف الشروط حتى لا تختفي النقاط #}
+          {% if product %}
+            {% set prod_name = safeget(product, 'name') or safeget(product, 'title') or '' %}
+            {% set prod_formatted_price = safeget(product, 'formatted_sale_price') or safeget(product, 'formatted_price') %}
+            {% set prod_formatted_sale_price = safeget(product, 'formatted_sale_price') %}
+            {% set _has_sale = prod_formatted_sale_price is not none and prod_formatted_sale_price != '' and prod_formatted_sale_price != prod_formatted_price %}
+            {% set prod_price = prod_formatted_sale_price if _has_sale else (prod_formatted_price or '') %}
+            {% set prod_old_price = (safeget(product, 'formatted_price') or '') if _has_sale else '' %}
+            {% set prod_slug = safeget(product, 'slug') or '' %}
+            {% set prod_url = '/products/' ~ prod_slug if prod_slug else '#' %}
+            {% set prod_img =
+              safeget(product, 'main_image.image.small')
+              or safeget(product, 'main_image.image.medium')
+              or safeget(product, 'image_url')
+              or safeget(product, 'thumbnail_url')
+              or '' %}
+            {% set x_web = (safeget(hotspot, 'x') | default(50)) | float %}
+            {% set y_web = (safeget(hotspot, 'y') | default(50)) | float %}
+            {% set x_mob = (safeget(hotspot, 'x_mobile') | default(50)) | float %}
+            {% set y_mob = (safeget(hotspot, 'y_mobile') | default(50)) | float %}
+            <button type="button"
+                    class="hotspot-products-dot"
+                    aria-label="{{ _('View product: %s') | format(prod_name) }}"
+                    aria-expanded="false"
+                    aria-controls="hotspot-products-card-{{ sectionId }}"
+                    data-product-name="{{ prod_name | e }}"
+                    data-product-price="{{ prod_price | e }}"
+                    data-product-old-price="{{ prod_old_price | e }}"
+                    data-product-image="{{ prod_img | e }}"
+                    data-product-url="{{ prod_url | e }}"
+                    data-index="{{ loop.index0 }}"
+                    style="--dot-x: {{ (x_web | round(2)) }}%; --dot-y: {{ (y_web | round(2)) }}%; --dot-x-mobile: {{ (x_mob | round(2)) }}%; --dot-y-mobile: {{ (y_mob | round(2)) }}%;">
+              <span class="hotspot-products-dot-inner"></span>
+            </button>
+          {% endif %}
+        {% endfor %}
+
+        <div class="hotspot-products-card"
+             id="hotspot-products-card-{{ sectionId }}"
+             role="dialog"
+             aria-modal="true"
+             aria-label="{{ _('Product card') }}"
+             aria-hidden="true"
+             hidden>
+          <div class="hotspot-products-card-inner">
+            <a class="hotspot-products-card-link" href="#" data-card-link>
+              <img class="hotspot-products-card-img" src="" alt="" width="120" height="120" data-card-img>
+              <div class="hotspot-products-card-content">
+                <h3 class="hotspot-products-card-title" data-card-title></h3>
+                <p class="hotspot-products-card-price " data-card-price></p>
+                <p class="hotspot-products-card-old-price" data-card-old-price></p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% if has_content %}
+<style>
+  .hotspot-products-section {
+    --primary-color: var(--primary-color, #333);
+    --hotspot-color: var(--hotspot-color, #fff);
+    --hotspot-size: var(--hotspot-size, 12px);
+    --hotspot-shadow: 0 0 0 2px rgba(255,255,255,0.5), 0 2px 8px rgba(0,0,0,0.12);
+    --card-bg: var(--card-bg, #f7f0ed);
+    --card-shadow: var(--card-shadow, 0 4px 20px rgba(0,0,0,0.08));
+    --card-title-color: var(--card-title-color, #222);
+    --card-price-color: var(--card-price-color, var(--primary-color));
+    --card-old-price-color: var(--card-old-price-color, #6B6B6B);
+    --card-radius: var(--card-radius, 12px);
+  }
+  .hotspot-products-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--text-color, #333);
+    text-align: center;
+    margin: 0 0 24px;
+  }
+  .hotspot-products-image-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 80vh;
+    overflow: hidden;
+    border-radius: 8px;
+    background: var(--secondary-color-alt13, #f0f0f0);
+  }
+  .hotspot-products-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .hotspot-products-dot {
+    position: absolute;
+    width: var(--hotspot-size);
+    height: var(--hotspot-size);
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    background: transparent;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    z-index: 2;
+    box-shadow: var(--hotspot-shadow);
+    /* إبقاء النقطة داخل حدود الصورة (المركز بين 4% و 96%) */
+    left: clamp(4%, var(--dot-x, 50%), 96%) !important;
+    top: clamp(4%, var(--dot-y, 50%), 96%) !important;
+  }
+  .hotspot-products-dot:hover {
+    transform: translate(-50%, -50%) scale(1.15);
+    box-shadow: 0 0 0 3px var(--hotspot-color), 0 4px 12px rgba(0,0,0,0.15);
+  }
+  .hotspot-products-dot-inner {
+    display: block;
+    width:  100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--hotspot-color, #fff);
+    animation: hotspot-pulse 2s ease-in-out infinite;
+  }
+  @keyframes hotspot-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.85; transform: scale(1.1); }
+  }
+  .hotspot-products-card {
+    position: absolute;
+    z-index: 2;
+    width: 280px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+  }
+  .hotspot-products-card[aria-hidden="false"] {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  .hotspot-products-card-inner {
+    position: relative;
+    background: #ffffff45;
+    backdrop-filter: blur(4px);
+    border-radius: var(--card-radius);
+    padding: 10px;
+    border: 1px solid rgb(159 159 159 / 40%);
+  }
+  .hotspot-products-card-link {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    text-decoration: none;
+    color: inherit;
+  }
+  .hotspot-products-card-img {
+    width: 65px;
+    height: 65px;
+    min-width: 65px;
+    object-fit: contain;
+    background: rgba(255,255,255,0.5);
+    border-radius: 10px;
+  }
+  .hotspot-products-card-content {
+    flex: 1;
+    min-width: 0;
+  }
+  .hotspot-products-card-title {
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0 0 6px;
+    color: var(--card-title-color);
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    max-width: 90%;
+  }
+  .hotspot-products-card-price {
+    font-size: 15px;
+    font-weight: 500;
+    margin: 0 0 2px;
+    color: var(--card-price-color);
+  }
+  .hotspot-products-card-old-price {
+    font-size: 13px;
+    color: var(--card-old-price-color);
+    margin: 0;
+    text-decoration: line-through;
+  }
+  @media (min-width: 992px) {
+    .hotspot-products-card {
+      transform-origin: center center;
+    }
+  }
+  @media (max-width: 991px) {
+    .hotspot-products-card {
+      bottom: auto;
+      margin-top: 0;
+    }
+  }
+  @media (max-width: 767px) {
+    .hotspot-products-card-img {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+  }
+    .hotspot-products-title {
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+    .hotspot-products-image-wrap {
+      aspect-ratio: 4 / 3;
+    }
+    .hotspot-products-dot {
+      left: clamp(4%, var(--dot-x-mobile, 50%), 96%) !important;
+      top: clamp(4%, var(--dot-y-mobile, 50%), 96%) !important;
+    }
+    .hotspot-products-card {
+      width: calc(100vw - 32px);
+      max-width: 280px;
+    }
+    .hotspot-products-card-title {
+      font-size: 14px;
+    }
+    .hotspot-products-card-price {
+      font-size: 15px;
+    }
+    .hotspot-products-card-old-price {
+      font-size: 12px;
+    }
+  }
+</style>
+
+<script>
+(function() {
+  var sectionEl = document.querySelector('[section-id="{{ sectionId }}"]');
+  if (!sectionEl) return;
+
+  var card = sectionEl.querySelector('.hotspot-products-card');
+  var dots = sectionEl.querySelectorAll('.hotspot-products-dot');
+  var cardLink = sectionEl.querySelector('[data-card-link]');
+  var triggerType = '{{ settings.trigger_type | default("click") }}';
+
+  if (!card) return;
+
+  var cardImg = card.querySelector('[data-card-img]');
+  var cardTitle = card.querySelector('[data-card-title]');
+  var cardPrice = card.querySelector('[data-card-price]');
+  var cardOldPrice = card.querySelector('[data-card-old-price]');
+  var coordTooltip = sectionEl.querySelector('.hotspot-coord-tooltip');
+  var imgWrap = sectionEl.querySelector('.hotspot-products-image-wrap');
+
+  var isEditingMode = {{ 'true' if store.editing_mode else 'false' }};
+  var isFromDashboard = window.location.origin === 'https://dashboard.zid.sa' || window.location.href.indexOf('zid_preview=1') > -1;
+  var shouldShowHelper = isEditingMode || isFromDashboard;
+
+  if (!dots.length && !shouldShowHelper) return;
+
+  if (window.console) {
+    console.log('[Hotspots Debug] URL:', window.location.href);
+    console.log('[Hotspots Debug] isFromDashboard:', isFromDashboard);
+    console.log('[Hotspots Debug] shouldShowHelper:', shouldShowHelper);
+  }
+
+  if (shouldShowHelper && coordTooltip && imgWrap) {
+    imgWrap.addEventListener('mousemove', function(e) {
+      if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
+
+      var rect = imgWrap.getBoundingClientRect();
+      var x = ((e.clientX - rect.left) / rect.width * 100).toFixed(2);
+      var y = ((e.clientY - rect.top) / rect.height * 100).toFixed(2);
+
+      coordTooltip.textContent = 'X: ' + x + '%, Y: ' + y + '%';
+      coordTooltip.style.left = (e.clientX - rect.left + 15) + 'px';
+      coordTooltip.style.top = (e.clientY - rect.top + 15) + 'px';
+      coordTooltip.style.display = 'block';
+    });
+
+    imgWrap.addEventListener('mouseleave', function() {
+      coordTooltip.style.display = 'none';
+    });
+  }
+
+  function getViewportWidth() {
+    return window.innerWidth || document.documentElement.clientWidth;
+  }
+
+  function positionCard(triggerRect, cardEl) {
+    var vw = getViewportWidth();
+    var wrap = sectionEl.querySelector('.hotspot-products-image-wrap');
+    if (!wrap) return;
+
+    var wrapRect = wrap.getBoundingClientRect();
+    var gap = 16;
+    var padding = 8;
+
+    var triggerCenterX = triggerRect.left - wrapRect.left + triggerRect.width / 2;
+    var triggerCenterY = triggerRect.top - wrapRect.top + triggerRect.height / 2;
+
+    var cardRect = cardEl.getBoundingClientRect();
+    var cardWidth = 280;
+    var cardHeight = cardRect.height || 140;
+
+    function clampCardInWrap(left, top) {
+      var minLeft = padding;
+      var maxLeft = wrapRect.width - cardWidth - padding;
+      var minTop = padding;
+      var maxTop = wrapRect.height - cardHeight - padding;
+
+      left = Math.max(minLeft, Math.min(maxLeft, left));
+      top = Math.max(minTop, Math.min(maxTop, top));
+
+      return { left: left, top: top };
+    }
+
+    if (vw >= 992) {   
+      var rtl = document.documentElement.getAttribute('dir') === 'rtl';
+      var left = rtl ? triggerCenterX - cardWidth - gap : triggerCenterX + gap;
+
+      if (rtl && triggerCenterX < cardWidth + gap) left = triggerCenterX + gap;
+      if (!rtl && (wrapRect.width - triggerCenterX) < cardWidth + gap) {
+        left = triggerCenterX - cardWidth - gap;
+      }
+
+      var top = triggerCenterY - cardHeight / 2;
+      var clamped = clampCardInWrap(left, top);
+
+      cardEl.style.left = clamped.left + 'px';
+      cardEl.style.top = clamped.top + 'px';
+    } else {
+      var left = (wrapRect.width - cardWidth) / 2;
+      var top = triggerRect.bottom - wrapRect.top + 12;
+
+      var clamped = clampCardInWrap(left, top);
+
+      cardEl.style.left = clamped.left + 'px';
+      cardEl.style.top = clamped.top + 'px';
+    }
+  }
+
+  function openCard(btn) {
+    var name = btn.getAttribute('data-product-name') || '';
+    var price = btn.getAttribute('data-product-price') || '';
+    var oldPrice = btn.getAttribute('data-product-old-price') || '';
+    var img = btn.getAttribute('data-product-image') || '';
+    var url = btn.getAttribute('data-product-url') || '#';
+
+    if (cardTitle) cardTitle.textContent = name;
+    if (cardPrice) cardPrice.textContent = price;
+
+    if (cardOldPrice) {
+      cardOldPrice.textContent = oldPrice;
+      cardOldPrice.style.display = oldPrice ? '' : 'none';
+    }
+
+    if (cardImg) {
+      cardImg.src = img;
+      cardImg.alt = name;
+    }
+
+    if (cardLink) cardLink.href = url;
+
+    card.removeAttribute('hidden');
+    card.setAttribute('aria-hidden', 'false');
+
+    dots.forEach(function(d) {
+      d.setAttribute('aria-expanded', d === btn ? 'true' : 'false');
+    });
+
+    requestAnimationFrame(function() {
+      var rect = btn.getBoundingClientRect();
+      positionCard(rect, card);
+    });
+  }
+
+  function closeCard() {
+    card.setAttribute('hidden', '');
+    card.setAttribute('aria-hidden', 'true');
+
+    dots.forEach(function(d) {
+      d.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  dots.forEach(function(btn) {
+    if (triggerType === 'hover') {
+      btn.addEventListener('mouseenter', function() { openCard(btn); });
+
+      imgWrap.addEventListener('mouseleave', function(e) {
+        if (!card.contains(e.relatedTarget)) closeCard();
+      });
+
+      card.addEventListener('mouseleave', function(e) {
+        if (!btn.contains(e.relatedTarget)) closeCard();
+      });
+    } else {
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+
+        var isOpen = card.getAttribute('aria-hidden') === 'false';
+        var expanded = sectionEl.querySelector('.hotspot-products-dot[aria-expanded="true"]');
+
+        if (isOpen && expanded === btn) closeCard();
+        else openCard(btn);
+      });
+    }
+  });
+
+  document.addEventListener('click', function(e) {
+    if (triggerType === 'click' && !card.contains(e.target) && !sectionEl.contains(e.target)) {
+      closeCard();
+    }
+  });
+
+  window.addEventListener('resize', function() {
+    if (card.getAttribute('aria-hidden') !== 'false') return;
+
+    var expanded = sectionEl.querySelector('.hotspot-products-dot[aria-expanded="true"]');
+    if (expanded) positionCard(expanded.getBoundingClientRect(), card);
+  });
+
+})();
+</script>
+{% endif %}

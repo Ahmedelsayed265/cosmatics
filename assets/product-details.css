@@ -2297,7 +2297,6 @@ th {
 .fbt-container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
 .fbt-items-row {
@@ -2442,4 +2441,109 @@ th {
   .fbt-item {
     flex: 0 0 140px;
   }
+}
+
+.fbt-section {
+  margin-top: 25px;
+  border-top: 1px solid #eee;
+  padding-top: 20px;
+}
+.fbt-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: start;
+}
+.fbt-products-wrapper {
+  position: relative;
+}
+.fbt-loading {
+  text-align: center;
+  padding: 10px;
+}
+.fbt-products-slider {
+  display: none;
+  padding-bottom: 10px;
+}
+.fbt-checkbox-wrap {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 20;
+}
+[dir="rtl"] .fbt-checkbox-wrap {
+  right: 10px;
+  left: auto;
+}
+.fbt-checkbox {
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  accent-color: var(--primary-color, #e11d48);
+  border-radius: 4px;
+}
+.fbt-plus-icon {
+  position: absolute;
+  top: calc(var(--outlit-card-img-height, 280px) / 2);
+  left: -22px;
+  transform: translateY(-50%);
+  font-size: 24px;
+  color: #3b2a52;
+  z-index: 5;
+  font-weight: 300;
+}
+[dir="ltr"] .fbt-plus-icon {
+  left: auto;
+  right: -26px;
+}
+.fbt-total-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  color: var(--primary-color);
+  margin-top: 12px;
+}
+.fbt-total-label {
+  font-weight: 500;
+  font-size: 20px;
+}
+.fbt-total-price-group {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+.fbt-total-price-old {
+  font-size: 15px;
+  text-decoration: line-through;
+  color: #a1a1b1;
+  display: none;
+  font-weight: 400;
+}
+.fbt-total-price {
+  font-weight: 700;
+  font-size: 20px;
+}
+.btn-fbt-add-all {
+  width: 100%;
+  height: 48px;
+  border-radius: 12px;
+  background: #f1f0f7;
+  color: #6c558e;
+  border: none;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15px;
+  transition: 0.2s;
+}
+.btn-fbt-add-all:hover {
+  background: #e9e7f2;
+}
+.btn-fbt-add-all:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
