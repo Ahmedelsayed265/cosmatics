@@ -4230,6 +4230,13 @@ button {
       border-radius: 16px;
       overflow: hidden;
 
+      @media screen and (max-width: 768px) {
+        flex: 1 1 35%;
+        min-width: 150px;
+        border-radius: 16px;
+        overflow: hidden;
+      }
+
       @media screen and (max-width: 576px) {
         flex: 1 1 35%;
         min-width: 68px;
@@ -4347,7 +4354,7 @@ button {
 }
 
 .s_block {
-  padding: 40px 0;
+  padding: 40px 0 0;
 }
 
 .view-all-header {

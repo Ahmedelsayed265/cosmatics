@@ -10,6 +10,7 @@
     {
       "type": "list",
       "id": "banners",
+      "max_items": 6,
       "label": {
         "ar": "البانرات",
         "en": "Banners"

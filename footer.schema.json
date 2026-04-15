@@ -50,6 +50,7 @@
         {
           "id": "links",
           "type": "list",
+          "max_items": 10,
           "label": {
             "ar": "الروابط",
             "en": "Links"
@@ -102,6 +103,7 @@
         {
           "id": "links",
           "type": "list",
+          "max_items": 10,
           "label": {
             "ar": "الروابط",
             "en": "Links"

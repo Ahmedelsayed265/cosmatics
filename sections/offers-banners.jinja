@@ -2,12 +2,12 @@
 
 <section class="offers-banners-section s_block" id="{{ sectionId }}" section-id="{{ sectionId }}">
     <div class="container-fluid">
-        {% if settings.title %}
+        {%if settings.title%}
         <div class="view-all-header">
             <h2 class="section-title" style="text-align: center; width: 100%; margin-bottom: 16px;">{{ settings.title }}
             </h2>
         </div>
-        {% endif %}
+        {%endif%}
 
         <div class="swiper offers-coupons-slider"
             data-autoplay="{{ (settings.slider_autoplay | default(false)) | lower }}"

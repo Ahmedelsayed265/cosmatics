@@ -43,6 +43,7 @@
     {
       "type": "list",
       "id": "logos",
+      "max_items": 12,
       "label": { "ar": "قائمة الشعارات", "en": "Logo List" },
       "settings": [
         {

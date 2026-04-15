@@ -10,6 +10,7 @@
     {
       "id": "right_banners",
       "type": "list",
+      "max_items": 4,
       "label": {
         "ar": "البانرات اليمنى",
         "en": "Right Banners"
@@ -68,6 +69,7 @@
     {
       "id": "left_banners",
       "type": "list",
+      "max_items": 4,
       "label": {
         "ar": "البانرات اليسرى",
         "en": "Left Banners"

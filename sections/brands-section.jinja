@@ -1,5 +1,6 @@
 <section class="brands-section s_block" id="{{ sectionId }}" section-id="{{ sectionId }}">
     <div class="container-fluid">
+        {%if settings.title%}
         <div class="view-all-header">
             <h2 class="section-title">{{ settings.title }}</h2>
 
@@ -9,6 +10,7 @@
             </a>
             {% endif %}
         </div>
+        {%endif%}
 
         <div class="swiper brands-slider" data-autoplay="{{ (settings.slider_autoplay | default(false)) | lower }}"
             data-delay="{{ settings.slider_autoplay_delay | default(0) }}">

@@ -55,6 +55,7 @@
     {
       "id": "brands",
       "type": "list",
+      "max_items": 12,
       "label": { "ar": "الماركات", "en": "Brands" },
       "settings": [
         {

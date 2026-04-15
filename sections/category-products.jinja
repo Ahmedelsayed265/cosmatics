@@ -27,13 +27,15 @@
 
 <section class="category-products s_block" id="{{ sectionId }}" section-id="{{ sectionId }}">
     <div class="container-fluid">
-        <div class="view-all-header">
-            <h2>{{ settings.title }}</h2>
+        {%if settings.title%}
+            <div class="view-all-header">
+                <h2>{{ settings.title }}</h2>
 
-            {% if settings.view_all_url %}
-            <a href="{{ settings.view_all_url }}">{{ settings.view_all_text }}</a>
-            {% endif %}
-        </div>
+                {% if settings.view_all_url %}
+                <a href="{{ settings.view_all_url }}">{{ settings.view_all_text }}</a>
+                {% endif %}
+            </div>
+        {%endif%}
 
         <div class="swiper category-products-slider"
              data-autoplay="{{ (settings.slider_autoplay | default(false)) | lower }}"

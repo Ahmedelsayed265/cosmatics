@@ -28,6 +28,7 @@
     {
       "id": "col_1_items",
       "type": "list",
+      "max_items": 16,
       "label": { "ar": "بنرات العمود 1", "en": "Col 1 Banners" },
       "settings": [
         {
@@ -64,6 +65,7 @@
     {
       "id": "col_2_items",
       "type": "list",
+      "max_items": 16,
       "label": { "ar": "بنرات العمود 2", "en": "Col 2 Banners" },
       "settings": [
         {
@@ -95,6 +97,7 @@
     {
       "id": "col_3_items",
       "type": "list",
+      "max_items": 16,
       "label": {
         "ar": "بنرات العمود 3",
         "en": "Col 3 Banners"

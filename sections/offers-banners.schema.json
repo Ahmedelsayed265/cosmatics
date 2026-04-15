@@ -44,6 +44,7 @@
     {
       "id": "items",
       "type": "list",
+      "max_items": 12,
       "label": { "ar": "العروض", "en": "Offers" },
       "settings": [
         {

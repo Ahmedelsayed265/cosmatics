@@ -15,8 +15,8 @@
     {
       "type": "list",
       "id": "banners",
+      "max_items": 4,
       "label": { "ar": "قائمة الصور", "en": "Banners List" },
-      "max": 4,
       "settings": [
         {
           "type": "image",

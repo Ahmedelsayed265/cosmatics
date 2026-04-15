@@ -10,6 +10,7 @@
    {
     "type": "list",
     "id": "categories",
+    "max_items": 12,
     "label": {
       "ar": "الأقسام",
       "en": "Categories"

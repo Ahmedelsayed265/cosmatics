@@ -44,6 +44,7 @@
     {
       "type": "list",
       "id": "reviews",
+      "max_items": 12,
       "label": { "ar": "قائمة الآراء", "en": "Reviews List" },
       "settings": [
         {

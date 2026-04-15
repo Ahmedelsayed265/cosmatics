@@ -18,6 +18,7 @@
     {
       "id": "hero_slider",
       "type": "list",
+      "max_items": 5,
       "label": {
         "ar": "الشرائح",
         "en": "Slides"

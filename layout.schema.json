@@ -603,6 +603,7 @@
         {
           "id": "bundles",
           "type": "list",
+          "max_items": 10,
           "label": {
             "ar": "قائمة المنتجات المترابطة",
             "en": "Related Bundles List"
@@ -619,6 +620,7 @@
             {
               "id": "bundle_source",
               "type": "list",
+              "max_items": 6,
               "label": {
                 "ar": "المنتجات المقترحة (تصنيف أو منتجات)",
                 "en": "Suggested Products (Category or products)"

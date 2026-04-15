@@ -1,5 +1,6 @@
 <section class="month-brands s_block" id="{{ sectionId }}" section-id="{{ sectionId }}">
     <div class="container-fluid">
+        {%if settings.title%}
         <div class="view-all-header">
             <h2 class="section-title">{{ settings.title }}</h2>
 
@@ -7,6 +8,7 @@
             <a href="{{ settings.view_all_url }}" class="view-all-link">{{ settings.view_all_text }}</a>
             {% endif %}
         </div>
+        {%endif%}
 
         <div class="swiper month-brands-slider" 
              data-autoplay="{{ (settings.slider_autoplay | default(false)) | lower }}"

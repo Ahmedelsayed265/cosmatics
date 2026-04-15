@@ -26,6 +26,7 @@
     {
       "type": "list",
       "id": "features_bar_list",
+      "max_items": 10,
       "label": {
         "ar": "الاعلان",
         "en": "Advertisement"

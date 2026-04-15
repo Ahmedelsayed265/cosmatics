@@ -53,6 +53,7 @@
     {
       "type": "list",
       "id": "items",
+      "max_items": 12,
       "label": {
         "ar": "العناصر",
         "en": "Items"

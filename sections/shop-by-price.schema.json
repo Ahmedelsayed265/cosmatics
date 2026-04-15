@@ -43,6 +43,7 @@
     {
       "id": "prices",
       "type": "list",
+      "max_items": 12,
       "label": { "ar": "الاسعار", "en": "Prices" },
       "settings": [
         {
