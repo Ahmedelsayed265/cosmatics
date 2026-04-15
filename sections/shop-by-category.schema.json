@@ -8,6 +8,49 @@
   },
   "settings": [
     {
+      "type": "select",
+      "id": "desktop_layout",
+      "label": {
+        "ar": "تنسيق النسخة المكتبية",
+        "en": "Desktop Layout"
+      },
+      "options": [
+        {
+          "label": {
+            "ar": "عرض مرن (Flex)",
+            "en": "Flex Mode"
+          },
+          "value": "flex"
+        },
+        {
+          "label": {
+            "ar": "سلايدر (Swiper)",
+            "en": "Swiper Mode"
+          },
+          "value": "swiper"
+        }
+      ],
+      "default": "flex"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": {
+        "ar": "إظهار الأسهم (في وضع السلايدر)",
+        "en": "Show Arrows (in Swiper mode)"
+      },
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination",
+      "label": {
+        "ar": "إظهار النقاط (في وضع السلايدر)",
+        "en": "Show Pagination (in Swiper mode)"
+      },
+      "default": false
+    },
+    {
       "type": "text",
       "id": "title",
       "label": {
@@ -18,6 +61,7 @@
     {
       "type": "list",
       "id": "categories",
+      "max_items": 16,
       "label": {
         "ar": "الأقسام",
         "en": "Categories"

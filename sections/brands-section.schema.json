@@ -41,18 +41,6 @@
       "default": 0
     },
     {
-      "id": "slider_show_arrows",
-      "type": "checkbox",
-      "label": { "ar": "إظهار أسهم التنقل", "en": "Show Navigation Arrows" },
-      "default": false
-    },
-    {
-      "id": "slider_show_pagination",
-      "type": "checkbox",
-      "label": { "ar": "إظهار نقاط الترقيم", "en": "Show Pagination" },
-      "default": false
-    },
-    {
       "type": "list",
       "id": "logos",
       "label": { "ar": "قائمة الشعارات", "en": "Logo List" },

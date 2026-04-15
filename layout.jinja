@@ -215,6 +215,11 @@
         --product-card-discount-color: {{ _discount_color }};
       {% endif %}
 
+      {% set _discount_bg = safeget(settings, 'product_card_control_product_Discount_percentage_background_color') %}
+      {% if _discount_bg %}
+        --product-card-discount-bg: {{ _discount_bg }};
+      {% endif %}
+
       {% set _btn_color = safeget(settings, 'product_card_control_product_card_add_to_cart_button_color') %}
       {% if _btn_color %}
         --product-card-add-to-cart-bg: {{ _btn_color }};

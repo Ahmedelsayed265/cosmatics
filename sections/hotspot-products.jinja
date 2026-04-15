@@ -13,7 +13,7 @@
 
 <section id="{{ sectionId }}"
          section-id="{{ sectionId }}"
-         class="hotspot-products-section mrg"
+         class="hotspot-products-section mrg mt-4 mb-4"
          aria-labelledby="hotspot-products-heading-{{ sectionId }}"
          data-alt-fallback="{{ section_title | e }}"
          style="
@@ -50,10 +50,6 @@
                  fetchpriority="low">
           </picture>
         {% endif %}
-
-        <div class="hotspot-coord-tooltip"
-             style="display: none; position: absolute; z-index: 100; pointer-events: none; background: rgba(0,0,0,0.8); color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-family: sans-serif; white-space: nowrap;">
-        </div>
 
         {% for hotspot in hotspots_list %}
           {% set product = safeget(hotspot, 'product') %}
@@ -317,39 +313,9 @@
   var cardTitle = card.querySelector('[data-card-title]');
   var cardPrice = card.querySelector('[data-card-price]');
   var cardOldPrice = card.querySelector('[data-card-old-price]');
-  var coordTooltip = sectionEl.querySelector('.hotspot-coord-tooltip');
   var imgWrap = sectionEl.querySelector('.hotspot-products-image-wrap');
 
-  var isEditingMode = {{ 'true' if store.editing_mode else 'false' }};
-  var isFromDashboard = window.location.origin === 'https://dashboard.zid.sa' || window.location.href.indexOf('zid_preview=1') > -1;
-  var shouldShowHelper = isEditingMode || isFromDashboard;
-
-  if (!dots.length && !shouldShowHelper) return;
-
-  if (window.console) {
-    console.log('[Hotspots Debug] URL:', window.location.href);
-    console.log('[Hotspots Debug] isFromDashboard:', isFromDashboard);
-    console.log('[Hotspots Debug] shouldShowHelper:', shouldShowHelper);
-  }
-
-  if (shouldShowHelper && coordTooltip && imgWrap) {
-    imgWrap.addEventListener('mousemove', function(e) {
-      if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
-
-      var rect = imgWrap.getBoundingClientRect();
-      var x = ((e.clientX - rect.left) / rect.width * 100).toFixed(2);
-      var y = ((e.clientY - rect.top) / rect.height * 100).toFixed(2);
-
-      coordTooltip.textContent = 'X: ' + x + '%, Y: ' + y + '%';
-      coordTooltip.style.left = (e.clientX - rect.left + 15) + 'px';
-      coordTooltip.style.top = (e.clientY - rect.top + 15) + 'px';
-      coordTooltip.style.display = 'block';
-    });
-
-    imgWrap.addEventListener('mouseleave', function() {
-      coordTooltip.style.display = 'none';
-    });
-  }
+  if (!dots.length) return;
 
   function getViewportWidth() {
     return window.innerWidth || document.documentElement.clientWidth;

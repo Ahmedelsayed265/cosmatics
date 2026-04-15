@@ -12,53 +12,49 @@
                     </div>
                     {% endif %}
                     <p>{{ settings.about_us_des | safe }}</p>
-                    <div class="social-icons social-icons-mobile d-flex flex-wrap footer-social-block">
+                     <div class="social-icons d-flex flex-wrap footer-social-block d-lg-none mt-3">
+
+                        {% if store.settings.contact.facebook %}
+                        <a href="https://www.facebook.com/{{ store.settings.contact.facebook }}" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" color="#000000" fill="none" stroke="#141B34" stroke-width="1.5" stroke-linejoin="round">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M6.18182 10.3333C5.20406 10.3333 5 10.5252 5 11.4444V13.1111C5 14.0304 5.20406 14.2222 6.18182 14.2222H8.54545V20.8889C8.54545 21.8081 8.74951 22 9.72727 22H12.0909C13.0687 22 13.2727 21.8081 13.2727 20.8889V14.2222H15.9267C16.6683 14.2222 16.8594 14.0867 17.0631 13.4164L17.5696 11.7497C17.9185 10.6014 17.7035 10.3333 16.4332 10.3333H13.2727V7.55556C13.2727 6.94191 13.8018 6.44444 14.4545 6.44444H17.8182C18.7959 6.44444 19 6.25259 19 5.33333V3.11111C19 2.19185 18.7959 2 17.8182 2H14.4545C11.191 2 8.54545 4.48731 8.54545 7.55556V10.3333H6.18182Z" />
+                            </svg>
+                        </a>
+                        {% endif %}
 
                         {% if store.settings.contact.instagram %}
                         <a href="https://www.instagram.com/{{ store.settings.contact.instagram }}" target="_blank">
-
-                            <svg width="44" height="44" viewBox="0 0 44 44" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M12.5 22C12.5 17.5217 12.5 15.2825 13.8912 13.8912C15.2825 12.5 17.5217 12.5 22 12.5C26.4783 12.5 28.7175 12.5 30.1088 13.8912C31.5 15.2825 31.5 17.5217 31.5 22C31.5 26.4783 31.5 28.7175 30.1088 30.1088C28.7175 31.5 26.4783 31.5 22 31.5C17.5217 31.5 15.2825 31.5 13.8912 30.1088C12.5 28.7175 12.5 26.4783 12.5 22Z"
-                                    stroke="#050505" stroke-width="1.5" stroke-linejoin="round" />
-                                <path
-                                    d="M26.5 22C26.5 24.4853 24.4853 26.5 22 26.5C19.5147 26.5 17.5 24.4853 17.5 22C17.5 19.5147 19.5147 17.5 22 17.5C24.4853 17.5 26.5 19.5147 26.5 22Z"
-                                    stroke="#050505" stroke-width="1.5" />
-                                <path d="M27.5078 16.5L27.4988 16.5" stroke="#050505" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" />
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" color="#000000" fill="none" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 12C3 7.75736 3 5.63604 4.31802 4.31802C5.63604 3 7.75736 3 12 3C16.2426 3 18.364 3 19.682 4.31802C21 5.63604 21 7.75736 21 12C21 16.2426 21 18.364 19.682 19.682C18.364 21 16.2426 21 12 21C7.75736 21 5.63604 21 4.31802 19.682C3 18.364 3 16.2426 3 12Z" />
+                                <path d="M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z" />
+                                <path d="M17.3748 6.75024H17.2498M17.4998 6.75024C17.4998 6.88832 17.3878 7.00024 17.2498 7.00024C17.1117 7.00024 16.9998 6.88832 16.9998 6.75024C16.9998 6.61217 17.1117 6.50024 17.2498 6.50024C17.3878 6.50024 17.4998 6.61217 17.4998 6.75024Z" />
                             </svg>
+                        </a>
+                        {% endif %}
 
+                        {%if store.settings.contact.twitter %}
+                        <a href="https://www.twitter.com/{{ store.settings.contact.twitter }}" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" color="#000000" fill="none" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 21L10.5484 13.4516M21 3L13.4516 10.5484M13.4516 10.5484L8 3H3L10.5484 13.4516M13.4516 10.5484L21 21H16L10.5484 13.4516" />
+                            </svg>
                         </a>
                         {% endif %}
 
                         {% if store.settings.contact.snapchat %}
                         <a href="https://www.snapchat.com/add/{{ store.settings.contact.snapchat }}" target="_blank">
-
-                            <svg width="44" height="44" viewBox="0 0 44 44" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M16.5756 17.4244C16.5756 14.4286 19.0042 12 22 12C24.9958 12 27.4244 14.4286 27.4244 17.4244C27.4244 22.1722 27.6611 24.5456 32 26.4444C29.7778 27 29.2222 27.5556 28.6667 29.7778C24.7778 29.7778 24.2222 32 22 32C19.7778 32 19.2222 29.7778 15.3333 29.7778C14.7778 27.5556 14.2222 27 12 26.4444C16.3389 24.5456 16.5756 22.1722 16.5756 17.4244Z"
-                                    stroke="#050505" stroke-width="1.5" stroke-linecap="round"
-                                    stroke-linejoin="round" />
-                                <path d="M12 26C15.8236 23.9171 15.8236 21.9503 12.9559 19" stroke="#050505"
-                                    stroke-width="1.5" stroke-linecap="round" />
-                                <path d="M32 26C28.1764 23.9171 28.1764 21.9503 31.0441 19" stroke="#050505"
-                                    stroke-width="1.5" stroke-linecap="round" />
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" color="#000000" fill="none" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M6.57556 7.42444C6.57556 4.42861 9.00416 2 12 2C14.9958 2 17.4244 4.42861 17.4244 7.42444C17.4244 12.1722 17.6611 14.5456 22 16.4444C19.7778 17 19.2222 17.5556 18.6667 19.7778C14.7778 19.7778 14.2222 22 12 22C9.77778 22 9.22222 19.7778 5.33333 19.7778C4.77778 17.5556 4.22222 17 2 16.4444C6.33889 14.5456 6.57556 12.1722 6.57556 7.42444Z" />
+                                <path d="M2 16C5.82356 13.9171 5.82356 11.9503 2.95589 9" />
+                                <path d="M22 16C18.1764 13.9171 18.1764 11.9503 21.0441 9" />
                             </svg>
                         </a>
                         {% endif %}
+
                         {% if store.settings.contact.tiktok %}
                         <a href="https://www.tiktok.com/@{{ store.settings.contact.tiktok }}" target="_blank">
-
-                            <svg width="44" height="44" viewBox="0 0 44 44" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M12.5 22C12.5 17.5217 12.5 15.2825 13.8912 13.8912C15.2825 12.5 17.5217 12.5 22 12.5C26.4783 12.5 28.7175 12.5 30.1088 13.8912C31.5 15.2825 31.5 17.5217 31.5 22C31.5 26.4783 31.5 28.7175 30.1088 30.1088C28.7175 31.5 26.4783 31.5 22 31.5C17.5217 31.5 15.2825 31.5 13.8912 30.1088C12.5 28.7175 12.5 26.4783 12.5 22Z"
-                                    stroke="#050505" stroke-width="1.5" stroke-linejoin="round" />
-                                <path
-                                    d="M20.3938 21.7779C20.8038 21.8365 21.1838 21.5517 21.2424 21.1416C21.3011 20.7316 21.0162 20.3517 20.6062 20.293L20.5 21.0354L20.3938 21.7779ZM27.5 20.25C27.9142 20.25 28.25 19.9142 28.25 19.5C28.25 19.0858 27.9142 18.75 27.5 18.75V19.5V20.25ZM24.25 16C24.25 15.5858 23.9142 15.25 23.5 15.25C23.0858 15.25 22.75 15.5858 22.75 16H23.5H24.25ZM23.5 24.5H22.75C22.75 26.0188 21.5188 27.25 20 27.25V28V28.75C22.3472 28.75 24.25 26.8472 24.25 24.5H23.5ZM20 28V27.25C18.4812 27.25 17.25 26.0188 17.25 24.5H16.5H15.75C15.75 26.8472 17.6528 28.75 20 28.75V28ZM16.5 24.5H17.25C17.25 22.9812 18.4812 21.75 20 21.75V21V20.25C17.6528 20.25 15.75 22.1528 15.75 24.5H16.5ZM20 21V21.75C20.1341 21.75 20.2656 21.7595 20.3938 21.7779L20.5 21.0354L20.6062 20.293C20.4078 20.2646 20.2054 20.25 20 20.25V21ZM27.5 19.5V18.75C26.7254 18.75 25.8924 18.4308 25.2559 17.8992C24.62 17.3682 24.25 16.6883 24.25 16H23.5H22.75C22.75 17.2446 23.4135 18.3148 24.2944 19.0505C25.1746 19.7857 26.3416 20.25 27.5 20.25V19.5ZM23.5 16H22.75V24.5H23.5H24.25V16H23.5Z"
-                                    fill="#050505" />
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" color="#000000" fill="none" stroke="#141B34" stroke-width="1.5" stroke-linejoin="round">
+                                <path d="M2.5 12C2.5 7.52166 2.5 5.28249 3.89124 3.89124C5.28249 2.5 7.52166 2.5 12 2.5C16.4783 2.5 18.7175 2.5 20.1088 3.89124C21.5 5.28249 21.5 7.52166 21.5 12C21.5 16.4783 21.5 18.7175 20.1088 20.1088C18.7175 21.5 16.4783 21.5 12 21.5C7.52166 21.5 5.28249 21.5 3.89124 20.1088C2.5 18.7175 2.5 16.4783 2.5 12Z" />
+                                <path d="M10.5359 11.0075C9.71585 10.8916 7.84666 11.0834 6.93011 12.7782C6.01355 14.4729 6.9373 16.2368 7.51374 16.9069C8.08298 17.5338 9.89226 18.721 11.8114 17.5619C12.2871 17.2746 12.8797 17.0603 13.552 14.8153L13.4738 5.98145C13.3441 6.95419 14.4186 9.23575 17.478 9.5057" />
                             </svg>
                         </a>
                         {% endif %}
@@ -158,55 +154,52 @@
                         </p>
                         {% endif %}
                     </div>
-                    <h3 class="footer-follow-title pb-2 mt-5">{% if settings.follow_us_title %}{{ settings.follow_us_title
+                    <h3 class="footer-follow-title pb-2 mt-5">{% if settings.follow_us_title %}{{
+                        settings.follow_us_title
                         }}{% else %}{{ _("Follow us") }}{% endif %}</h3>
                     <div class="social-icons d-flex flex-wrap footer-social-block">
 
+                        {% if store.settings.contact.facebook %}
+                        <a href="https://www.facebook.com/{{ store.settings.contact.facebook }}" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" color="#000000" fill="none" stroke="#141B34" stroke-width="1.5" stroke-linejoin="round">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M6.18182 10.3333C5.20406 10.3333 5 10.5252 5 11.4444V13.1111C5 14.0304 5.20406 14.2222 6.18182 14.2222H8.54545V20.8889C8.54545 21.8081 8.74951 22 9.72727 22H12.0909C13.0687 22 13.2727 21.8081 13.2727 20.8889V14.2222H15.9267C16.6683 14.2222 16.8594 14.0867 17.0631 13.4164L17.5696 11.7497C17.9185 10.6014 17.7035 10.3333 16.4332 10.3333H13.2727V7.55556C13.2727 6.94191 13.8018 6.44444 14.4545 6.44444H17.8182C18.7959 6.44444 19 6.25259 19 5.33333V3.11111C19 2.19185 18.7959 2 17.8182 2H14.4545C11.191 2 8.54545 4.48731 8.54545 7.55556V10.3333H6.18182Z" />
+                            </svg>
+                        </a>
+                        {% endif %}
+
                         {% if store.settings.contact.instagram %}
                         <a href="https://www.instagram.com/{{ store.settings.contact.instagram }}" target="_blank">
-
-                            <svg width="44" height="44" viewBox="0 0 44 44" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M12.5 22C12.5 17.5217 12.5 15.2825 13.8912 13.8912C15.2825 12.5 17.5217 12.5 22 12.5C26.4783 12.5 28.7175 12.5 30.1088 13.8912C31.5 15.2825 31.5 17.5217 31.5 22C31.5 26.4783 31.5 28.7175 30.1088 30.1088C28.7175 31.5 26.4783 31.5 22 31.5C17.5217 31.5 15.2825 31.5 13.8912 30.1088C12.5 28.7175 12.5 26.4783 12.5 22Z"
-                                    stroke="#050505" stroke-width="1.5" stroke-linejoin="round" />
-                                <path
-                                    d="M26.5 22C26.5 24.4853 24.4853 26.5 22 26.5C19.5147 26.5 17.5 24.4853 17.5 22C17.5 19.5147 19.5147 17.5 22 17.5C24.4853 17.5 26.5 19.5147 26.5 22Z"
-                                    stroke="#050505" stroke-width="1.5" />
-                                <path d="M27.5078 16.5L27.4988 16.5" stroke="#050505" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" />
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" color="#000000" fill="none" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 12C3 7.75736 3 5.63604 4.31802 4.31802C5.63604 3 7.75736 3 12 3C16.2426 3 18.364 3 19.682 4.31802C21 5.63604 21 7.75736 21 12C21 16.2426 21 18.364 19.682 19.682C18.364 21 16.2426 21 12 21C7.75736 21 5.63604 21 4.31802 19.682C3 18.364 3 16.2426 3 12Z" />
+                                <path d="M16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12Z" />
+                                <path d="M17.3748 6.75024H17.2498M17.4998 6.75024C17.4998 6.88832 17.3878 7.00024 17.2498 7.00024C17.1117 7.00024 16.9998 6.88832 16.9998 6.75024C16.9998 6.61217 17.1117 6.50024 17.2498 6.50024C17.3878 6.50024 17.4998 6.61217 17.4998 6.75024Z" />
                             </svg>
+                        </a>
+                        {% endif %}
 
+                        {%if store.settings.contact.twitter %}
+                        <a href="https://www.twitter.com/{{ store.settings.contact.twitter }}" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" color="#000000" fill="none" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 21L10.5484 13.4516M21 3L13.4516 10.5484M13.4516 10.5484L8 3H3L10.5484 13.4516M13.4516 10.5484L21 21H16L10.5484 13.4516" />
+                            </svg>
                         </a>
                         {% endif %}
 
                         {% if store.settings.contact.snapchat %}
                         <a href="https://www.snapchat.com/add/{{ store.settings.contact.snapchat }}" target="_blank">
-
-                            <svg width="44" height="44" viewBox="0 0 44 44" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M16.5756 17.4244C16.5756 14.4286 19.0042 12 22 12C24.9958 12 27.4244 14.4286 27.4244 17.4244C27.4244 22.1722 27.6611 24.5456 32 26.4444C29.7778 27 29.2222 27.5556 28.6667 29.7778C24.7778 29.7778 24.2222 32 22 32C19.7778 32 19.2222 29.7778 15.3333 29.7778C14.7778 27.5556 14.2222 27 12 26.4444C16.3389 24.5456 16.5756 22.1722 16.5756 17.4244Z"
-                                    stroke="#050505" stroke-width="1.5" stroke-linecap="round"
-                                    stroke-linejoin="round" />
-                                <path d="M12 26C15.8236 23.9171 15.8236 21.9503 12.9559 19" stroke="#050505"
-                                    stroke-width="1.5" stroke-linecap="round" />
-                                <path d="M32 26C28.1764 23.9171 28.1764 21.9503 31.0441 19" stroke="#050505"
-                                    stroke-width="1.5" stroke-linecap="round" />
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" color="#000000" fill="none" stroke="#141B34" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M6.57556 7.42444C6.57556 4.42861 9.00416 2 12 2C14.9958 2 17.4244 4.42861 17.4244 7.42444C17.4244 12.1722 17.6611 14.5456 22 16.4444C19.7778 17 19.2222 17.5556 18.6667 19.7778C14.7778 19.7778 14.2222 22 12 22C9.77778 22 9.22222 19.7778 5.33333 19.7778C4.77778 17.5556 4.22222 17 2 16.4444C6.33889 14.5456 6.57556 12.1722 6.57556 7.42444Z" />
+                                <path d="M2 16C5.82356 13.9171 5.82356 11.9503 2.95589 9" />
+                                <path d="M22 16C18.1764 13.9171 18.1764 11.9503 21.0441 9" />
                             </svg>
                         </a>
                         {% endif %}
+
                         {% if store.settings.contact.tiktok %}
                         <a href="https://www.tiktok.com/@{{ store.settings.contact.tiktok }}" target="_blank">
-
-                            <svg width="44" height="44" viewBox="0 0 44 44" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M12.5 22C12.5 17.5217 12.5 15.2825 13.8912 13.8912C15.2825 12.5 17.5217 12.5 22 12.5C26.4783 12.5 28.7175 12.5 30.1088 13.8912C31.5 15.2825 31.5 17.5217 31.5 22C31.5 26.4783 31.5 28.7175 30.1088 30.1088C28.7175 31.5 26.4783 31.5 22 31.5C17.5217 31.5 15.2825 31.5 13.8912 30.1088C12.5 28.7175 12.5 26.4783 12.5 22Z"
-                                    stroke="#050505" stroke-width="1.5" stroke-linejoin="round" />
-                                <path
-                                    d="M20.3938 21.7779C20.8038 21.8365 21.1838 21.5517 21.2424 21.1416C21.3011 20.7316 21.0162 20.3517 20.6062 20.293L20.5 21.0354L20.3938 21.7779ZM27.5 20.25C27.9142 20.25 28.25 19.9142 28.25 19.5C28.25 19.0858 27.9142 18.75 27.5 18.75V19.5V20.25ZM24.25 16C24.25 15.5858 23.9142 15.25 23.5 15.25C23.0858 15.25 22.75 15.5858 22.75 16H23.5H24.25ZM23.5 24.5H22.75C22.75 26.0188 21.5188 27.25 20 27.25V28V28.75C22.3472 28.75 24.25 26.8472 24.25 24.5H23.5ZM20 28V27.25C18.4812 27.25 17.25 26.0188 17.25 24.5H16.5H15.75C15.75 26.8472 17.6528 28.75 20 28.75V28ZM16.5 24.5H17.25C17.25 22.9812 18.4812 21.75 20 21.75V21V20.25C17.6528 20.25 15.75 22.1528 15.75 24.5H16.5ZM20 21V21.75C20.1341 21.75 20.2656 21.7595 20.3938 21.7779L20.5 21.0354L20.6062 20.293C20.4078 20.2646 20.2054 20.25 20 20.25V21ZM27.5 19.5V18.75C26.7254 18.75 25.8924 18.4308 25.2559 17.8992C24.62 17.3682 24.25 16.6883 24.25 16H23.5H22.75C22.75 17.2446 23.4135 18.3148 24.2944 19.0505C25.1746 19.7857 26.3416 20.25 27.5 20.25V19.5ZM23.5 16H22.75V24.5H23.5H24.25V16H23.5Z"
-                                    fill="#050505" />
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" color="#000000" fill="none" stroke="#141B34" stroke-width="1.5" stroke-linejoin="round">
+                                <path d="M2.5 12C2.5 7.52166 2.5 5.28249 3.89124 3.89124C5.28249 2.5 7.52166 2.5 12 2.5C16.4783 2.5 18.7175 2.5 20.1088 3.89124C21.5 5.28249 21.5 7.52166 21.5 12C21.5 16.4783 21.5 18.7175 20.1088 20.1088C18.7175 21.5 16.4783 21.5 12 21.5C7.52166 21.5 5.28249 21.5 3.89124 20.1088C2.5 18.7175 2.5 16.4783 2.5 12Z" />
+                                <path d="M10.5359 11.0075C9.71585 10.8916 7.84666 11.0834 6.93011 12.7782C6.01355 14.4729 6.9373 16.2368 7.51374 16.9069C8.08298 17.5338 9.89226 18.721 11.8114 17.5619C12.2871 17.2746 12.8797 17.0603 13.552 14.8153L13.4738 5.98145C13.3441 6.95419 14.4186 9.23575 17.478 9.5057" />
                             </svg>
                         </a>
                         {% endif %}
@@ -216,23 +209,31 @@
             </div>
             {# 5. App download (leftmost on web - RTL) #}
             <div class="col-12 col-lg footer-footer-col footer-col-app">
+                {% if store.settings.general.one_signal.ios_app_id or
+                store.settings.general.one_signal.android_package_name%}
                 <div class="footer-about-us-links-div footer-app-download">
                     <h2 class="pb-2">{{ _("Download the App") }}</h2>
-                    <div class="icons social-apps-icons d-flex flex-column flex-lg-column align-items-start">
-                        <div class="google-app-stores apps-social-icons d-flex flex-column align-items-start">
-                            <a href="https://play.google.com/store/apps/details?id={{ store.settings.general.one_signal.android_package_name }}"
-                                target="_blank" class="mb-2">
-                                <img src="{{ 'google-play.svg' | asset_url }}" loading="lazy" alt="" width="115"
-                                    height="35">
-                            </a>
+                    <div class="icons social-apps-icons d-flex flex-wrap align-items-center"
+                        style="flex-direction: column;">
+                        <div class="google-app-stores apps-social-icons d-flex justify-content-center">
+                            {% if store.settings.general.one_signal.ios_app_id %}
                             <a href="https://apps.apple.com/app/id{{ store.settings.general.one_signal.ios_app_id }}"
                                 target="_blank">
                                 <img src="{{ 'app-store.svg' | asset_url }}" loading="lazy" alt="" width="115"
                                     height="35">
                             </a>
+                            {% endif %}
+                            {% if store.settings.general.one_signal.android_package_name %}
+                            <a href="https://play.google.com/store/apps/details?id={{ store.settings.general.one_signal.android_package_name }}"
+                                target="_blank">
+                                <img src="{{ 'google-play.svg' | asset_url }}" loading="lazy" alt="" width="115"
+                                    height="35">
+                            </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -290,7 +291,8 @@
                 <div
                     class="d-flex flex-row justify-content-between align-items-center flex-wrap icons-wrapper footer-store-section-bars">
                     <div class="icons footer-payment-logos">
-                        <div class="logistics-pay-icons d-flex flex-wrap justify-content-center justify-content-lg-end" style="gap: 8px;">
+                        <div class="logistics-pay-icons d-flex flex-wrap justify-content-center justify-content-lg-end"
+                            style="gap: 8px;">
                             {% for shipping_method in store.settings.checkout.shipping_methods %}
                             <a href="/shipping-and-payment">
                                 <img src="{{ image_url(shipping_method.icon, h=80, q=100) }}" loading="lazy" alt=""

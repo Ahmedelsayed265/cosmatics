@@ -1,3 +1,30 @@
+<style>
+    .category-products-slider {
+        position: relative;
+        padding-bottom: 40px; /* Space for pagination if active */
+    }
+
+    .category-products-slider .swiper-button-next,
+    .category-products-slider .swiper-button-prev {
+        color: var(--primary-color, #000);
+        width: 35px;
+        height: 35px;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .category-products-slider .swiper-button-next::after,
+    .category-products-slider .swiper-button-prev::after {
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .category-products-slider .swiper-pagination-bullet-active {
+        background: var(--primary-color, #000);
+    }
+</style>
+
 <section class="category-products s_block" id="{{ sectionId }}" section-id="{{ sectionId }}">
     <div class="container-fluid">
         <div class="view-all-header">
@@ -9,10 +36,10 @@
         </div>
 
         <div class="swiper category-products-slider"
-             data-autoplay="{{ settings.slider_autoplay | default(false) }}"
+             data-autoplay="{{ (settings.slider_autoplay | default(false)) | lower }}"
              data-delay="{{ settings.slider_autoplay_delay | default(3000) }}"
-             data-arrows="{{ settings.slider_show_arrows | default(false) }}"
-             data-pagination="{{ settings.slider_show_pagination | default(false) }}">
+             data-arrows="{{ (settings.slider_show_arrows | default(false)) | lower }}"
+             data-pagination="{{ (settings.slider_show_pagination | default(false)) | lower }}">
             <div class="swiper-wrapper">
                 {% for product in safeget(settings, "category.products.results", []) %}
                 <div class="swiper-slide">
@@ -66,7 +93,7 @@
                         prevEl: sliderEl.querySelector('.swiper-button-prev')
                     } : false,
                     breakpoints: {
-                        640: { slidesPerView: 1.5, spaceBetween: 12 },
+                        640: { slidesPerView: 2.5, spaceBetween: 12 },
                         768: { slidesPerView: 3, spaceBetween: 16 },
                         1024: { slidesPerView: 5.5, spaceBetween: 20 }
                     }

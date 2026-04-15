@@ -32,8 +32,8 @@
                     observeParents: true,
                     autoplay: isAutoplay ? { delay: autoplayDelay, disableOnInteraction: false } : false,
                     breakpoints: {
-                        320: { slidesPerView: 1.5, spaceBetween: 10 },
-                        640: { slidesPerView: 1.5, spaceBetween: 12 },
+                        320: { slidesPerView: 2.2, spaceBetween: 10 },
+                        640: { slidesPerView: 2.5, spaceBetween: 12 },
                         768: { slidesPerView: 4, spaceBetween: 16 },
                         1024: { slidesPerView: 5.5, spaceBetween: 20 },
                     }

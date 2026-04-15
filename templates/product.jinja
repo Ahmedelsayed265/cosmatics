@@ -136,7 +136,6 @@
                                     src="{{ image_url(main_cat.image, w=80, h=80, q=90, f='auto') }}"
                                     alt="{{ main_cat_name }}" loading="lazy" width="48" height="48">
                                 {% endif %}
-                                <span class="product-category-origin-authentic">{{ _("authentic_100") }}</span>
                                 <span class="product-category-origin-prefix">{{ _("click_here_for_more_from") }}</span>
                                 <a href="/categories/{{ main_cat.id }}/{{ main_cat.slug }}"
                                     class="product-category-origin-name">{{ main_cat_name }}</a>
@@ -224,7 +223,7 @@
                             </div>
 
 
-                            <p class="product-viewing-now d-flex align-items-center mb-0">
+                            {# <p class="product-viewing-now d-flex align-items-center mb-0">
                                 <span class="product-viewing-now-icon" aria-hidden="true">
 
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -239,10 +238,7 @@
                                             stroke="#050505" stroke-width="1.5" stroke-linejoin="round" />
                                     </svg>
                                 </span>
-                                <span class="product-viewing-now-text">{{ _("viewing_product_before") }}<span
-                                        class="product-viewing-now-number">250</span>{{ _("viewing_product_after")
-                                    }}</span>
-                            </p>
+                            </p> #}
                             <div class="d-flex flex-column flex-lg-row product-features">
 
                                 {% if product.sold_products_count %}
@@ -327,12 +323,10 @@
                                 {% endif %}
                             </div>
 
-                            {% if product.selected_product.is_infinite or product.selected_product.quantity > 0 %}
+                            {% if settings.product_details_product_no_return_notice %}
                             <div class="product-no-return-notice">
-                                <span class="product-no-return-text">{{ _("This product is not returned or exchanged.") }}</span>
-                            </div>
-
-                            
+                                <span class="product-no-return-text">{{ settings.product_details_product_no_return_notice }}</span>
+                            </div>                            
                             {% endif %}
 
                             <div

@@ -436,6 +436,14 @@
           }
         },
         {
+          "id": "product_Discount_percentage_background_color",
+          "type": "color",
+          "label": {
+            "ar": "لون خلفية نسبة الخصم",
+            "en": "Discount percentage background color"
+          }
+        },
+        {
           "id": "product_card_add_to_cart_button_color",
           "type": "color",
           "label": {
@@ -559,11 +567,29 @@
       ]
     },
     {
+      "id": "product_details",
+      "icon": "font_awesome",
+      "name": {
+        "ar": "تفاصيل المنتج",
+        "en": "product details page"
+      },
+      "settings": [
+        {
+          "id": "product_no_return_notice",
+          "type": "text",
+          "label": {
+            "ar": "نص عدم الإرجاع",
+            "en": "No return notice text"
+          }
+        }
+      ]
+    },
+    {
       "id": "frequently_bought_together",
       "icon": "font_awesome",
       "name": {
-        "ar": "غالبا ما يتم شراؤها معاً",
-        "en": "Frequently bought together"
+        "ar": "غالبا ما يتم شراؤها معاً (تفاصيل المنتج)",
+        "en": "Frequently bought together (product details)"
       },
       "settings": [
         {

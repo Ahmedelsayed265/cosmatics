@@ -1113,3 +1113,6 @@ msgstr "دقيقة"
 
 msgid "second"
 msgstr "ثانية"
+
+msgid "Sub Categories"
+msgstr "التصنيفات الفرعية"
